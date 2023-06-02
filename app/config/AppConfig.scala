@@ -16,11 +16,63 @@
 
 package config
 
+import com.typesafe.config.Config
+import play.api.{Configuration, ConfigLoader}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+
+trait AppConfig {
+
+  lazy val ifsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
+
+  // IFS Config
+  def ifsBaseUrl: String
+  def ifsEnv: String
+  def ifsToken: String
+  def ifsEnvironmentHeaders: Option[Seq[String]]
+
+  // MTD IF Lookup Config
+  def mtdIdBaseUrl: String
+  def featureSwitches: Configuration
+  def apiStatus(version: String): String
+  def apiGatewayContext: String
+  def endpointsEnabled(version: String): Boolean
+
+  def confidenceLevelConfig: ConfidenceLevelConfig
+}
 
 @Singleton
-class AppConfig @Inject() (config: Configuration) {
+class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configuration) extends AppConfig {
 
-  val appName: String = config.get[String]("appName")
+  val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
+
+  // IFS Config
+  val ifsBaseUrl: String                         = config.baseUrl("ifs")
+  val ifsEnv: String                             = config.getString("microservice.services.ifs.env")
+  val ifsToken: String                           = config.getString("microservice.services.ifs.token")
+  val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
+
+  // MTD IF Lookup Config
+  val apiGatewayContext: String                    = config.getString("api.gateway.context")
+  def apiStatus(version: String): String           = config.getString(s"api.$version.status")
+  def featureSwitches: Configuration               = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def endpointsEnabled(version: String): Boolean   = config.getBoolean(s"api.$version.endpoints.enabled")
+  val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
+}
+
+case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)
+
+object ConfidenceLevelConfig {
+
+  implicit val configLoader: ConfigLoader[ConfidenceLevelConfig] = (rootConfig: Config, path: String) => {
+    val config = rootConfig.getConfig(path)
+    ConfidenceLevelConfig(
+      confidenceLevel = ConfidenceLevel.fromInt(config.getInt("confidence-level")).getOrElse(ConfidenceLevel.L200),
+      definitionEnabled = config.getBoolean("definition.enabled"),
+      authValidationEnabled = config.getBoolean("auth-validation.enabled")
+    )
+  }
+
 }
