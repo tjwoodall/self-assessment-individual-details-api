@@ -1,6 +1,5 @@
 import play.core.PlayVersion
 import play.sbt.PlayImport._
-import sbt.Keys.libraryDependencies
 import sbt._
 
 object AppDependencies {
@@ -15,8 +14,15 @@ object AppDependencies {
     "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.14.2"
   )
 
-  val test = Seq(
-    "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapPlayVersion % "test, it"
+  val test: Seq[ModuleID] = Seq(
+    "org.scalatest"         %% "scalatest"              % "3.2.15"             % "test, it",
+    "org.scalacheck"        %% "scalacheck"             % "1.17.0"             % "test, it",
+    "com.vladsch.flexmark"   % "flexmark-all"           % "0.64.6"             % "test, it",
+    "org.scalamock"         %% "scalamock"              % "5.2.0"              % "test, it",
+    "com.typesafe.play"     %% "play-test"              % PlayVersion.current  % "test, it",
+    "uk.gov.hmrc"           %% "bootstrap-test-play-28" % bootstrapPlayVersion % "test, it",
+    "com.github.tomakehurst" % "wiremock-jre8"          % "2.35.0"             % "test, it",
+    "io.swagger.parser.v3"   % "swagger-parser-v3"      % "2.1.12"             % "test, it"
   )
 
 }
