@@ -17,18 +17,26 @@
 package config
 
 import controllers.Assets
-import javax.inject.{Inject, Singleton}
+import definition.ApiDefinitionFactory
+import play.api.http.HttpErrorHandler
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-@Singleton
-class DocumentationController @Inject() (assets: Assets, cc: ControllerComponents) extends BackendController(cc) {
+import javax.inject.{Inject, Singleton}
 
-  def definition(): Action[AnyContent] = {
-    assets.at("/public/api", "definition.json")
+@Singleton
+class DocumentationController @Inject() (selfAssessmentApiDefinition: ApiDefinitionFactory,
+                                         cc: ControllerComponents,
+                                         assets: Assets,
+                                         errorHandler: HttpErrorHandler)
+    extends BackendController(cc) {
+
+  def definition(): Action[AnyContent] = Action {
+    Ok(Json.toJson(selfAssessmentApiDefinition.definition))
   }
 
-  def specification(version: String, file: String): Action[AnyContent] = {
+  def asset(version: String, file: String): Action[AnyContent] = {
     assets.at(s"/public/api/conf/$version", file)
   }
 

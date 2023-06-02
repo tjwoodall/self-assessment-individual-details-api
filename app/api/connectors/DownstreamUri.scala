@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package api.controllers
+package api.connectors
 
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import play.api.http.Status
-import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
+sealed trait DownstreamUri[Resp] {
+  val value: String
+}
 
-class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers {
-
-  private val fakeRequest = FakeRequest("GET", "/")
-  private val controller  = new MicroserviceHelloWorldController(Helpers.stubControllerComponents())
-
-  "GET /" should {
-    "return 200" in {
-      val result = controller.hello()(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-  }
-
+object DownstreamUri {
+  final case class IfsUri[Resp](value: String) extends DownstreamUri[Resp]
 }

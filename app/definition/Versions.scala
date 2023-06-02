@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package api.controllers
+package definition
 
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import play.api.http.HeaderNames.ACCEPT
+import play.api.mvc.RequestHeader
 
-@Singleton()
-class MicroserviceHelloWorldController @Inject() (cc: ControllerComponents) extends BackendController(cc) {
+object Versions {
+  val VERSION_1 = "1.0"
 
-  def hello(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("Hello world"))
-  }
+  private val versionRegex = """application\/vnd.hmrc.(\d.\d)\+json""".r
+
+  def getFromRequest(request: RequestHeader): Option[String] =
+    getFrom(request.headers.headers)
+
+  private def getFrom(headers: Seq[(String, String)]) =
+    headers.collectFirst { case (ACCEPT, versionRegex(ver)) => ver }
 
 }
