@@ -1,8 +1,8 @@
 openapi: "3.0.3"
 
 info:
-  version: 1.0.0
-  title: Hello World
+  version: 1.0
+  title: Self Assessment Individual Details (MTD)
 
 servers:
   - url: https://test-api.service.hmrc.gov.uk/hello-world
