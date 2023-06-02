@@ -22,9 +22,13 @@ import play.api.http.Status._
 object NinoFormatError    extends MtdError("FORMAT_NINO", "The provided NINO is invalid", BAD_REQUEST)
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid", BAD_REQUEST)
 
+// Rule Errors
+object RuleIncorrectOrEmptyBodyError
+    extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted", BAD_REQUEST)
+
 //Standard Errors
 object NotFoundError           extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found", NOT_FOUND)
-object StandardDownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred", INTERNAL_SERVER_ERROR)
+object InternalError           extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred", INTERNAL_SERVER_ERROR)
 object BadRequestError         extends MtdError("INVALID_REQUEST", "Invalid request", BAD_REQUEST)
 object BVRError                extends MtdError("BUSINESS_ERROR", "Business validation error", BAD_REQUEST)
 object ServiceUnavailableError extends MtdError("SERVICE_UNAVAILABLE", "Internal server error", INTERNAL_SERVER_ERROR)
