@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package config
+package definition
 
-import com.google.inject.AbstractModule
+import definition.APIStatus.{ALPHA, BETA, DEPRECATED, RETIRED, STABLE}
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
 
-class DIModule extends AbstractModule {
+class APIStatusSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
-  }
+  testRoundTrip[APIStatus](
+    ("ALPHA", ALPHA),
+    ("BETA", BETA),
+    ("STABLE", STABLE),
+    ("DEPRECATED", DEPRECATED),
+    ("RETIRED", RETIRED)
+  )
 
 }

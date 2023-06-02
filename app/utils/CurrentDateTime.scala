@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package config
+package utils
 
-import com.google.inject.AbstractModule
+import org.joda.time.{DateTime, DateTimeZone}
 
-class DIModule extends AbstractModule {
+import java.time.LocalDate
+import javax.inject.Singleton
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
-  }
+@Singleton
+class CurrentDateTime {
+  def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
 
+  def getLocalDate: LocalDate = LocalDate.now()
 }

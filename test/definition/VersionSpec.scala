@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package config
+package definition
 
-import com.google.inject.AbstractModule
+import play.api.http.HeaderNames.ACCEPT
+import play.api.test.FakeRequest
+import support.UnitSpec
 
-class DIModule extends AbstractModule {
+class VersionSpec extends UnitSpec {
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
+  "Versions" when {
+
+    "retrieved from a request header" must {
+      "work" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))) shouldBe Some("1.0")
+      }
+    }
   }
 
 }

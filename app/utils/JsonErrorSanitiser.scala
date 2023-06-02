@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package config
+package utils
 
-import com.google.inject.AbstractModule
+object JsonErrorSanitiser {
 
-class DIModule extends AbstractModule {
+  def sanitise(str: String): String = {
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
+    val searchString = "Invalid Json"
+
+    if (str.startsWith(searchString)) {
+      "Invalid Json"
+    } else {
+      val index = str.indexOf(searchString)
+      if (index > 0) {
+        str.substring(0, index).trim
+      } else {
+        str.trim
+      }
+    }
   }
 
 }
