@@ -1,5 +1,7 @@
 Self Assessment Individual Details API
 ========================
+The Self Assessment Individual Details API allows... 
+[//]: # (complete later^)
 
 ## Requirements
 
@@ -12,22 +14,36 @@ Self Assessment Individual Details API
 
 Run from the console using: `sbt run` (starts on port 7790 by default)
 
-Start the service manager profile: `sm2 --start MTDFB_SA`
+Start the service manager profile: `sm2 --start MTDFB_SA_DETAILS`
 
-## Running tests
+## Run Tests
+
+Run unit tests: `sbt test`
+
+Run integration tests: `sbt it:test`
+
+Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtopts` file to the root of the project with the
+following contents:
 
 ```
-sbt test
-sbt it:test
+-J-Xmx3G
+-J-XX:+UseG1GC
 ```
 
 ## Viewing OAS
 
 To view documentation locally ensure the Self Assessment Individual Details API is running, and run api-documentation-frontend:
-`./run_local_with_dependencies.sh`
 
-Then go to http://localhost:7790/api-documentation/docs/openapi/preview and use this port and version:
-`http://localhost:7790/api/conf/1.0/application.yaml`
+```
+./run_local_with_dependencies.sh
+```
+
+Then go to http://localhost:9680/api-documentation/docs/openapi/preview and enter the full URL path to the YAML file with the
+appropriate port and version:
+
+```
+http://localhost:7790/api/conf/1.0/application.yaml
+```
 
 ## Changelog
 
