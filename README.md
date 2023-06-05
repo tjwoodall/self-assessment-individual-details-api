@@ -10,7 +10,7 @@ Self Assessment Individual Details API
 
 ## Development Setup
 
-Run from the console using: `sbt run` (starts on port NNNN by default)
+Run from the console using: `sbt run` (starts on port 7790 by default)
 
 Start the service manager profile: `sm2 --start MTDFB_SA`
 
@@ -26,8 +26,8 @@ sbt it:test
 To view documentation locally ensure the Self Assessment Individual Details API is running, and run api-documentation-frontend:
 `./run_local_with_dependencies.sh`
 
-Then go to http://localhost:NNNN/api-documentation/docs/openapi/preview and use this port and version:
-`http://localhost:NNNN/api/conf/1.0/application.yaml`
+Then go to http://localhost:7790/api-documentation/docs/openapi/preview and use this port and version:
+`http://localhost:7790/api/conf/1.0/application.yaml`
 
 ## Changelog
 
