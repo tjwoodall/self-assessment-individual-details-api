@@ -23,11 +23,11 @@ sbt it:test
 
 ## Viewing OAS
 
-To view documentation locally ensure the Expenses API is running, and run api-documentation-frontend:
+To view documentation locally ensure the Self Assessment Individual Details API is running, and run api-documentation-frontend:
 `./run_local_with_dependencies.sh`
 
 Then go to http://localhost:NNNN/api-documentation/docs/openapi/preview and use this port and version:
-`http://localhost:7795/api/conf/1.0/application.yaml`
+`http://localhost:NNNN/api/conf/1.0/application.yaml`
 
 ## Changelog
 
@@ -40,7 +40,7 @@ You can create a GitHub issue [here](https://github.com/hmrc/income-tax-mtd-chan
 ## API Reference / Documentation
 
 Available on
-the [Individuals Expenses Documentation](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/individuals-expenses-api)
+the [Self Assessment Individual Details Documentation](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-individual-details-api)
 
 ## License
 
