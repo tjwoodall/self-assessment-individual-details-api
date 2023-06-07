@@ -29,7 +29,7 @@ class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers {
 
   "GET /" should {
     "return 200" in {
-      val result = controller.hello()(fakeRequest)
+      val result = controller.hello("nino", "taxYear")(fakeRequest)
       status(result) shouldBe Status.OK
     }
   }

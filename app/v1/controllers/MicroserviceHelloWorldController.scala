@@ -16,16 +16,21 @@
 
 package v1.controllers
 
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton()
 class MicroserviceHelloWorldController @Inject() (cc: ControllerComponents) extends BackendController(cc) {
 
-  def hello(): Action[AnyContent] = Action.async { _ =>
-    Future.successful(Ok("Hello world"))
+  def hello(nino: String, taxYear: String): Action[AnyContent] = Action.async { _ =>
+    val exampleData              = s"""{"nino":"$nino","taxYear":"$taxYear"}"""
+    val exampleDataJson: JsValue = Json.parse(exampleData)
+
+    Future.successful(Ok(exampleDataJson))
   }
 
 }

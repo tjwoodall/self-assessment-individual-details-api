@@ -1,7 +1,7 @@
 Self Assessment Individual Details API
 ========================
-The Self Assessment Individual Details API allows... 
-[//]: # (complete later^)
+This API allows developers to perform operations related to Individuals/Taxable Entities for Income Tax Self Assessment:
+- Retrieve ITSA status for a given NINO for a specified tax year and optionally for future years
 
 ## Requirements
 
