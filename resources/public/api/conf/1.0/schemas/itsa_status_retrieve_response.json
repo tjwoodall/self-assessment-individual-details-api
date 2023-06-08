@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve ITSA Status Request",
+  "description": "Retrieve ITSA Status Request",
+  "type": "object",
+  "properties": {
+    "hello": {
+      "type": "string",
+      "example": "world"
+    },
+  }
+}
