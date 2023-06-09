@@ -1,2 +1,2 @@
-GET        /individuals/person/itsa-status/:nino/:taxYear             v1.controllers.MicroserviceHelloWorldController.hello(nino, taxYear)
+GET        /itsa-status/:nino/:taxYear             v1.controllers.MicroserviceHelloWorldController.hello(nino, taxYear)
 
