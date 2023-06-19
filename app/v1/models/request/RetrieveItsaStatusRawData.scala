@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.request
+package v1.models.request
 
-import play.api.mvc.AnyContentAsJson
+import api.models.request.RawData
 
-trait RawData
-
-case class NinoAndJsonBodyRawData(nino: String, body: AnyContentAsJson) extends RawData
+case class RetrieveItsaStatusRawData(nino: String, taxYear: String, futureYears: Option[Boolean], history: Option[Boolean]) extends RawData

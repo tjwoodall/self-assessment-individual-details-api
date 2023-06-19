@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package api.models.request
+package v1.models.response
 
-import play.api.mvc.AnyContentAsJson
+import play.api.libs.json.{Json, OFormat}
 
-trait RawData
+case class RetrieveItsaStatusResponse(itsaStatuses: Seq[ItsaStatuses])
 
-case class NinoAndJsonBodyRawData(nino: String, body: AnyContentAsJson) extends RawData
+object RetrieveItsaStatusResponse {
+
+  implicit val format: OFormat[RetrieveItsaStatusResponse] = Json.format[RetrieveItsaStatusResponse]
+
+}

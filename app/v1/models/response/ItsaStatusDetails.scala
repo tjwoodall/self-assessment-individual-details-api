@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package api.models.request
+package v1.models.response
 
-import play.api.mvc.AnyContentAsJson
+import play.api.libs.json.{Json, OFormat}
+import v1.models.domain.{StatusEnum, StatusReasonEnum}
 
-trait RawData
+case class ItsaStatusDetails(submittedOn: String, status: StatusEnum, statusReason: StatusReasonEnum, businessIncomePriorTo2Years: Option[BigDecimal])
 
-case class NinoAndJsonBodyRawData(nino: String, body: AnyContentAsJson) extends RawData
+object ItsaStatusDetails {
+
+  implicit val format: OFormat[ItsaStatusDetails] = Json.format[ItsaStatusDetails]
+
+}

@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package api.models.request
+package v1.domain
 
-import play.api.mvc.AnyContentAsJson
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+import v1.models.domain.StatusEnum
 
-trait RawData
+class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
-case class NinoAndJsonBodyRawData(nino: String, body: AnyContentAsJson) extends RawData
+  testRoundTrip[StatusEnum](
+    ("noStatus", StatusEnum.noStatus),
+    ("mtdMandated", StatusEnum.mtdMandated),
+    ("mtdVoluntary", StatusEnum.mtdVoluntary),
+    ("annual", StatusEnum.annual),
+    ("nonDigital", StatusEnum.nonDigital),
+    ("dormant", StatusEnum.dormant),
+    ("mtdExempt", StatusEnum.mtdExempt)
+  )
+
+}
