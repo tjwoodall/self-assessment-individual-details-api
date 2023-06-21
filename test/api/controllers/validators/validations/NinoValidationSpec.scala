@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.controllers.requestParsers.validators.validations
+package api.controllers.validators.validations
 
 import api.models.errors.NinoFormatError
 import api.models.utils.JsonErrorValidators
@@ -27,7 +27,7 @@ class NinoValidationSpec extends UnitSpec with JsonErrorValidators {
       "when a valid NINO is supplied" in {
 
         val validNino        = "AA123456A"
-        val validationResult = NinoValidation.validate(validNino)
+        val validationResult = NinoValidation(validNino)
         validationResult.isEmpty shouldBe true
 
       }
@@ -37,14 +37,13 @@ class NinoValidationSpec extends UnitSpec with JsonErrorValidators {
       "when an invalid NINO is supplied" in {
 
         val invalidNino      = "AA123456ABCBBCBCBC"
-        val validationResult = NinoValidation.validate(invalidNino)
+        val validationResult = NinoValidation(invalidNino)
         validationResult.isEmpty shouldBe false
         validationResult.length shouldBe 1
         validationResult.head shouldBe NinoFormatError
 
       }
     }
-
   }
 
 }

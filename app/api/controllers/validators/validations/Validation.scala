@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package api.controllers.validators.validations
 
-import api.models.request.RawData
-
-case class RetrieveItsaStatusRawData(nino: String, taxYear: String, futureYears: Option[String], history: Option[String]) extends RawData
+trait Validation

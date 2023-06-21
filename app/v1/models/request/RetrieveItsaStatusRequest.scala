@@ -18,4 +18,4 @@ package v1.models.request
 
 import api.models.domain.{Nino, TaxYear}
 
-case class RetrieveItsaStatusRequest(nino: Nino, taxYear: TaxYear, futureYears: Boolean = false, history: Boolean = false)
+case class RetrieveItsaStatusRequest(nino: Nino, taxYear: TaxYear, futureYears: Boolean, history: Boolean)

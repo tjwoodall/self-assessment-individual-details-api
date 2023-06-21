@@ -25,6 +25,8 @@ object FutureYearsFormatError extends MtdError("FORMAT_FUTURE_YEARS", "The provi
 object HistoryFormatError     extends MtdError("FORMAT_HISTORY", "The provided history value should be true or false", BAD_REQUEST)
 
 // Rule Errors
+object RuleTaxYearRangeInvalid
+  extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required", BAD_REQUEST)
 object RuleIncorrectOrEmptyBodyError
     extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted", BAD_REQUEST)
 

@@ -33,7 +33,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
   "RetrieveItsaStatusConnector" should {
     "return a 200 status and expected response for a success scenario" in new IfsTest with Test {
 
-      willGet(url = s"$baseUrl/income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=false&history=false")
+      willGet(url = s"$baseUrl/income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=true&history=true")
         .returns(Future.successful(outcome))
 
       await(connector.retrieve(request)) shouldBe outcome
@@ -47,7 +47,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    val request: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(Nino(nino), taxYear)
+    val request: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(Nino(nino), taxYear, futureYears = true, history = true)
 
     val itsaStatusDetails: ItsaStatusDetails = ItsaStatusDetails(
       submittedOn = "2023-05-23T12:29:27.566Z",

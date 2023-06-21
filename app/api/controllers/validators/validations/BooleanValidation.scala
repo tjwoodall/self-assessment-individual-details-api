@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
-package api.controllers.requestParsers.validators
+package api.controllers.validators.validations
 
 import api.models.errors.MtdError
 
-package object validations {
-  val NoValidationErrors: List[MtdError] = List()
+import scala.util.{Failure, Success, Try}
+
+object BooleanValidation {
+
+  def validate(value: Option[String], error: MtdError): List[MtdError] = {
+    value.map(validate(_, error)).getOrElse(Nil)
+  }
+
+  def validate(value: String, error: MtdError): List[MtdError] = Try {
+    value.toBoolean
+  } match {
+    case Success(_) => Nil
+    case Failure(_) => List(error)
+  }
+
 }

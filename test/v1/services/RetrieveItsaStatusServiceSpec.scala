@@ -76,7 +76,7 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec {
     private val nino    = "AA112233A"
     private val taxYear = "2019-20"
 
-    val request: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(Nino(nino), TaxYear.fromMtd(taxYear))
+    val request: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(Nino(nino), TaxYear.fromMtd(taxYear), futureYears = true, history = true)
 
     val itsaStatusDetails: ItsaStatusDetails = ItsaStatusDetails(
       submittedOn = "2023-05-23T12:29:27.566Z",
