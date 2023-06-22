@@ -25,7 +25,7 @@ sealed trait StatusReasonEnum {
 
 object StatusReasonEnum {
 
-  case object signUpReturnAvailable extends StatusReasonEnum {
+  case object `Sign up - return available` extends StatusReasonEnum {
     val downstreamValue = "Sign up - return available"
   }
 
@@ -37,7 +37,7 @@ object StatusReasonEnum {
     val downstreamValue = "ITSA final declaration"
   }
 
-  case object itsaQ4Declaration extends StatusReasonEnum {
+  case object `ITSA Q4 declaration` extends StatusReasonEnum {
     val downstreamValue = "ITSA Q4 declaration"
   }
 

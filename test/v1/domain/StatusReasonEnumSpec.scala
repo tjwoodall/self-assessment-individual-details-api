@@ -23,10 +23,10 @@ import v1.models.domain.StatusReasonEnum
 class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[StatusReasonEnum](
-    ("signUpReturnAvailable", StatusReasonEnum.signUpReturnAvailable),
+    ("Sign up - return available", StatusReasonEnum.`Sign up - return available`),
     ("signUpNoReturnAvailable", StatusReasonEnum.signUpNoReturnAvailable),
     ("itsaFinalDeclaration", StatusReasonEnum.itsaFinalDeclaration),
-    ("itsaQ4Declaration", StatusReasonEnum.itsaQ4Declaration),
+    ("ITSA Q4 declaration", StatusReasonEnum.`ITSA Q4 declaration`),
     ("cesaSaReturn", StatusReasonEnum.cesaSaReturn),
     ("complex", StatusReasonEnum.complex),
     ("ceasedIncomeSource", StatusReasonEnum.ceasedIncomeSource),
