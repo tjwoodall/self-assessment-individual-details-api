@@ -4,9 +4,38 @@
   "description": "Retrieve ITSA Status Request",
   "type": "object",
   "properties": {
-    "hello": {
-      "type": "string",
-      "example": "world"
+    "itsaStatuses": {
+      "type": "array",
+      "description": "An array of ITSA statuses for the requested National Insurance number and tax year(s).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "taxYear": {
+            "$ref": "itsa_status_retrieve_definitions.json#/definitions/taxYear"
+          },
+          "itsaStatusDetails": {
+            "type": "array",
+            "description": "An array of ITSA status details for a specific National Insurance number and tax year.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "submittedOn": {
+                  "$ref": "itsa_status_retrieve_definitions.json#/definitions/submittedOn"
+                },
+                "status": {
+                  "$ref": "itsa_status_retrieve_definitions.json#/definitions/status"
+                },
+                "statusReason": {
+                  "$ref": "itsa_status_retrieve_definitions.json#/definitions/statusReason"
+                },
+                "businessIncomePriorTo2Years": {
+                  "$ref": "itsa_status_retrieve_definitions.json#/definitions/businessIncomePriorTo2Years"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -13,8 +13,8 @@ components:
       name: taxYear
       in: path
       description: |
-        The tax year to retrieve data for. The start year and end year must not span two tax years. No gaps are allowed, for example, 23-25 is not valid. There is no minimum tax year
+        The tax year to retrieve data for. The start year and end year must not span two tax years. No gaps are allowed, for example, 2023-25 is not valid. There is no minimum tax year.
       schema:
         type: string
-        example: 23-24
+        example: 2023-24
       required: true

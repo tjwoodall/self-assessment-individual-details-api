@@ -1,0 +1,48 @@
+{
+  "definitions": {
+    "taxYear": {
+      "type": "string",
+      "description": "The tax year the data applies to. The start year and end year must not span two tax years. No gaps are allowed, for example, 2023-25 is not valid. There is no minimum tax year.",
+      "pattern": "^2[0-9]{3}-[0-9]{2}$",
+      "example": "2023-24"
+    },
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the ITSA status was submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ.",
+      "example": "2021-03-23T16:02:34.039Z"
+    },
+    "status": {
+      "type": "string",
+      "description": "The ITSA Status for the Tax Year. Values are 00 = No Status; 01 = MTD Mandated; 02 = MTD Voluntary; 03 = Annual; 04 = Non Digital; 05 = Dormant; 99 = MTD Exempt.",
+      "enum": [
+        "No Status",
+        "MTD Mandated",
+        "MTD Voluntary",
+        "Annual",
+        "Non Digital",
+        "Dormant",
+        "MTD Exempt"
+      ]
+    },
+    "statusReason": {
+      "type": "string",
+      "description": "The reason for the ITSA Status. Values are 00 = Sign up - return available; 01 = Sign up - no return available; 02 = ITSA final declaration; 03 = ITSA Q4 declaration; 04 = CESA SA return; 05 = Complex; 06 = Ceased income source; 07 = Reinstated income source; 08 = Rollover.",
+      "enum": [
+        "Sign up - return available",
+        "Sign up - no return available",
+        "ITSA final declaration",
+        "ITSA Q4 declaration",
+        "CESA SA return",
+        "Complex",
+        "Ceased income source",
+        "Reinstated income source",
+        "Rollover"
+      ]
+    },
+    "businessIncomePriorTo2Years": {
+      "type": "number",
+      "description": "The business income prior to 2 years. For Q4 check, the business income prior to 1 year will be used.",
+      "example": "99999999999.99"
+    }
+  }
+}
