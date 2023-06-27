@@ -29,11 +29,11 @@ object StatusReasonEnum {
     val downstreamValue = "Sign up - return available"
   }
 
-  case object signUpNoReturnAvailable extends StatusReasonEnum {
+  case object `Sign up - no return available` extends StatusReasonEnum {
     val downstreamValue = "Sign up - no return available"
   }
 
-  case object itsaFinalDeclaration extends StatusReasonEnum {
+  case object `ITSA final declaration` extends StatusReasonEnum {
     val downstreamValue = "ITSA final declaration"
   }
 
@@ -41,23 +41,23 @@ object StatusReasonEnum {
     val downstreamValue = "ITSA Q4 declaration"
   }
 
-  case object cesaSaReturn extends StatusReasonEnum {
+  case object `CESA SA return` extends StatusReasonEnum {
     val downstreamValue = "CESA SA return"
   }
 
-  case object complex extends StatusReasonEnum {
+  case object Complex extends StatusReasonEnum {
     val downstreamValue = "Complex"
   }
 
-  case object ceasedIncomeSource extends StatusReasonEnum {
+  case object `Ceased income source` extends StatusReasonEnum {
     val downstreamValue = "Ceased income source"
   }
 
-  case object reinstatedIncomeSource extends StatusReasonEnum {
+  case object `Reinstated income source` extends StatusReasonEnum {
     val downstreamValue = "Reinstated income source"
   }
 
-  case object rollover extends StatusReasonEnum {
+  case object Rollover extends StatusReasonEnum {
     val downstreamValue = "Rollover"
   }
 

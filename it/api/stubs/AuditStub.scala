@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package v1.controllers
+package api.stubs
 
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import play.api.http.Status
-import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Helpers}
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status._
+import support.WireMockMethods
 
-class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers {
+object AuditStub extends WireMockMethods {
 
-  private val fakeRequest = FakeRequest("GET", "/")
-  private val controller  = new MicroserviceHelloWorldController(Helpers.stubControllerComponents())
+  private val auditUri: String = s"/write/audit.*"
 
-  "GET /" should {
-    "return 200" in {
-      val result = controller.hello("nino", "taxYear")(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
+  def audit(): StubMapping = {
+    when(method = POST, uri = auditUri)
+      .thenReturn(status = NO_CONTENT)
   }
 
 }

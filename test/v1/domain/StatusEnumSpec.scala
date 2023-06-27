@@ -25,11 +25,11 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
   testRoundTrip[StatusEnum](
     ("No Status", StatusEnum.`No Status`),
     ("MTD Mandated", StatusEnum.`MTD Mandated`),
-    ("mtdVoluntary", StatusEnum.mtdVoluntary),
-    ("annual", StatusEnum.annual),
-    ("nonDigital", StatusEnum.nonDigital),
-    ("dormant", StatusEnum.dormant),
-    ("mtdExempt", StatusEnum.mtdExempt)
+    ("MTD Voluntary", StatusEnum.`MTD Voluntary`),
+    ("Annual", StatusEnum.Annual),
+    ("Non Digital", StatusEnum.`Non Digital`),
+    ("Dormant", StatusEnum.Dormant),
+    ("MTD Exempt", StatusEnum.`MTD Exempt`)
   )
 
 }
