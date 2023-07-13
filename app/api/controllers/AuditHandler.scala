@@ -28,31 +28,12 @@ import scala.concurrent.ExecutionContext
 trait AuditHandler extends RequestContextImplicits {
 
   def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Unit
+                                                                                                               ctx: RequestContext,
+                                                                                                               ec: ExecutionContext): Unit
 
 }
 
 object AuditHandler {
-
-  trait AuditDetailCreator[A] {
-    def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit ctx: RequestContext): A
-  }
-
-  def custom[A: Writes](auditService: AuditService,
-                        auditType: String,
-                        transactionName: String,
-                        auditDetailCreator: AuditDetailCreator[A],
-                        requestBody: Option[JsValue] = None,
-                        includeResponse: Boolean = false): AuditHandler =
-    new AuditHandlerImpl[A](
-      auditService = auditService,
-      auditType = auditType,
-      transactionName = transactionName,
-      auditDetailCreator,
-      requestBody = requestBody,
-      responseBodyMap = if (includeResponse) identity else _ => None
-    )
 
   def apply(auditService: AuditService,
             auditType: String,
@@ -71,17 +52,36 @@ object AuditHandler {
     )
   }
 
+  def custom[A: Writes](auditService: AuditService,
+                        auditType: String,
+                        transactionName: String,
+                        auditDetailCreator: AuditDetailCreator[A],
+                        requestBody: Option[JsValue] = None,
+                        includeResponse: Boolean = false): AuditHandler =
+    new AuditHandlerImpl[A](
+      auditService = auditService,
+      auditType = auditType,
+      transactionName = transactionName,
+      auditDetailCreator,
+      requestBody = requestBody,
+      responseBodyMap = if (includeResponse) identity else _ => None
+    )
+
+  trait AuditDetailCreator[A] {
+    def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit ctx: RequestContext): A
+  }
+
   private class AuditHandlerImpl[A: Writes](auditService: AuditService,
                                             auditType: String,
                                             transactionName: String,
                                             auditDetailCreator: AuditDetailCreator[A],
                                             requestBody: Option[JsValue],
                                             responseBodyMap: Option[JsValue] => Option[JsValue])
-      extends AuditHandler {
+    extends AuditHandler {
 
     def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-        ctx: RequestContext,
-        ec: ExecutionContext): Unit = {
+                                                                                                                 ctx: RequestContext,
+                                                                                                                 ec: ExecutionContext): Unit = {
 
       val auditEvent = {
         val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(_.auditErrors))

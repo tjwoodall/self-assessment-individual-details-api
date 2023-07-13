@@ -31,14 +31,11 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
   private trait Test {
     implicit val correlationId: String = "1234"
-
-    val validRaw: TestRawData     = TestRawData("ABCDEF", "12345")
-    val parsed: TestParsedRequest = TestParsedRequest("ABCDEF", "12345")
-
-    lazy val preParseValidations: PreParseValidationCallers[TestRawData]              = Nil
+    lazy val preParseValidations: PreParseValidationCallers[TestRawData] = Nil
     lazy val parserValidation: ParserValidationCaller[TestRawData, TestParsedRequest] = _ => Right(parsed)
-    lazy val postParseValidations: PostParseValidationCallers[TestParsedRequest]      = Nil
-
+    lazy val postParseValidations: PostParseValidationCallers[TestParsedRequest] = Nil
+    val validRaw: TestRawData = TestRawData("ABCDEF", "12345")
+    val parsed: TestParsedRequest = TestParsedRequest("ABCDEF", "12345")
     val validator = new TestValidator(preParseValidations, parserValidation, postParseValidations)
   }
 
@@ -158,21 +155,23 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 class MockFunctionObject {
   var called = 0
 
-  def noErrors(): Seq[MtdError]             = validate(maybeError = None)
-  def error(error: MtdError): Seq[MtdError] = validate(maybeError = Some(error))
+  def noErrors(): Seq[MtdError] = validate(maybeError = None)
 
   private def validate(maybeError: Option[MtdError]): Seq[MtdError] = {
     called = called + 1
     maybeError.toList
   }
 
+  def error(error: MtdError): Seq[MtdError] = validate(maybeError = Some(error))
+
 }
 
 private case class TestRawData(fieldOne: String, fieldTwo: String) extends RawData
+
 private case class TestParsedRequest(fieldOne: String, fieldTwo: String)
 
 private class TestValidator(
-    override protected val preParserValidations: PreParseValidationCallers[TestRawData],
-    override protected val parserValidation: ParserValidationCaller[TestRawData, TestParsedRequest],
-    override protected val postParserValidations: PostParseValidationCallers[TestParsedRequest]
-) extends Validator[TestRawData, TestParsedRequest]
+                             override protected val preParserValidations: PreParseValidationCallers[TestRawData],
+                             override protected val parserValidation: ParserValidationCaller[TestRawData, TestParsedRequest],
+                             override protected val postParserValidations: PostParseValidationCallers[TestParsedRequest]
+                           ) extends Validator[TestRawData, TestParsedRequest]

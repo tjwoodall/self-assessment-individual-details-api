@@ -28,14 +28,14 @@ import v1.services.RetrieveItsaStatusService
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              validator: RetrieveItsaStatusValidator,
-                                              service: RetrieveItsaStatusService,
-                                              hateoasFactory: HateoasFactory,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) {
+class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthService,
+                                             val lookupService: MtdIdLookupService,
+                                             validator: RetrieveItsaStatusValidator,
+                                             service: RetrieveItsaStatusService,
+                                             hateoasFactory: HateoasFactory,
+                                             cc: ControllerComponents,
+                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(

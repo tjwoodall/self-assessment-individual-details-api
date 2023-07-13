@@ -24,6 +24,7 @@ sealed trait StatusEnum {
 }
 
 object StatusEnum {
+  val parser: PartialFunction[String, StatusEnum] = Enums.parser[StatusEnum]
 
   case object `No Status` extends StatusEnum {
     val downstreamValue = "No Status"
@@ -49,10 +50,9 @@ object StatusEnum {
     val downstreamValue = "Dormant"
   }
 
+  implicit val format: Format[StatusEnum] = Enums.format[StatusEnum]
+
   case object `MTD Exempt` extends StatusEnum {
     val downstreamValue = "MTD Exempt"
   }
-
-  implicit val format: Format[StatusEnum]         = Enums.format[StatusEnum]
-  val parser: PartialFunction[String, StatusEnum] = Enums.parser[StatusEnum]
 }

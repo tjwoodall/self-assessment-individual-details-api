@@ -24,18 +24,13 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ApiDefinitionFactory @Inject() (appConfig: AppConfig) {
-
-  private val readScope      = "read:self-assessment"
-  private val writeScope     = "write:self-assessment"
-  private val logger: Logger = Logger(this.getClass)
+class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
 
   lazy val confidenceLevel: ConfidenceLevel = {
     val clConfig = appConfig.confidenceLevelConfig
 
     if (clConfig.definitionEnabled) clConfig.confidenceLevel else ConfidenceLevel.L50
   }
-
   lazy val definition: Definition =
     Definition(
       scopes = Seq(
@@ -67,6 +62,9 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) {
         requiresTrust = None
       )
     )
+  private val readScope = "read:self-assessment"
+  private val writeScope = "write:self-assessment"
+  private val logger: Logger = Logger(this.getClass)
 
   private[definition] def buildAPIStatus(version: String): APIStatus = {
     APIStatus.parser

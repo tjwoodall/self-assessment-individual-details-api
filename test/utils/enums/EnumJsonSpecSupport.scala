@@ -25,9 +25,9 @@ trait EnumJsonSpecSupport {
   /** Tests round-tripping
     *
     * @param namesAndValues
-    *   Pairs (name, object) for all the objects in the enumeration under test
+    * Pairs (name, object) for all the objects in the enumeration under test
     * @tparam A
-    *   the type of enumeration (sealed trait of objects) being tested
+    * the type of enumeration (sealed trait of objects) being tested
     */
 
   def testRoundTrip[A: Format](namesAndValues: (String, A)*): Unit =

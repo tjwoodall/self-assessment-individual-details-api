@@ -37,7 +37,22 @@ object GenericAuditDetail {
       (JsPath \ "request").writeNullable[JsValue] and
       (JsPath \ "X-CorrelationId").write[String] and
       (JsPath \ "response").write[AuditResponse]
-  )(unlift(GenericAuditDetail.unapply))
+    ) (unlift(GenericAuditDetail.unapply))
+
+  def auditDetailCreator(params: Map[String, String]): AuditHandler.AuditDetailCreator[GenericAuditDetail] =
+    new AuditHandler.AuditDetailCreator[GenericAuditDetail] {
+
+      def createAuditDetail(userDetails: UserDetails, request: Option[JsValue], response: AuditResponse)(implicit
+                                                                                                         ctx: RequestContext): GenericAuditDetail =
+        GenericAuditDetail(
+          userDetails = userDetails,
+          params = params,
+          request = request,
+          `X-CorrelationId` = ctx.correlationId,
+          response = response
+        )
+
+    }
 
   def apply(userDetails: UserDetails,
             params: Map[String, String],
@@ -54,20 +69,5 @@ object GenericAuditDetail {
       response = response
     )
   }
-
-  def auditDetailCreator(params: Map[String, String]): AuditHandler.AuditDetailCreator[GenericAuditDetail] =
-    new AuditHandler.AuditDetailCreator[GenericAuditDetail] {
-
-      def createAuditDetail(userDetails: UserDetails, request: Option[JsValue], response: AuditResponse)(implicit
-          ctx: RequestContext): GenericAuditDetail =
-        GenericAuditDetail(
-          userDetails = userDetails,
-          params = params,
-          request = request,
-          `X-CorrelationId` = ctx.correlationId,
-          response = response
-        )
-
-    }
 
 }

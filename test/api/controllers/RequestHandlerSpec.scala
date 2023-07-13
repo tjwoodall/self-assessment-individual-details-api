@@ -42,7 +42,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class RequestHandlerSpec
-    extends UnitSpec
+  extends UnitSpec
     with MockAuditService
     with MockHateoasFactory
     with MockIdGenerator
@@ -52,15 +52,16 @@ class RequestHandlerSpec
     with ControllerSpecHateoasSupport {
 
   private val successResponseJson = Json.obj("result" -> "SUCCESS!")
-  private val successCode         = Status.ACCEPTED
+  private val successCode = Status.ACCEPTED
 
   private val generatedCorrelationId = "generatedCorrelationId"
-  private val serviceCorrelationId   = "serviceCorrelationId"
+  private val serviceCorrelationId = "serviceCorrelationId"
+  private val userDetails = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
+  private val mockService = mock[DummyService]
+  private val mockValidator = mock[Validator[InputRaw.type, Input.type]]
 
-  case object InputRaw extends RawData
-  case object Input
-  case object Output { implicit val writes: OWrites[Output.type] = _ => successResponseJson }
-  case object HData extends HateoasData
+  private def service =
+    (mockService.service(_: Input.type)(_: RequestContext, _: ExecutionContext)).expects(Input, *, *)
 
   implicit object HLinksFactory extends HateoasLinksFactory[Output.type, HData.type] {
     override def links(appConfig: AppConfig, data: HData.type): Seq[Link] = hateoaslinks
@@ -71,24 +72,26 @@ class RequestHandlerSpec
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
 
-  implicit val hc: HeaderCarrier                    = HeaderCarrier()
-  implicit val ctx: RequestContext                  = RequestContext.from(mockIdGenerator, endpointLogContext)
-  private val userDetails                           = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+
+  private def parseAndValidateRequest =
+    (mockValidator.parseAndValidateRequest(_: InputRaw.type)(_: String)).expects(InputRaw, *)
   implicit val userRequest: UserRequest[AnyContent] = UserRequest[AnyContent](userDetails, FakeRequest())
 
   trait DummyService {
     def service(input: Input.type)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Output.type]]
   }
 
-  private val mockService = mock[DummyService]
+  case object InputRaw extends RawData
 
-  private def service =
-    (mockService.service(_: Input.type)(_: RequestContext, _: ExecutionContext)).expects(Input, *, *)
+  case object Input
 
-  private val mockValidator = mock[Validator[InputRaw.type, Input.type]]
+  case object Output {
+    implicit val writes: OWrites[Output.type] = _ => successResponseJson
+  }
 
-  private def parseAndValidateRequest =
-    (mockValidator.parseAndValidateRequest(_: InputRaw.type)(_: String)).expects(InputRaw, *)
+  case object HData extends HateoasData
 
   "RequestHandler" when {
     "a request is successful" must {
@@ -182,7 +185,7 @@ class RequestHandlerSpec
       val params = Map("param" -> "value")
 
       val auditType = "type"
-      val txName    = "txName"
+      val txName = "txName"
 
       val requestBody = Some(JsString("REQUEST BODY"))
 

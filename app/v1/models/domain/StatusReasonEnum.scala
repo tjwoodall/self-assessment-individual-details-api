@@ -24,6 +24,7 @@ sealed trait StatusReasonEnum {
 }
 
 object StatusReasonEnum {
+  val parser: PartialFunction[String, StatusReasonEnum] = Enums.parser[StatusReasonEnum]
 
   case object `Sign up - return available` extends StatusReasonEnum {
     val downstreamValue = "Sign up - return available"
@@ -57,10 +58,9 @@ object StatusReasonEnum {
     val downstreamValue = "Reinstated income source"
   }
 
+  implicit val format: Format[StatusReasonEnum] = Enums.format[StatusReasonEnum]
+
   case object Rollover extends StatusReasonEnum {
     val downstreamValue = "Rollover"
   }
-
-  implicit val format: Format[StatusReasonEnum]         = Enums.format[StatusReasonEnum]
-  val parser: PartialFunction[String, StatusReasonEnum] = Enums.parser[StatusReasonEnum]
 }

@@ -31,28 +31,30 @@ class HateoasWrapperSpec extends UnitSpec {
   "HateoasWrapper writes" must {
     "place links alongside wrapped object fields" in {
       Json.toJson(HateoasWrapper(TestMtdResponse("value1", 123), Seq(Link("/some/resource", GET, "thing")))) shouldBe
-        Json.parse("""
-                     |{
-                     |"field1": "value1",
-                     |"field2": 123,
-                     |"links" : [
-                     |  {
-                     |    "href": "/some/resource",
-                     |    "rel": "thing",
-                     |    "method": "GET"
-                     |  }
-                     | ]
-                     |}
+        Json.parse(
+          """
+            |{
+            |"field1": "value1",
+            |"field2": 123,
+            |"links" : [
+            |  {
+            |    "href": "/some/resource",
+            |    "rel": "thing",
+            |    "method": "GET"
+            |  }
+            | ]
+            |}
       """.stripMargin)
     }
 
     "not write links array if there are no links" in {
       Json.toJson(HateoasWrapper(TestMtdResponse("value1", 123), Nil)) shouldBe
-        Json.parse("""
-                     |{
-                     |"field1": "value1",
-                     |"field2": 123
-                     |}
+        Json.parse(
+          """
+            |{
+            |"field1": "value1",
+            |"field2": 123
+            |}
     """.stripMargin)
     }
   }
@@ -60,16 +62,17 @@ class HateoasWrapperSpec extends UnitSpec {
   "HateoasWrapper writesEmpty" must {
     "write links" in {
       Json.toJson(HateoasWrapper((), Seq(Link("/some/resource", GET, "thing")))) shouldBe
-        Json.parse("""
-                     |{
-                     |  "links" : [
-                     |    {
-                     |      "href": "/some/resource",
-                     |      "rel": "thing",
-                     |      "method": "GET"
-                     |    }
-                     |  ]
-                     |}
+        Json.parse(
+          """
+            |{
+            |  "links" : [
+            |    {
+            |      "href": "/some/resource",
+            |      "rel": "thing",
+            |      "method": "GET"
+            |    }
+            |  ]
+            |}
       """.stripMargin)
     }
 

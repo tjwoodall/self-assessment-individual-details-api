@@ -25,14 +25,14 @@ class FeatureSwitchesSpec extends UnitSpec {
     "be enabled" when {
 
       "absent from the config" in {
-        val configuration   = Configuration.empty
+        val configuration = Configuration.empty
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isEnabled("some-key.enabled") shouldBe true
       }
 
       "explicitly true" in {
-        val configuration   = Configuration("some-key.enabled" -> true)
+        val configuration = Configuration("some-key.enabled" -> true)
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isEnabled("some-key.enabled") shouldBe true
@@ -41,7 +41,7 @@ class FeatureSwitchesSpec extends UnitSpec {
 
     "be disabled" when {
       "explicitly false" in {
-        val configuration   = Configuration("some-key.enabled" -> false)
+        val configuration = Configuration("some-key.enabled" -> false)
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isEnabled("some-key.enabled") shouldBe false

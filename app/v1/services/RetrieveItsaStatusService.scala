@@ -27,22 +27,22 @@ import v1.models.response.RetrieveItsaStatusResponse
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusService @Inject() (connector: RetrieveItsaStatusConnector) extends BaseService {
-
-  def retrieve(
-      request: RetrieveItsaStatusRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveItsaStatusResponse]] =
-    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+class RetrieveItsaStatusService @Inject()(connector: RetrieveItsaStatusConnector) extends BaseService {
 
   private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_FUTURES_YEAR"      -> FutureYearsFormatError,
-      "INVALID_HISTORY"           -> HistoryFormatError,
-      "INVALID_CORRELATION_ID"    -> InternalError,
-      "NOT_FOUND"                 -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_FUTURES_YEAR" -> FutureYearsFormatError,
+      "INVALID_HISTORY" -> HistoryFormatError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "NOT_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
+
+  def retrieve(
+                request: RetrieveItsaStatusRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveItsaStatusResponse]] =
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
 }

@@ -22,12 +22,12 @@ import api.models.request.RawData
 import utils.Logging
 
 object Validator {
-  type PreParseValidationCaller[A <: RawData]  = A => Seq[MtdError]
+  type PreParseValidationCaller[A <: RawData] = A => Seq[MtdError]
   type PreParseValidationCallers[A <: RawData] = Seq[PreParseValidationCaller[A]]
 
   type ParserValidationCaller[A <: RawData, PARSED] = A => Either[Seq[MtdError], PARSED]
 
-  type PostParseValidationCaller[PARSED]  = PARSED => Seq[MtdError]
+  type PostParseValidationCaller[PARSED] = PARSED => Seq[MtdError]
   type PostParseValidationCallers[PARSED] = Seq[PostParseValidationCaller[PARSED]]
 }
 
@@ -44,18 +44,18 @@ trait Validator[RAW <: RawData, PARSED] extends Logging {
 
   def parseAndValidate(data: RAW): Either[Seq[MtdError], PARSED] = {
     for {
-      _      <- runPreParseValidations(data)
+      _ <- runPreParseValidations(data)
       parsed <- runParserValidation(data)
-      _      <- runPostParseValidations(parsed)
+      _ <- runPostParseValidations(parsed)
 
     } yield parsed
   }
 
   private def runPreParseValidations(data: RAW): Either[Seq[MtdError], RAW] = {
-    val errors = preParserValidations.flatMap(_(data))
+    val errors = preParserValidations.flatMap(_ (data))
     errors match {
       case _ if errors.nonEmpty => Left(errors)
-      case _                    => Right(data)
+      case _ => Right(data)
     }
   }
 
@@ -64,10 +64,10 @@ trait Validator[RAW <: RawData, PARSED] extends Logging {
   }
 
   private def runPostParseValidations(parsed: PARSED): Either[Seq[MtdError], PARSED] = {
-    val errors = postParserValidations.flatMap(_(parsed))
+    val errors = postParserValidations.flatMap(_ (parsed))
     errors match {
       case _ if errors.nonEmpty => Left(errors)
-      case _                    => Right(parsed)
+      case _ => Right(parsed)
     }
   }
 

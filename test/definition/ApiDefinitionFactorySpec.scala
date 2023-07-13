@@ -25,12 +25,12 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ApiDefinitionFactorySpec extends UnitSpec {
 
+  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
+
   class Test extends MockHttpClient with MockAppConfig {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
     MockedAppConfig.apiGatewayContext returns "individuals/person"
   }
-
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "definition" when {
     "called" should {
@@ -48,8 +48,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.endpointsEnabled("1.0") returns true
         MockedAppConfig.confidenceLevelCheckEnabled.returns(confidenceLevelConfig).anyNumberOfTimes()
 
-        val readScope: String                = "read:self-assessment"
-        val writeScope: String               = "write:self-assessment"
+        val readScope: String = "read:self-assessment"
+        val writeScope: String = "write:self-assessment"
         val confidenceLevel: ConfidenceLevel = if (confidenceLevelConfig.authValidationEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
 
         apiDefinitionFactory.definition shouldBe
