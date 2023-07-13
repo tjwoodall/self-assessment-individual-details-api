@@ -23,36 +23,38 @@ class TimestampSpec extends UnitSpec {
 
   private val response = AnyDownstreamResponse(3, "payments", Timestamp("2023-01-20T01:20:30.000Z"))
 
-  private val responseJs = Json.parse(""" {
-                                        |   "amount": 3,
-                                        |   "category": "payments",
-                                        |   "lastUpdated": "2023-01-20T01:20:30.000Z"
-                                        | }
-                                        | """.stripMargin)
+  private val responseJs = Json.parse(
+    """ {
+      |   "amount": 3,
+      |   "category": "payments",
+      |   "lastUpdated": "2023-01-20T01:20:30.000Z"
+      | }
+      | """.stripMargin)
 
-  private val responseJsNoMillis = Json.parse(""" {
-                                                |   "amount": 3,
-                                                |   "category": "payments",
-                                                |   "lastUpdated": "2023-01-20T01:20:30Z"
-                                                | }
-                                                | """.stripMargin)
+  private val responseJsNoMillis = Json.parse(
+    """ {
+      |   "amount": 3,
+      |   "category": "payments",
+      |   "lastUpdated": "2023-01-20T01:20:30Z"
+      | }
+      | """.stripMargin)
 
   "Timestamp.apply()" should {
     "parse correctly and return a ts with milliseconds" when {
       "given a ts without milliseconds" in {
-        val str    = "2023-01-20T01:20:30Z"
+        val str = "2023-01-20T01:20:30Z"
         val result = Timestamp(str)
         result.value shouldBe "2023-01-20T01:20:30.000Z"
       }
 
       "given a ts with milliseconds" in {
-        val str    = "2023-01-20T01:20:30.123Z"
+        val str = "2023-01-20T01:20:30.123Z"
         val result = Timestamp(str)
         result.value shouldBe str
       }
 
       "given a ts with > millisecond precision" in {
-        val str    = "2023-01-20T01:20:30.123456789Z"
+        val str = "2023-01-20T01:20:30.123456789Z"
         val result = Timestamp(str)
         result.value shouldBe "2023-01-20T01:20:30.123Z"
       }
@@ -84,7 +86,7 @@ class TimestampSpec extends UnitSpec {
   private case class AnyDownstreamResponse(amount: Int, category: String, lastUpdated: Timestamp)
 
   private object AnyDownstreamResponse {
-    implicit val reads: Reads[AnyDownstreamResponse]    = Json.reads[AnyDownstreamResponse]
+    implicit val reads: Reads[AnyDownstreamResponse] = Json.reads[AnyDownstreamResponse]
     implicit val writes: OWrites[AnyDownstreamResponse] = Json.writes[AnyDownstreamResponse]
   }
 

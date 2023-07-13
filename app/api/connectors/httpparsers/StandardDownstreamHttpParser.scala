@@ -26,9 +26,9 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object StandardDownstreamHttpParser extends HttpParser {
 
-  case class SuccessCode(status: Int) extends AnyVal
-
   override lazy val logger: Logger = Logger(this.getClass)
+
+  case class SuccessCode(status: Int) extends AnyVal
 
   implicit def readsEmpty(implicit successCode: SuccessCode = SuccessCode(NO_CONTENT)): HttpReads[DownstreamOutcome[Unit]] =
     (_: String, url: String, response: HttpResponse) =>
@@ -41,12 +41,12 @@ object StandardDownstreamHttpParser extends HttpParser {
       doRead(url, response) { correlationId =>
         response.validateJson[A] match {
           case Some(ref) => Right(ResponseWrapper(correlationId, ref))
-          case None      => Left(ResponseWrapper(correlationId, OutboundError(InternalError)))
+          case None => Left(ResponseWrapper(correlationId, OutboundError(InternalError)))
         }
       }
 
   private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(implicit
-      successCode: SuccessCode): DownstreamOutcome[A] = {
+                                                                                                                    successCode: SuccessCode): DownstreamOutcome[A] = {
 
     val correlationId = retrieveCorrelationId(response)
 

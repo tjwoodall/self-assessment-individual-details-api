@@ -1,6 +1,7 @@
 Self Assessment Individual Details API
 ========================
 This API allows developers to perform operations related to Individuals/Taxable Entities for Income Tax Self Assessment:
+
 - Retrieve ITSA status for a given NINO for a specified tax year and optionally for future years
 
 ## Requirements
@@ -32,13 +33,15 @@ following contents:
 
 ## Viewing OAS
 
-To view documentation locally ensure the Self Assessment Individual Details API is running, and run api-documentation-frontend:
+To view documentation locally ensure the Self Assessment Individual Details API is running, and run
+api-documentation-frontend:
 
 ```
 ./run_local_with_dependencies.sh
 ```
 
-Then go to http://localhost:9680/api-documentation/docs/openapi/preview and enter the full URL path to the YAML file with the
+Then go to http://localhost:9680/api-documentation/docs/openapi/preview and enter the full URL path to the YAML file
+with the
 appropriate port and version:
 
 ```

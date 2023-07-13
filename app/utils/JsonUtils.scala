@@ -29,7 +29,7 @@ trait JsonUtils {
     def mapEmptySeqToNone: Reads[Option[Seq[A]]] =
       reads.map {
         case Some(Nil) => None
-        case other     => other
+        case other => other
       }
 
   }

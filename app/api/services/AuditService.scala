@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AuditService @Inject() (auditConnector: AuditConnector, appNameConfiguration: Configuration) {
+class AuditService @Inject()(auditConnector: AuditConnector, appNameConfiguration: Configuration) {
 
   def auditEvent[T](event: AuditEvent[T])(implicit hc: HeaderCarrier, ec: ExecutionContext, writer: Writes[T]): Future[AuditResult] = {
 

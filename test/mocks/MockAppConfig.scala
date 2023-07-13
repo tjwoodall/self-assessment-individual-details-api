@@ -27,16 +27,23 @@ trait MockAppConfig extends MockFactory {
 
   object MockedAppConfig {
     // IFS Config
-    def ifsBaseUrl: CallHandler[String]                         = (() => mockAppConfig.ifsBaseUrl).expects()
-    def ifsToken: CallHandler[String]                           = (() => mockAppConfig.ifsToken).expects()
-    def ifsEnvironment: CallHandler[String]                     = (() => mockAppConfig.ifsEnv).expects()
+    def ifsBaseUrl: CallHandler[String] = (() => mockAppConfig.ifsBaseUrl).expects()
+
+    def ifsToken: CallHandler[String] = (() => mockAppConfig.ifsToken).expects()
+
+    def ifsEnvironment: CallHandler[String] = (() => mockAppConfig.ifsEnv).expects()
+
     def ifsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (() => mockAppConfig.ifsEnvironmentHeaders).expects()
 
     // MTD IF Lookup Config
-    def mtdIdBaseUrl: CallHandler[String]                       = (() => mockAppConfig.mtdIdBaseUrl).expects()
-    def featureSwitches: CallHandler[Configuration]             = (() => mockAppConfig.featureSwitches).expects()
-    def apiGatewayContext: CallHandler[String]                  = (() => mockAppConfig.apiGatewayContext).expects()
-    def apiStatus(status: String): CallHandler[String]          = (mockAppConfig.apiStatus: String => String).expects(status)
+    def mtdIdBaseUrl: CallHandler[String] = (() => mockAppConfig.mtdIdBaseUrl).expects()
+
+    def featureSwitches: CallHandler[Configuration] = (() => mockAppConfig.featureSwitches).expects()
+
+    def apiGatewayContext: CallHandler[String] = (() => mockAppConfig.apiGatewayContext).expects()
+
+    def apiStatus(status: String): CallHandler[String] = (mockAppConfig.apiStatus: String => String).expects(status)
+
     def endpointsEnabled(version: String): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: String => Boolean).expects(version)
 
     def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] =

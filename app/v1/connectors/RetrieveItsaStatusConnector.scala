@@ -27,12 +27,12 @@ import v1.models.response.RetrieveItsaStatusResponse
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveItsaStatusConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveItsaStatusRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveItsaStatusResponse]] = {
+                                                   hc: HeaderCarrier,
+                                                   ec: ExecutionContext,
+                                                   correlationId: String): Future[DownstreamOutcome[RetrieveItsaStatusResponse]] = {
 
     import request._
 

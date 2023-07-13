@@ -35,7 +35,7 @@ trait MockRetrieveItsaStatusValidator extends MockFactory {
     }
 
     def parseAndValidate(
-        data: RetrieveItsaStatusRawData): CallHandler1[RetrieveItsaStatusRawData, Either[Seq[MtdError], RetrieveItsaStatusRequest]] = {
+                          data: RetrieveItsaStatusRawData): CallHandler1[RetrieveItsaStatusRawData, Either[Seq[MtdError], RetrieveItsaStatusRequest]] = {
 
       (mockRetrieveItsaStatusValidator
         .parseAndValidate(_: RetrieveItsaStatusRawData))

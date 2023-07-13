@@ -56,10 +56,10 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String        = requestNino
-            override val mtdTaxYear: String  = requestTaxYear
+            override val nino: String = requestNino
+            override val mtdTaxYear: String = requestTaxYear
             override val futureYears: String = requestFutureYears
-            override val history: String     = requestHistory
+            override val history: String = requestHistory
 
             val response: WSResponse = await(request.withQueryStringParameters("futureYears" -> futureYears, "history" -> history).get())
             response.status shouldBe expectedStatus
@@ -117,11 +117,11 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String                   = "AA123456A"
-    val mtdTaxYear: String             = "2023-24"
     lazy val downstreamTaxYear: String = TaxYear.fromMtd(mtdTaxYear).asTysDownstream
-    val futureYears: String            = "true"
-    val history: String                = "true"
+    val nino: String = "AA123456A"
+    val mtdTaxYear: String = "2023-24"
+    val futureYears: String = "true"
+    val history: String = "true"
 
     val downstreamResponse: JsValue = Json.parse(
       """
@@ -161,11 +161,7 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
-    def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
-
     def downstreamUri: String = s"/income-tax/$nino/person-itd/itsa-status/$downstreamTaxYear"
-
-    def setupStubs(): Unit = {}
 
     def request: WSRequest = {
       AuditStub.audit()
@@ -178,6 +174,10 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
+
+    def setupStubs(): Unit = {}
 
   }
 

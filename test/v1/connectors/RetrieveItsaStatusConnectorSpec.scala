@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
 
-  private val nino: String     = "AA111111A"
+  private val nino: String = "AA111111A"
   private val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
   "RetrieveItsaStatusConnector" should {
@@ -40,7 +40,8 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
 
     val connector: RetrieveItsaStatusConnector = new RetrieveItsaStatusConnector(
       http = mockHttpClient,

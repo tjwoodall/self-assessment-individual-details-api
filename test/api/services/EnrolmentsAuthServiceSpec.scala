@@ -22,10 +22,11 @@ import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, CompositePredicate, AlternatePredicate, Predicate}
+import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
@@ -105,7 +106,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig()
 
         val retrievalsResult = new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))
-        val expected         = Right(UserDetails("", "Individual", None))
+        val expected = Right(UserDetails("", "Individual", None))
 
         MockedAuthConnector
           .authorised(extraPredicatesAnd(EmptyPredicate), authRetrievals)
@@ -123,7 +124,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
         val retrievalsResult = new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))
-        val expected         = Right(UserDetails("", "Individual", None))
+        val expected = Right(UserDetails("", "Individual", None))
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
@@ -141,7 +142,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
         val retrievalsResult = new ~(Some(AffinityGroup.Organisation), Enrolments(Set.empty))
-        val expected         = Right(UserDetails("", "Organisation", None))
+        val expected = Right(UserDetails("", "Organisation", None))
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
@@ -240,21 +241,9 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
   }
 
   trait Test {
-    val mockAuthConnector: AuthConnector = mock[AuthConnector]
-
-    val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
-
-    object MockedAuthConnector {
-
-      def authorised[A](predicate: Predicate, retrievals: Retrieval[A]): CallHandler[Future[A]] = {
-        (mockAuthConnector
-          .authorise[A](_: Predicate, _: Retrieval[A])(_: HeaderCarrier, _: ExecutionContext))
-          .expects(predicate, retrievals, *, *)
-      }
-
-    }
-
     lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
+    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {
       MockedAppConfig.confidenceLevelCheckEnabled.returns(
@@ -264,6 +253,16 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           authValidationEnabled = authValidationEnabled
         )
       )
+    }
+
+    object MockedAuthConnector {
+
+      def authorised[A](predicate: Predicate, retrievals: Retrieval[A]): CallHandler[Future[A]] = {
+        (mockAuthConnector
+          .authorise[A](_: Predicate, _: Retrieval[A])(_: HeaderCarrier, _: ExecutionContext))
+          .expects(predicate, retrievals, *, *)
+      }
+
     }
 
   }

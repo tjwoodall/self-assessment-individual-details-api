@@ -46,37 +46,37 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
   lazy val fakeDeleteRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withHeaders(
     HeaderNames.AUTHORIZATION -> "Bearer Token"
   )
+  val testHateoasLinks: Seq[Link] =
+    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
+  val testHateoasLinksJson: JsObject = Json
+    .parse(
+      """{
+        |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
+        |}
+        |""".stripMargin)
+    .as[JsObject]
 
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 
   def fakePutRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
-
-  val testHateoasLinks: Seq[Link] =
-    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
-
-  val testHateoasLinksJson: JsObject = Json
-    .parse("""{
-             |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
-             |}
-             |""".stripMargin)
-    .as[JsObject]
 
   def withPath(error: MtdError): MtdError = error.copy(paths = Some(Seq("/somePath")))
 
   def defaultDownstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
 }
 
-trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator { _: ControllerBaseSpec =>
-  protected val nino: String  = validNino
+trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator {
+  _: ControllerBaseSpec =>
+  protected val nino: String = validNino
   protected val correlationId = "X-123"
 
   trait ControllerTest {
@@ -94,7 +94,7 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
 
       maybeExpectedResponseBody match {
         case Some(jsBody) => contentAsJson(result) shouldBe jsBody
-        case None         => contentType(result) shouldBe empty
+        case None => contentType(result) shouldBe empty
       }
     }
 
@@ -123,14 +123,14 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
       checkAuditOkEvent(expectedStatus, maybeAuditRequestBody, maybeAuditResponseBody)
     }
 
-    protected def runErrorTestWithAudit(expectedError: MtdError, maybeAuditRequestBody: Option[JsValue] = None): Unit = {
-      runErrorTest(expectedError)
-      checkAuditErrorEvent(expectedError, maybeAuditRequestBody)
-    }
-
     protected def checkAuditOkEvent(expectedStatus: Int, maybeRequestBody: Option[JsValue], maybeAuditResponseBody: Option[JsValue]): Unit = {
       val auditResponse: AuditResponse = AuditResponse(expectedStatus, None, maybeAuditResponseBody)
       MockedAuditService.verifyAuditEvent(event(auditResponse, maybeRequestBody)).once()
+    }
+
+    protected def runErrorTestWithAudit(expectedError: MtdError, maybeAuditRequestBody: Option[JsValue] = None): Unit = {
+      runErrorTest(expectedError)
+      checkAuditErrorEvent(expectedError, maybeAuditRequestBody)
     }
 
     protected def checkAuditErrorEvent(expectedError: MtdError, maybeRequestBody: Option[JsValue]): Unit = {

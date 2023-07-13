@@ -22,7 +22,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
-case class Timestamp private (value: String) extends AnyVal {
+case class Timestamp private(value: String) extends AnyVal {
   override def toString: String = value
 }
 
@@ -33,12 +33,12 @@ object Timestamp {
   /** Adds milliseconds to the timestamp string if not already present.
     */
   def apply(value: String): Timestamp = {
-    val ts  = ISO_DATE_TIME.parse(value)
-    val dt  = ZonedDateTime.from(ts)
+    val ts = ISO_DATE_TIME.parse(value)
+    val dt = ZonedDateTime.from(ts)
     val str = dt.format(formatter)
     new Timestamp(str)
   }
 
-  implicit val reads: Reads[Timestamp]   = Reads.of[String].map(Timestamp(_))
+  implicit val reads: Reads[Timestamp] = Reads.of[String].map(Timestamp(_))
   implicit val writes: Writes[Timestamp] = ts => JsString(ts.value)
 }

@@ -25,25 +25,25 @@ class BooleanValidationSpec extends UnitSpec with JsonErrorValidators {
   "validate" should {
     "return no errors" when {
       "when the string true is supplied" in {
-        val validBoolean     = "true"
+        val validBoolean = "true"
         val result = BooleanValidation.validate(validBoolean, BadRequestError)
         result shouldBe Nil
       }
 
       "when the upper case string TRUE is supplied" in {
-        val validBoolean     = "TRUE"
+        val validBoolean = "TRUE"
         val result = BooleanValidation.validate(validBoolean, BadRequestError)
         result shouldBe Nil
       }
 
       "when the string false is supplied" in {
-        val validBoolean     = "false"
+        val validBoolean = "false"
         val result = BooleanValidation.validate(validBoolean, BadRequestError)
         result shouldBe Nil
       }
 
       "when the optional string true is supplied" in {
-        val validBoolean     = Some("true")
+        val validBoolean = Some("true")
         val result = BooleanValidation.validate(validBoolean, BadRequestError)
         result shouldBe Nil
       }
@@ -51,13 +51,13 @@ class BooleanValidationSpec extends UnitSpec with JsonErrorValidators {
 
     "return an error" when {
       "when an invalid string is supplied" in {
-        val invalidBoolean   = "invalid"
+        val invalidBoolean = "invalid"
         val result = BooleanValidation.validate(invalidBoolean, BadRequestError)
         result shouldBe List(BadRequestError)
       }
 
       "when an invalid optional string is supplied" in {
-        val invalidBoolean   = Some("invalid")
+        val invalidBoolean = Some("invalid")
         val result = BooleanValidation.validate(invalidBoolean, BadRequestError)
         result shouldBe List(BadRequestError)
       }
