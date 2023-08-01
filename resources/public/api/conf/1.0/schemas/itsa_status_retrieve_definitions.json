@@ -26,7 +26,7 @@
     },
     "statusReason": {
       "type": "string",
-      "description": "The reason for the ITSA Status. Values are 00 = Sign up - return available; 01 = Sign up - no return available; 02 = ITSA final declaration; 03 = ITSA Q4 declaration; 04 = CESA SA return; 05 = Complex; 06 = Ceased income source; 07 = Reinstated income source; 08 = Rollover.",
+      "description": "The reason for the ITSA Status. Values are 00 = Sign up - return available; 01 = Sign up - no return available; 02 = ITSA final declaration; 03 = ITSA Q4 declaration; 04 = CESA SA return; 05 = Complex; 06 = Ceased income source; 07 = Reinstated income source; 08 = Rollover; 09 = Income Source Latency Changes.",
       "enum": [
         "Sign up - return available",
         "Sign up - no return available",
@@ -36,7 +36,8 @@
         "Complex",
         "Ceased income source",
         "Reinstated income source",
-        "Rollover"
+        "Rollover",
+        "Income Source Latency Changes"
       ]
     },
     "businessIncomePriorTo2Years": {

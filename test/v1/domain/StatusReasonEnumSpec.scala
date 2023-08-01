@@ -31,7 +31,8 @@ class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {
     ("Complex", StatusReasonEnum.Complex),
     ("Ceased income source", StatusReasonEnum.`Ceased income source`),
     ("Reinstated income source", StatusReasonEnum.`Reinstated income source`),
-    ("Rollover", StatusReasonEnum.Rollover)
+    ("Rollover", StatusReasonEnum.Rollover),
+    ("Income Source Latency Changes", StatusReasonEnum.`Income Source Latency Changes`)
   )
 
 }
