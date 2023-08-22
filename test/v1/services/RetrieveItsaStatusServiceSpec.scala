@@ -22,9 +22,10 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.connectors.MockRetrieveItsaStatusConnector
+import v1.connectors.MockRetrieveItsaStatusConnector
 import v1.models.domain.{StatusEnum, StatusReasonEnum}
-import v1.models.request.RetrieveItsaStatusRequest
+import v1.models.errors.{FutureYearsFormatError, HistoryFormatError}
+import v1.models.request.RetrieveItsaStatusRequestData
 import v1.models.response.{ItsaStatusDetails, ItsaStatuses, RetrieveItsaStatusResponse}
 
 import scala.concurrent.Future
@@ -76,7 +77,8 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec {
     private val nino    = "AA112233A"
     private val taxYear = "2019-20"
 
-    val request: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(Nino(nino), TaxYear.fromMtd(taxYear), futureYears = true, history = true)
+    val request: RetrieveItsaStatusRequestData =
+      RetrieveItsaStatusRequestData(Nino(nino), TaxYear.fromMtd(taxYear), futureYears = true, history = true)
 
     val itsaStatusDetails: ItsaStatusDetails = ItsaStatusDetails(
       submittedOn = "2023-05-23T12:29:27.566Z",

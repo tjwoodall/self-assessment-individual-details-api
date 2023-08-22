@@ -17,42 +17,34 @@
 package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas.HateoasLinks
-import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, FutureYearsFormatError, NinoFormatError}
+import api.models.domain.TaxYear
+import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.{JsValue, Json}
+import config.MockAppConfig
+import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.mocks.services.MockRetrieveItsaStatusService
-import v1.mocks.validators.MockRetrieveItsaStatusValidator
+import v1.controllers.validators.MockRetrieveItsaStatusValidatorFactory
 import v1.models.domain.{StatusEnum, StatusReasonEnum}
-import v1.models.request.{RetrieveItsaStatusRawData, RetrieveItsaStatusRequest}
+import v1.models.errors.FutureYearsFormatError
+import v1.models.request.RetrieveItsaStatusRequestData
 import v1.models.response.{ItsaStatusDetails, ItsaStatuses, RetrieveItsaStatusResponse}
+import v1.services.MockRetrieveItsaStatusService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveItsaStatusControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveItsaStatusService
-    with MockHateoasFactory
-    with MockRetrieveItsaStatusValidator
-    with HateoasLinks {
+    with MockRetrieveItsaStatusValidatorFactory
+    with MockAppConfig {
 
-  val taxYear: String = "2023-24"
+  private val taxYear = TaxYear.fromMtd("2023-24")
 
-  val rawData: RetrieveItsaStatusRawData = RetrieveItsaStatusRawData(
+  val requestData: RetrieveItsaStatusRequestData = RetrieveItsaStatusRequestData(
     nino = nino,
     taxYear = taxYear,
-    futureYears = None,
-    history = None
-  )
-
-  val requestData: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
     futureYears = false,
     history = false
   )
@@ -65,15 +57,15 @@ class RetrieveItsaStatusControllerSpec
   )
 
   val itsaStatuses: ItsaStatuses = ItsaStatuses(
-    taxYear = taxYear,
-    itsaStatusDetails = Some(Seq(itsaStatusDetails))
+    taxYear = taxYear.asMtd,
+    itsaStatusDetails = Some(List(itsaStatusDetails))
   )
 
   val responseModel: RetrieveItsaStatusResponse = RetrieveItsaStatusResponse(
-    itsaStatuses = Seq(itsaStatuses)
+    itsaStatuses = List(itsaStatuses)
   )
 
-  val mtdResponse: JsValue = Json.parse(
+  private val mtdResponse = Json.parse(
     """
       |{
       |  "itsaStatuses": [
@@ -93,12 +85,10 @@ class RetrieveItsaStatusControllerSpec
     """.stripMargin
   )
 
-  "RetrieveItsaStatusController" should {
+  "retrieve" should {
     "return OK" when {
-      "a valid request is made" in new Test {
-        MockedRetrieveItsaStatusValidator
-          .parseAndValidateRequest(rawData)
-          .returns(Right(requestData))
+      "the request is valid" in new Test {
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveItsaStatusService
           .retrieve(requestData)
@@ -110,17 +100,12 @@ class RetrieveItsaStatusControllerSpec
 
     "return the error as per spec" when {
       "the validation fails" in new Test {
-        MockedRetrieveItsaStatusValidator
-          .parseAndValidateRequest(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockedRetrieveItsaStatusValidator
-          .parseAndValidateRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveItsaStatusService
           .retrieve(requestData)
@@ -136,15 +121,13 @@ class RetrieveItsaStatusControllerSpec
     val controller = new RetrieveItsaStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      validator = mockRetrieveItsaStatusValidator,
+      validatorFactory = mockRetrieveItsaStatusValidatorFactory,
       service = mockRetrieveItsaStatusService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieveItsaStatus(nino, taxYear, None, None)(fakeGetRequest)
-
+    protected def callController(): Future[Result] = controller.retrieveItsaStatus(nino.nino, taxYear.asMtd, None, None)(fakeGetRequest)
   }
 
 }

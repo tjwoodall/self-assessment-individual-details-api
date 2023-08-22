@@ -16,7 +16,7 @@
 
 package api.connectors
 
-import mocks.{MockAppConfig, MockHttpClient}
+import config.MockAppConfig
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import support.UnitSpec
@@ -29,12 +29,12 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
   lazy val baseUrl = "http://test-BaseUrl"
 
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
+  implicit val hc: HeaderCarrier     = HeaderCarrier()
+  implicit val ec: ExecutionContext  = scala.concurrent.ExecutionContext.global
 
   val otherHeaders: Seq[(String, String)] = List(
     "Gov-Test-Scenario" -> "DEFAULT",
-    "AnotherHeader" -> "HeaderValue"
+    "AnotherHeader"     -> "HeaderValue"
   )
 
   val dummyIfsHeaderCarrierConfig: HeaderCarrier.Config =
@@ -61,7 +61,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
   )
 
   val requiredIfsHeaders: Seq[(String, String)] = List(
-    "Environment" -> "ifs-environment",
+    "Environment"   -> "ifs-environment",
     "Authorization" -> s"Bearer ifs-token",
     "CorrelationId" -> s"$correlationId"
   )

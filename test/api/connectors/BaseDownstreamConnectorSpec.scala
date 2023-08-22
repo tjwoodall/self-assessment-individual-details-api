@@ -18,17 +18,16 @@ package api.connectors
 
 import api.connectors.DownstreamUri.IfsUri
 import api.models.outcomes.ResponseWrapper
-import config.AppConfig
-import mocks.{MockAppConfig, MockHttpClient}
+import config.{AppConfig, MockAppConfig}
 import uk.gov.hmrc.http.{HttpClient, HttpReads}
 
 import scala.concurrent.Future
 
 class BaseDownstreamConnectorSpec extends ConnectorSpec {
   // WLOG
-  val body = "body"
-  val outcome = Right(ResponseWrapper(correlationId, Result(2)))
-  val url = "some/url?param=value"
+  val body        = "body"
+  val outcome     = Right(ResponseWrapper(correlationId, Result(2)))
+  val url         = "some/url?param=value"
   val absoluteUrl = s"$baseUrl/$url"
 
   // WLOG
@@ -138,7 +137,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: BaseDownstreamConnector = new BaseDownstreamConnector {
-      val http: HttpClient = mockHttpClient
+      val http: HttpClient     = mockHttpClient
       val appConfig: AppConfig = mockAppConfig
     }
 

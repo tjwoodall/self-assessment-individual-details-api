@@ -17,13 +17,13 @@
 package api.connectors
 
 import api.models.errors.InternalError
-import mocks.{MockAppConfig, MockHttpClient}
+import config.MockAppConfig
 
 import scala.concurrent.Future
 
 class MtdIdLookupConnectorSpec extends ConnectorSpec {
 
-  val nino = "test-nino"
+  val nino  = "test-nino"
   val mtdId = "test-mtdId"
 
   class Test extends MockHttpClient with MockAppConfig {

@@ -18,8 +18,7 @@ package api.services
 
 import api.models.auth.UserDetails
 import api.models.errors.{ClientNotAuthenticatedError, InternalError}
-import config.ConfidenceLevelConfig
-import mocks.MockAppConfig
+import config.{ConfidenceLevelConfig, MockAppConfig}
 import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, EmptyPredicate, Predicate}
@@ -106,7 +105,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig()
 
         val retrievalsResult = new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))
-        val expected = Right(UserDetails("", "Individual", None))
+        val expected         = Right(UserDetails("", "Individual", None))
 
         MockedAuthConnector
           .authorised(extraPredicatesAnd(EmptyPredicate), authRetrievals)
@@ -124,7 +123,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
         val retrievalsResult = new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))
-        val expected = Right(UserDetails("", "Individual", None))
+        val expected         = Right(UserDetails("", "Individual", None))
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
@@ -142,7 +141,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
         val retrievalsResult = new ~(Some(AffinityGroup.Organisation), Enrolments(Set.empty))
-        val expected = Right(UserDetails("", "Organisation", None))
+        val expected         = Right(UserDetails("", "Organisation", None))
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
@@ -241,8 +240,8 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
   }
 
   trait Test {
-    lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
-    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    lazy val target                                                   = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
+    val mockAuthConnector: AuthConnector                              = mock[AuthConnector]
     val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {

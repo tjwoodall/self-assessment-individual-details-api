@@ -17,25 +17,23 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
-import v1.controllers.validators.RetrieveItsaStatusValidator
-import v1.models.request.RetrieveItsaStatusRawData
+import v1.controllers.validators.RetrieveItsaStatusValidatorFactory
 import v1.services.RetrieveItsaStatusService
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthService,
-                                             val lookupService: MtdIdLookupService,
-                                             validator: RetrieveItsaStatusValidator,
-                                             service: RetrieveItsaStatusService,
-                                             hateoasFactory: HateoasFactory,
-                                             cc: ControllerComponents,
-                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) {
+class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthService,
+                                              val lookupService: MtdIdLookupService,
+                                              validatorFactory: RetrieveItsaStatusValidatorFactory,
+                                              service: RetrieveItsaStatusService,
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -47,12 +45,7 @@ class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthServ
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData: RetrieveItsaStatusRawData = RetrieveItsaStatusRawData(
-        nino = nino,
-        taxYear = taxYear,
-        futureYears = futureYears,
-        history = history
-      )
+      val validator = validatorFactory.validator(nino, taxYear, futureYears, history)
 
       val requestHandler =
         RequestHandler
@@ -60,7 +53,7 @@ class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthServ
           .withService(service.retrieve)
           .withPlainJsonResult()
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 
 }

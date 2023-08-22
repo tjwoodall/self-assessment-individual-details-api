@@ -20,15 +20,15 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v1.models.domain.{StatusEnum, StatusReasonEnum}
-import v1.models.request.RetrieveItsaStatusRequest
+import v1.models.request.RetrieveItsaStatusRequestData
 import v1.models.response.{ItsaStatusDetails, ItsaStatuses, RetrieveItsaStatusResponse}
 
 import scala.concurrent.Future
 
 class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
 
-  private val nino: String = "AA111111A"
-  private val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+  private val nino    = "AA111111A"
+  private val taxYear = TaxYear.fromMtd("2023-24")
 
   "RetrieveItsaStatusConnector" should {
     "return a 200 status and expected response for a success scenario" in new IfsTest with Test {
@@ -48,7 +48,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    val request: RetrieveItsaStatusRequest = RetrieveItsaStatusRequest(Nino(nino), taxYear, futureYears = true, history = true)
+    val request: RetrieveItsaStatusRequestData = RetrieveItsaStatusRequestData(Nino(nino), taxYear, futureYears = true, history = true)
 
     val itsaStatusDetails: ItsaStatusDetails = ItsaStatusDetails(
       submittedOn = "2023-05-23T12:29:27.566Z",

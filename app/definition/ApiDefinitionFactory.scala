@@ -17,20 +17,24 @@
 package definition
 
 import config.AppConfig
-import definition.Versions._
-import play.api.Logger
+import routing.{Version, Version1}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import utils.Logging
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
+class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
+
+  private val readScope  = "read:self-assessment"
+  private val writeScope = "write:self-assessment"
 
   lazy val confidenceLevel: ConfidenceLevel = {
     val clConfig = appConfig.confidenceLevelConfig
 
     if (clConfig.definitionEnabled) clConfig.confidenceLevel else ConfidenceLevel.L50
   }
+
   lazy val definition: Definition =
     Definition(
       scopes = Seq(
@@ -54,19 +58,16 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         categories = Seq("INCOME_TAX_MTD"),
         versions = Seq(
           APIVersion(
-            version = VERSION_1,
-            status = buildAPIStatus(VERSION_1),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_1)
+            version = Version1,
+            status = buildAPIStatus(Version1),
+            endpointsEnabled = appConfig.endpointsEnabled(Version1)
           )
         ),
         requiresTrust = None
       )
     )
-  private val readScope = "read:self-assessment"
-  private val writeScope = "write:self-assessment"
-  private val logger: Logger = Logger(this.getClass)
 
-  private[definition] def buildAPIStatus(version: String): APIStatus = {
+  private[definition] def buildAPIStatus(version: Version): APIStatus = {
     APIStatus.parser
       .lift(appConfig.apiStatus(version))
       .getOrElse {

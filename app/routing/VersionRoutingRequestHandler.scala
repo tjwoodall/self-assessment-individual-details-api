@@ -17,10 +17,8 @@
 package routing
 
 import api.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
-import config.{AppConfig, FeatureSwitches}
-import definition.Versions
+import config.AppConfig
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
-import play.api.libs.json.Json
 import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader, Results}
 import play.api.routing.Router
 import play.core.DefaultWebCommands
@@ -28,40 +26,41 @@ import play.core.DefaultWebCommands
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMap,
-                                             errorHandler: HttpErrorHandler,
-                                             httpConfiguration: HttpConfiguration,
-                                             config: AppConfig,
-                                             filters: HttpFilters,
-                                             action: DefaultActionBuilder)
-  extends DefaultHttpRequestHandler(
-    webCommands = new DefaultWebCommands,
-    optDevContext = None,
-    router = versionRoutingMap.defaultRouter,
-    errorHandler = errorHandler,
-    configuration = httpConfiguration,
-    filters = filters.filters
-  ) {
+class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingMap,
+                                              errorHandler: HttpErrorHandler,
+                                              httpConfiguration: HttpConfiguration,
+                                              config: AppConfig,
+                                              filters: HttpFilters,
+                                              action: DefaultActionBuilder)
+    extends DefaultHttpRequestHandler(
+      webCommands = new DefaultWebCommands,
+      optDevContext = None,
+      router = versionRoutingMap.defaultRouter,
+      errorHandler = errorHandler,
+      configuration = httpConfiguration,
+      filters = filters.filters
+    ) {
 
-  private val featureSwitch = FeatureSwitches(config.featureSwitches)
+  private val unsupportedVersionAction = action(Results.NotFound(UnsupportedVersionError.asJson))
 
-  private val unsupportedVersionAction = action(Results.NotFound(Json.toJson(UnsupportedVersionError)))
-
-  private val invalidAcceptHeaderError = action(Results.NotAcceptable(Json.toJson(InvalidAcceptHeaderError)))
+  private val invalidAcceptHeaderError = action(Results.NotAcceptable(InvalidAcceptHeaderError.asJson))
 
   override def routeRequest(request: RequestHeader): Option[Handler] = {
 
-    def documentHandler = routeWith(versionRoutingMap.defaultRouter)(request)
+    def documentHandler: Option[Handler] = routeWith(versionRoutingMap.defaultRouter)(request)
 
-    def apiHandler = Versions.getFromRequest(request) match {
-      case Some(version) =>
-        versionRoutingMap.versionRouter(version) match {
-          case Some(versionRouter) if featureSwitch.isVersionEnabled(version) => routeWith(versionRouter)(request)
-          case Some(_) => Some(unsupportedVersionAction)
-          case None => Some(unsupportedVersionAction)
-        }
-      case None => Some(invalidAcceptHeaderError)
-    }
+    def apiHandler: Option[Handler] =
+      Versions.getFromRequest(request) match {
+        case Left(InvalidHeader)   => Some(invalidAcceptHeaderError)
+        case Left(VersionNotFound) => Some(unsupportedVersionAction)
+
+        case Right(version) =>
+          versionRoutingMap.versionRouter(version) match {
+            case Some(versionRouter) if config.endpointsEnabled(version) => routeWith(versionRouter)(request)
+            case Some(_)                                                 => Some(unsupportedVersionAction)
+            case None                                                    => Some(unsupportedVersionAction)
+          }
+      }
 
     documentHandler orElse apiHandler
   }
@@ -71,7 +70,7 @@ class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMa
       .handlerFor(request)
       .orElse {
         if (request.path.endsWith("/")) {
-          val pathWithoutSlash = request.path.dropRight(1)
+          val pathWithoutSlash        = request.path.dropRight(1)
           val requestWithModifiedPath = request.withTarget(request.target.withPath(pathWithoutSlash))
           router.handlerFor(requestWithModifiedPath)
         } else {

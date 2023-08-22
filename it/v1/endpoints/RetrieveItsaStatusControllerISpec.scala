@@ -25,6 +25,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
+import v1.models.errors.{FutureYearsFormatError, HistoryFormatError}
 
 class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
 
@@ -56,10 +57,10 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val mtdTaxYear: String = requestTaxYear
+            override val nino: String        = requestNino
+            override val mtdTaxYear: String  = requestTaxYear
             override val futureYears: String = requestFutureYears
-            override val history: String = requestHistory
+            override val history: String     = requestHistory
 
             val response: WSResponse = await(request.withQueryStringParameters("futureYears" -> futureYears, "history" -> history).get())
             response.status shouldBe expectedStatus
@@ -118,10 +119,11 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     lazy val downstreamTaxYear: String = TaxYear.fromMtd(mtdTaxYear).asTysDownstream
-    val nino: String = "AA123456A"
-    val mtdTaxYear: String = "2023-24"
+
+    val nino: String        = "AA123456A"
+    val mtdTaxYear: String  = "2023-24"
     val futureYears: String = "true"
-    val history: String = "true"
+    val history: String     = "true"
 
     val downstreamResponse: JsValue = Json.parse(
       """

@@ -28,13 +28,8 @@ case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[S
 
   private def allErrors: Seq[MtdError] = errors match {
     case Some(seq) => seq
-    case None => Seq(error)
+    case None      => List(error)
   }
-
-  /** Controller only checks the first/main error code, not the additional errors.
-    */
-  def containsAnyOf(errorsToCheck: MtdError*): Boolean =
-    errorsToCheck.exists(_.code == error.code)
 
 }
 
@@ -46,7 +41,7 @@ object ErrorWrapper {
 
     errorResponse.errors match {
       case Some(errors) if errors.nonEmpty => json + ("errors" -> Json.toJson(errors))
-      case _ => json
+      case _                               => json
     }
   }
 
