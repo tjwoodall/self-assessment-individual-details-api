@@ -17,13 +17,18 @@
 package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import api.models.auth.UserDetails
 import api.models.domain.TaxYear
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
+import api.services.MockAuditService
 import config.MockAppConfig
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v1.controllers.validators.MockRetrieveItsaStatusValidatorFactory
+import v1.models.domain.StatusEnum.`No Status`
+import v1.models.domain.StatusReasonEnum.`Sign up - return available`
 import v1.models.domain.{StatusEnum, StatusReasonEnum}
 import v1.models.errors.FutureYearsFormatError
 import v1.models.request.RetrieveItsaStatusRequestData
@@ -33,15 +38,27 @@ import v1.services.MockRetrieveItsaStatusService
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+
 class RetrieveItsaStatusControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveItsaStatusService
+    with MockAuditService
     with MockRetrieveItsaStatusValidatorFactory
     with MockAppConfig {
 
+  private val versionNumber = "1.0"
   private val taxYear = TaxYear.fromMtd("2023-24")
-
+  val userType: String = "Individual"
+  val userDetails: UserDetails = UserDetails("mtdId", userType, None)
+  val successResponse = RetrieveItsaStatusResponse(itsaStatuses = List(
+    ItsaStatuses(
+      "2023-24",
+      Some(
+        List(
+          ItsaStatusDetails("2023-05-23T12:29:27.566Z", `No Status`, `Sign up - return available`, Some(BigDecimal("23600.99")))
+        )))
+  ))
   val requestData: RetrieveItsaStatusRequestData = RetrieveItsaStatusRequestData(
     nino = nino,
     taxYear = taxYear,
@@ -94,14 +111,14 @@ class RetrieveItsaStatusControllerSpec
           .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponse))
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponse))
       }
     }
 
     "return the error as per spec" when {
       "the validation fails" in new Test {
         willUseValidator(returning(NinoFormatError))
-        runErrorTest(NinoFormatError)
+        runErrorTestWithAudit(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
@@ -111,23 +128,41 @@ class RetrieveItsaStatusControllerSpec
           .retrieve(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, FutureYearsFormatError))))
 
-        runErrorTest(FutureYearsFormatError)
+        runErrorTestWithAudit(FutureYearsFormatError)
       }
     }
   }
 
-  trait Test extends ControllerTest {
+  trait Test extends ControllerTest with AuditEventChecking[FlattenedGenericAuditDetail] {
 
     val controller = new RetrieveItsaStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveItsaStatusValidatorFactory,
       service = mockRetrieveItsaStatusService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] = controller.retrieveItsaStatus(nino.nino, taxYear.asMtd, None, None)(fakeGetRequest)
+
+
+    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] =
+      AuditEvent(
+        auditType = "RetrieveITSAStatus",
+        transactionName = "Retrieve-ITSA-Status",
+        detail = FlattenedGenericAuditDetail(
+          versionNumber = Some(versionNumber),
+          userDetails = userDetails,
+          params = Map("nino" -> nino.toString, "taxYear" -> taxYear.asMtd),
+          futureYears = None,
+          history = None,
+          itsaStatuses = if (auditResponse.errors.isEmpty) Some(Json.toJson(successResponse)) else None,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
   }
 
 }

@@ -16,24 +16,32 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.controllers._
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import api.models.auth.UserDetails
+import api.models.errors.ErrorWrapper
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import routing.Versions
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.validators.RetrieveItsaStatusValidatorFactory
 import v1.services.RetrieveItsaStatusService
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              validatorFactory: RetrieveItsaStatusValidatorFactory,
-                                              service: RetrieveItsaStatusService,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc) {
+class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthService,
+                                             val lookupService: MtdIdLookupService,
+                                             validatorFactory: RetrieveItsaStatusValidatorFactory,
+                                             service: RetrieveItsaStatusService,
+                                             auditService: AuditService,
+                                             cc: ControllerComponents,
+                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+  extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -51,9 +59,54 @@ class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthSer
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieve)
+          .withAuditing(auditHandler(nino, taxYear, futureYears, history, request))
           .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }
+
+  private def auditHandler(nino: String, taxYear: String, futureYears: Option[String], history: Option[String],
+                           request: UserRequest[AnyContent]): AuditHandler = {
+    new AuditHandler() {
+      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])
+                               (implicit ctx: RequestContext, ec: ExecutionContext): Unit = {
+
+        val versionNumber = Versions.getFromRequest(request).toOption.map(_.toString)
+        val params = Map("nino" -> nino, "taxYear" -> taxYear)
+        response match {
+          case Left(err: ErrorWrapper) =>
+            auditSubmission(
+              FlattenedGenericAuditDetail(
+                versionNumber,
+                request.userDetails,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                futureYears,
+                history,
+                None,
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              ))
+
+          case Right(resp: Option[JsValue]) =>
+            auditSubmission(
+              FlattenedGenericAuditDetail(
+                versionNumber,
+                request.userDetails,
+                params,
+                futureYears,
+                history,
+                resp,
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, response = Right(None))
+              ))
+        }
+      }
+    }
+  }
+
+  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("RetrieveITSAStatus", "Retrieve-ITSA-Status", details)
+    auditService.auditEvent(event)
+  }
 
 }

@@ -18,8 +18,10 @@ package config
 
 import io.swagger.v3.parser.OpenAPIV3Parser
 import play.api.http.Status
+import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
+import routing.{Version, Version1}
 import support.IntegrationBaseSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -27,7 +29,7 @@ import scala.util.Try
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
 
-  val config: AppConfig                = app.injector.instanceOf[AppConfig]
+  val config: AppConfig = app.injector.instanceOf[AppConfig]
   val confidenceLevel: ConfidenceLevel = config.confidenceLevelConfig.confidenceLevel
 
   val apiDefinitionJson: JsValue = Json.parse(
@@ -75,12 +77,10 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
-    def version(version: String): Unit = {
-      s"return the documentation that passes OAS V$version parser" in {
-        val response: WSResponse = await(buildRequest(s"/api/conf/${version}.0/application.yaml").get())
-        response.status shouldBe Status.OK
-
-        val contents     = response.body[String]
+    def version(version: Version): Unit = {
+      s"return the documentation that passes OAS $version parser" in {
+        val response = get(s"/api/conf/${version.name}/application.yaml")
+        val contents = response.body[String]
         val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
         parserResult.isSuccess shouldBe true
 
@@ -88,12 +88,31 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
         openAPI.isEmpty shouldBe false
         openAPI.get.getOpenapi shouldBe "3.0.3"
         openAPI.get.getInfo.getTitle shouldBe "Self Assessment Individual Details (MTD)"
-        openAPI.get.getInfo.getVersion shouldBe s"${version}.0"
+        openAPI.get.getInfo.getVersion shouldBe s"${version.name}"
+      }
+
+      s"return the documentation with the correct accept header for version $version" in {
+        val response = get(s"/api/conf/${version.name}/common/headers.yaml")
+        val body = response.body[String]
+
+        val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
+        val header = headerRegex.findFirstMatchIn(body)
+        header.isDefined shouldBe true
+
+        val versionFromHeader = header.get.group(1)
+        versionFromHeader shouldBe version.name
+
       }
     }
 
-    val versions: Seq[String] = Seq("1")
+    val versions: Seq[Version] = Seq(Version1)
     versions.foreach(v => version(v))
+  }
+
+  private def get(path: String): WSResponse = {
+    val response: WSResponse = await(buildRequest(path).get())
+    response.status shouldBe OK
+    response
   }
 
 }

@@ -39,6 +39,7 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
   lazy val cc: ControllerComponents = stubControllerComponents()
 
   lazy val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withHeaders(
+    HeaderNames.ACCEPT -> "application/vnd.hmrc.1.0+json",
     HeaderNames.AUTHORIZATION -> "Bearer Token"
   )
 
