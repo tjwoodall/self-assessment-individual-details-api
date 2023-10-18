@@ -19,7 +19,7 @@ package v1.models.response
 import play.api.libs.json.{Json, OFormat}
 import v1.models.domain.{StatusEnum, StatusReasonEnum}
 
-case class ItsaStatusDetails(submittedOn: String, status: StatusEnum, statusReason: StatusReasonEnum, businessIncomePriorTo2Years: Option[BigDecimal])
+case class ItsaStatusDetails(submittedOn: String, status: StatusEnum, statusReason: StatusReasonEnum, businessIncome2YearsPrior: Option[BigDecimal])
 
 object ItsaStatusDetails {
 

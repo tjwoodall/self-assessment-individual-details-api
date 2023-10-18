@@ -84,7 +84,7 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec {
       submittedOn = "2023-05-23T12:29:27.566Z",
       status = StatusEnum.`No Status`,
       statusReason = StatusReasonEnum.`Sign up - return available`,
-      businessIncomePriorTo2Years = Some(23600.99)
+      businessIncome2YearsPrior = Some(23600.99)
     )
 
     val itsaStatuses: ItsaStatuses = ItsaStatuses(taxYear, itsaStatusDetails = Some(Seq(itsaStatusDetails)))

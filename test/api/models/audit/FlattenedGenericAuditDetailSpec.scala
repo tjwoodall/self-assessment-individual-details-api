@@ -59,7 +59,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
        |			"submittedOn": "2023-06-01T10:19:00.303Z",
        |			"status": "No Status",
        |			"statusReason": "Sign up - return available",
-       |			"businessIncomePriorTo2Years": 99999999999.99
+       |			"businessIncome2YearsPrior": 99999999999.99
        |		}]
        |	}, {
        |		"taxYear": "2020-21",
@@ -67,7 +67,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
        |			"submittedOn": "2022-05-01T10:19:00.101Z",
        |			"status": "MTD Mandated",
        |			"statusReason": "ITSA Q4 declaration",
-       |			"businessIncomePriorTo2Years": 8.88
+       |			"businessIncome2YearsPrior": 8.88
        |		}]
        |	}, {
        |		"taxYear": "2019-20",

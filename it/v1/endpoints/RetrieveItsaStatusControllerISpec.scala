@@ -135,7 +135,7 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
         |        "submittedOn": "2023-05-23T12:29:27.566Z",
         |        "status": "No Status",
         |        "statusReason": "Sign up - return available",
-        |        "businessIncomePriorTo2Years": 23600.99
+        |        "businessIncome2YearsPrior": 23600.99
         |      }
         |    ]
         |  }
@@ -154,7 +154,7 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
         |          "submittedOn": "2023-05-23T12:29:27.566Z",
         |          "status": "No Status",
         |          "statusReason": "Sign up - return available",
-        |          "businessIncomePriorTo2Years": 23600.99
+        |          "businessIncome2YearsPrior": 23600.99
         |        }
         |      ]
         |    }
