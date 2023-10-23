@@ -28,8 +28,8 @@
                 "statusReason": {
                   "$ref": "itsa_status_retrieve_definitions.json#/definitions/statusReason"
                 },
-                "businessIncomePriorTo2Years": {
-                  "$ref": "itsa_status_retrieve_definitions.json#/definitions/businessIncomePriorTo2Years"
+                "businessIncome2YearsPrior": {
+                  "$ref": "itsa_status_retrieve_definitions.json#/definitions/businessIncome2YearsPrior"
                 }
               }
             }

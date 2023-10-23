@@ -40,7 +40,7 @@
         "Income Source Latency Changes"
       ]
     },
-    "businessIncomePriorTo2Years": {
+    "businessIncome2YearsPrior": {
       "type": "number",
       "description": "The business income prior to 2 years. For Q4 check, the business income prior to 1 year will be used.",
       "example": "99999999999.99"
