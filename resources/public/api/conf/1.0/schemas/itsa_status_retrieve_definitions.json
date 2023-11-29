@@ -42,7 +42,7 @@
     },
     "businessIncome2YearsPrior": {
       "type": "number",
-      "description": "The business income prior to 2 years. For Q4 check, the business income prior to 1 year will be used.",
+      "description": "The business income for 2 years prior, based on Self Assessment returns or MTD ITSA declarations 2 years before the requested tax year.",
       "example": "99999999999.99"
     }
   }
