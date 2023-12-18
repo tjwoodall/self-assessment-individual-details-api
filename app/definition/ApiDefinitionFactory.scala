@@ -17,7 +17,7 @@
 package definition
 
 import config.AppConfig
-import routing.{Version, Version1}
+import routing.{Version, Version1, Version2}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.Logging
 
@@ -55,12 +55,17 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
         name = "Self Assessment Individual Details (MTD)",
         description = "An API for retrieving individual details data for Self Assessment",
         context = appConfig.apiGatewayContext,
-        categories = Seq("INCOME_TAX_MTD"),
-        versions = Seq(
+        categories = List("INCOME_TAX_MTD"),
+        versions = List(
           APIVersion(
             version = Version1,
             status = buildAPIStatus(Version1),
             endpointsEnabled = appConfig.endpointsEnabled(Version1)
+          ),
+          APIVersion(
+            version = Version2,
+            status = buildAPIStatus(Version2),
+            endpointsEnabled = appConfig.endpointsEnabled(Version2)
           )
         ),
         requiresTrust = None
@@ -71,7 +76,7 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
     APIStatus.parser
       .lift(appConfig.apiStatus(version))
       .getOrElse {
-        logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
+        logger.error("[ApiDefinition][buildApiStatus] no API Status found in config. Reverting to Alpha")
         APIStatus.ALPHA
       }
   }
