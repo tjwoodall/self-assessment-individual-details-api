@@ -25,12 +25,11 @@ import v2.models.response.RetrieveItsaStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MockRetrieveItsaStatusConnector extends MockFactory {
+trait MockRetrieveItsaStatusConnector extends MockFactory {
 
-  val mockRetrieveItsaStatusConnector: RetrieveItsaStatusConnector =
-    mock[RetrieveItsaStatusConnector]
+  val mockRetrieveItsaStatusConnector: RetrieveItsaStatusConnector = mock[RetrieveItsaStatusConnector]
 
-  object MockRetrieveItsaStatusConnector {
+  object MockedRetrieveItsaStatusConnector {
 
     def retrieve(requestData: RetrieveItsaStatusRequestData): CallHandler[Future[DownstreamOutcome[RetrieveItsaStatusResponse]]] = {
       (

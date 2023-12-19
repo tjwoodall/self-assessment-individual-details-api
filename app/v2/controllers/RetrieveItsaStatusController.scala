@@ -24,7 +24,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.Versions
+import routing.{Version, Version2}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
@@ -75,14 +75,14 @@ class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthSer
           ctx: RequestContext,
           ec: ExecutionContext): Unit = {
 
-        val versionNumber = Versions.getFromRequest(request).toOption.map(_.toString)
+        val versionNumber = Version.from(request, orElse = Version2)
         val params        = Map("nino" -> nino, "taxYear" -> taxYear)
 
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
               FlattenedGenericAuditDetail(
-                versionNumber,
+                Some(versionNumber.name),
                 request.userDetails,
                 Map("nino" -> nino, "taxYear" -> taxYear),
                 futureYears,
@@ -95,7 +95,7 @@ class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthSer
           case Right(resp: Option[JsValue]) =>
             auditSubmission(
               FlattenedGenericAuditDetail(
-                versionNumber,
+                Some(versionNumber.name),
                 request.userDetails,
                 params,
                 futureYears,

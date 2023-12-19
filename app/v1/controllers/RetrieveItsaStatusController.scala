@@ -24,7 +24,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.Versions
+import routing.{Version, Version1}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
@@ -34,14 +34,14 @@ import v1.services.RetrieveItsaStatusService
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthService,
-                                             val lookupService: MtdIdLookupService,
-                                             validatorFactory: RetrieveItsaStatusValidatorFactory,
-                                             service: RetrieveItsaStatusService,
-                                             auditService: AuditService,
-                                             cc: ControllerComponents,
-                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc) {
+class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthService,
+                                              val lookupService: MtdIdLookupService,
+                                              validatorFactory: RetrieveItsaStatusValidatorFactory,
+                                              service: RetrieveItsaStatusService,
+                                              auditService: AuditService,
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -65,19 +65,24 @@ class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthServ
       requestHandler.handleRequest()
     }
 
-  private def auditHandler(nino: String, taxYear: String, futureYears: Option[String], history: Option[String],
+  private def auditHandler(nino: String,
+                           taxYear: String,
+                           futureYears: Option[String],
+                           history: Option[String],
                            request: UserRequest[AnyContent]): AuditHandler = {
     new AuditHandler() {
-      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])
-                               (implicit ctx: RequestContext, ec: ExecutionContext): Unit = {
+      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+          ctx: RequestContext,
+          ec: ExecutionContext): Unit = {
 
-        val versionNumber = Versions.getFromRequest(request).toOption.map(_.toString)
-        val params = Map("nino" -> nino, "taxYear" -> taxYear)
+        val versionNumber = Version.from(request, orElse = Version1)
+        val params        = Map("nino" -> nino, "taxYear" -> taxYear)
+
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
               FlattenedGenericAuditDetail(
-                versionNumber,
+                Some(versionNumber.name),
                 request.userDetails,
                 Map("nino" -> nino, "taxYear" -> taxYear),
                 futureYears,
@@ -90,7 +95,7 @@ class RetrieveItsaStatusController @Inject()(val authService: EnrolmentsAuthServ
           case Right(resp: Option[JsValue]) =>
             auditSubmission(
               FlattenedGenericAuditDetail(
-                versionNumber,
+                Some(versionNumber.name),
                 request.userDetails,
                 params,
                 futureYears,

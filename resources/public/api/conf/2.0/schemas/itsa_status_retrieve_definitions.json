@@ -37,7 +37,8 @@
         "Ceased income source",
         "Reinstated income source",
         "Rollover",
-        "Income Source Latency Changes"
+        "Income Source Latency Changes",
+        "MTD ITSA Opt-Out"
       ]
     },
     "businessIncome2YearsPrior": {

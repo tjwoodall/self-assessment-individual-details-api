@@ -27,10 +27,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveItsaStatusService extends MockFactory {
 
-  val mockRetrieveItsaStatusService: RetrieveItsaStatusService =
-    mock[RetrieveItsaStatusService]
+  val mockRetrieveItsaStatusService: RetrieveItsaStatusService = mock[RetrieveItsaStatusService]
 
-  object MockRetrieveItsaStatusService {
+  object MockedRetrieveItsaStatusService {
 
     def retrieve(requestData: RetrieveItsaStatusRequestData): CallHandler[Future[ServiceOutcome[RetrieveItsaStatusResponse]]] = (
       mockRetrieveItsaStatusService

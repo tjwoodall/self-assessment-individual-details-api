@@ -16,10 +16,11 @@
 
 package v2.connectors
 
-import api.connectors.ConnectorSpec
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v2.models.domain.{StatusEnum, StatusReasonEnum}
+import v2.models.domain.StatusEnum.`No Status`
+import v2.models.domain.StatusReasonEnum.`Sign up - return available`
 import v2.models.request.RetrieveItsaStatusRequestData
 import v2.models.response.{ItsaStatusDetails, ItsaStatuses, RetrieveItsaStatusResponse}
 
@@ -30,17 +31,27 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
   private val nino    = "AA111111A"
   private val taxYear = TaxYear.fromMtd("2023-24")
 
+  private val request = RetrieveItsaStatusRequestData(Nino(nino), taxYear, futureYears = true, history = true)
+
+  private val itsaStatusDetails = ItsaStatusDetails("2023-05-23T12:29:27.566Z", `No Status`, `Sign up - return available`, Some(23600.99))
+  private val itsaStatuses      = ItsaStatuses(taxYear.asMtd, Some(List(itsaStatusDetails)))
+  private val responseModel     = RetrieveItsaStatusResponse(List(itsaStatuses))
+
+  private val outcome = Right(ResponseWrapper(correlationId, responseModel))
+
   "RetrieveItsaStatusConnector" should {
     "return a 200 status and expected response for a success scenario" in new IfsTest with Test {
 
       willGet(url = s"$baseUrl/income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=true&history=true")
         .returns(Future.successful(outcome))
 
-      await(connector.retrieve(request)) shouldBe outcome
+      val result: DownstreamOutcome[RetrieveItsaStatusResponse] = await(connector.retrieve(request))
+
+      result shouldBe outcome
     }
   }
 
-  trait Test {
+  private trait Test {
     _: ConnectorTest =>
 
     val connector: RetrieveItsaStatusConnector = new RetrieveItsaStatusConnector(
@@ -48,25 +59,6 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    val request: RetrieveItsaStatusRequestData = RetrieveItsaStatusRequestData(Nino(nino), taxYear, futureYears = true, history = true)
-
-    val itsaStatusDetails: ItsaStatusDetails = ItsaStatusDetails(
-      submittedOn = "2023-05-23T12:29:27.566Z",
-      status = StatusEnum.`No Status`,
-      statusReason = StatusReasonEnum.`Sign up - return available`,
-      businessIncome2YearsPrior = Some(23600.99)
-    )
-
-    val itsaStatuses: ItsaStatuses = ItsaStatuses(
-      taxYear = taxYear.asMtd,
-      itsaStatusDetails = Some(Seq(itsaStatusDetails))
-    )
-
-    val responseModel: RetrieveItsaStatusResponse = RetrieveItsaStatusResponse(
-      itsaStatuses = Seq(itsaStatuses)
-    )
-
-    val outcome: Right[Nothing, ResponseWrapper[RetrieveItsaStatusResponse]] = Right(ResponseWrapper(correlationId, responseModel))
   }
 
 }

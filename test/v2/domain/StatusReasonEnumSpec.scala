@@ -19,20 +19,22 @@ package v2.domain
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
 import v2.models.domain.StatusReasonEnum
+import v2.models.domain.StatusReasonEnum._
 
 class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[StatusReasonEnum](
-    ("Sign up - return available", StatusReasonEnum.`Sign up - return available`),
-    ("Sign up - no return available", StatusReasonEnum.`Sign up - no return available`),
-    ("ITSA final declaration", StatusReasonEnum.`ITSA final declaration`),
-    ("ITSA Q4 declaration", StatusReasonEnum.`ITSA Q4 declaration`),
-    ("CESA SA return", StatusReasonEnum.`CESA SA return`),
-    ("Complex", StatusReasonEnum.Complex),
-    ("Ceased income source", StatusReasonEnum.`Ceased income source`),
-    ("Reinstated income source", StatusReasonEnum.`Reinstated income source`),
-    ("Rollover", StatusReasonEnum.Rollover),
-    ("Income Source Latency Changes", StatusReasonEnum.`Income Source Latency Changes`)
+    ("Sign up - return available", `Sign up - return available`),
+    ("Sign up - no return available", `Sign up - no return available`),
+    ("ITSA final declaration", `ITSA final declaration`),
+    ("ITSA Q4 declaration", `ITSA Q4 declaration`),
+    ("CESA SA return", `CESA SA return`),
+    ("Complex", Complex),
+    ("Ceased income source", `Ceased income source`),
+    ("Reinstated income source", `Reinstated income source`),
+    ("Rollover", Rollover),
+    ("Income Source Latency Changes", `Income Source Latency Changes`),
+    ("MTD ITSA Opt-Out", `MTD ITSA Opt-Out`)
   )
 
 }

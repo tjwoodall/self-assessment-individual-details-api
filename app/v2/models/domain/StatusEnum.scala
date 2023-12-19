@@ -19,40 +19,24 @@ package v2.models.domain
 import play.api.libs.json.Format
 import utils.enums.Enums
 
-sealed trait StatusEnum {
-  val downstreamValue: String
-}
+sealed trait StatusEnum
 
 object StatusEnum {
   val parser: PartialFunction[String, StatusEnum] = Enums.parser[StatusEnum]
+  implicit val format: Format[StatusEnum]         = Enums.format[StatusEnum]
 
-  case object `No Status` extends StatusEnum {
-    val downstreamValue = "No Status"
-  }
+  case object `No Status` extends StatusEnum
 
-  case object `MTD Mandated` extends StatusEnum {
-    val downstreamValue = "MTD Mandated"
-  }
+  case object `MTD Mandated` extends StatusEnum
 
-  case object `MTD Voluntary` extends StatusEnum {
-    val downstreamValue = "MTD Voluntary"
-  }
+  case object `MTD Voluntary` extends StatusEnum
 
-  case object Annual extends StatusEnum {
-    val downstreamValue = "Annual"
-  }
+  case object Annual extends StatusEnum
 
-  case object `Non Digital` extends StatusEnum {
-    val downstreamValue = "Non Digital"
-  }
+  case object `Non Digital` extends StatusEnum
 
-  case object Dormant extends StatusEnum {
-    val downstreamValue = "Dormant"
-  }
+  case object Dormant extends StatusEnum
 
-  implicit val format: Format[StatusEnum] = Enums.format[StatusEnum]
+  case object `MTD Exempt` extends StatusEnum
 
-  case object `MTD Exempt` extends StatusEnum {
-    val downstreamValue = "MTD Exempt"
-  }
 }
