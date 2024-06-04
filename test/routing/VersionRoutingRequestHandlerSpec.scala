@@ -93,7 +93,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     "if the request ends with a trailing slash" when {
       "handler found" should {
         "use it" in new Test {
-          MockedAppConfig.endpointsEnabled(Version1).returns(true).anyNumberOfTimes()
+          MockAppConfig.endpointsEnabled(Version1).returns(true).anyNumberOfTimes()
 
           val result: Option[Handler] = requestHandler.routeRequest(buildRequest("/"))
           result shouldBe Some(DefaultHandler)
@@ -102,7 +102,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
       "handler not found" should {
         "try without the trailing slash" in new Test {
-          MockedAppConfig.endpointsEnabled(Version1).returns(true).anyNumberOfTimes()
+          MockAppConfig.endpointsEnabled(Version1).returns(true).anyNumberOfTimes()
 
           val result: Option[Handler] = requestHandler.routeRequest(buildRequest(""))
           result shouldBe Some(DefaultHandler)
@@ -114,7 +114,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   private def handleWithVersionRoutes(path: String, handler: Handler, version: Version)(implicit acceptHeader: Option[String]): Unit = {
     withClue("request ends with a trailing slash...") {
       new Test {
-        MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
         val result: Option[Handler] = requestHandler.routeRequest(buildRequest(s"$path/"))
         result shouldBe Some(handler)
@@ -122,7 +122,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     }
     withClue("request doesn't end with a trailing slash...") {
       new Test {
-        MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
         val result: Option[Handler] = requestHandler.routeRequest(buildRequest(s"$path"))
         result shouldBe Some(handler)
