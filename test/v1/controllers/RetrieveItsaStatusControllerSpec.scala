@@ -38,7 +38,6 @@ import v1.services.MockRetrieveItsaStatusService
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-
 class RetrieveItsaStatusControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
@@ -47,10 +46,10 @@ class RetrieveItsaStatusControllerSpec
     with MockRetrieveItsaStatusValidatorFactory
     with MockAppConfig {
 
-  private val versionNumber = "1.0"
-  private val taxYear = TaxYear.fromMtd("2023-24")
-  val userType: String = "Individual"
+  private val taxYear          = TaxYear.fromMtd("2023-24")
+  val userType: String         = "Individual"
   val userDetails: UserDetails = UserDetails("mtdId", userType, None)
+
   val successResponse = RetrieveItsaStatusResponse(itsaStatuses = List(
     ItsaStatuses(
       "2023-24",
@@ -59,6 +58,7 @@ class RetrieveItsaStatusControllerSpec
           ItsaStatusDetails("2023-05-23T12:29:27.566Z", `No Status`, `Sign up - return available`, Some(BigDecimal("23600.99")))
         )))
   ))
+
   val requestData: RetrieveItsaStatusRequestData = RetrieveItsaStatusRequestData(
     nino = nino,
     taxYear = taxYear,
@@ -147,13 +147,12 @@ class RetrieveItsaStatusControllerSpec
 
     protected def callController(): Future[Result] = controller.retrieveItsaStatus(nino.nino, taxYear.asMtd, None, None)(fakeGetRequest)
 
-
     def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] =
       AuditEvent(
         auditType = "RetrieveITSAStatus",
         transactionName = "Retrieve-ITSA-Status",
         detail = FlattenedGenericAuditDetail(
-          versionNumber = Some(versionNumber),
+          versionNumber = Some(apiVersion.name),
           userDetails = userDetails,
           params = Map("nino" -> nino.toString, "taxYear" -> taxYear.asMtd),
           futureYears = None,
@@ -163,6 +162,7 @@ class RetrieveItsaStatusControllerSpec
           auditResponse = auditResponse
         )
       )
+
   }
 
 }
