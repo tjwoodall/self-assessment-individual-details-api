@@ -43,6 +43,7 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") should not be None
       }
     }
 
