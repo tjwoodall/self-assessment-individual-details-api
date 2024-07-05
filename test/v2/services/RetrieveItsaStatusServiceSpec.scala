@@ -16,10 +16,10 @@
 
 package v2.services
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.{ServiceOutcome, ServiceSpec}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{ServiceOutcome, ServiceSpec}
 import v2.connectors.MockRetrieveItsaStatusConnector
 import v2.models.domain.StatusEnum.`No Status`
 import v2.models.domain.StatusReasonEnum.`Sign up - return available`

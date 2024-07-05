@@ -16,9 +16,9 @@
 
 package v1.connectors
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.outcomes.ResponseWrapper
 import v1.models.domain.{StatusEnum, StatusReasonEnum}
 import v1.models.request.RetrieveItsaStatusRequestData
 import v1.models.response.{ItsaStatusDetails, ItsaStatuses, RetrieveItsaStatusResponse}

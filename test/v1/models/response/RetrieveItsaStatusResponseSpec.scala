@@ -17,7 +17,7 @@
 package v1.models.response
 
 import play.api.libs.json.{JsError, JsPath, Json}
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v1.models.domain.StatusEnum.{`MTD Mandated`, `No Status`}
 import v1.models.domain.StatusReasonEnum.{`ITSA Q4 declaration`, `Sign up - return available`}
 

@@ -17,7 +17,7 @@
 package v2.models.domain
 
 import play.api.libs.json.Format
-import utils.enums.Enums
+import shared.utils.enums.Enums
 
 sealed trait StatusReasonEnum
 

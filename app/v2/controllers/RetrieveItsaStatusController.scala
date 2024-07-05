@@ -16,18 +16,18 @@
 
 package v2.controllers
 
-import api.controllers._
-import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
-import api.models.auth.UserDetails
-import api.models.errors.ErrorWrapper
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.Version
+import shared.config.AppConfig
+import shared.controllers._
+import shared.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import shared.models.auth.UserDetails
+import shared.models.errors.ErrorWrapper
+import shared.routing.Version
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.IdGenerator
 import v2.controllers.validators.RetrieveItsaStatusValidatorFactory
 import v2.services.RetrieveItsaStatusService
 

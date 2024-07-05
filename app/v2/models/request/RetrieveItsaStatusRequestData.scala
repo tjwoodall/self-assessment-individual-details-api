@@ -16,6 +16,6 @@
 
 package v2.models.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 
 case class RetrieveItsaStatusRequestData(nino: Nino, taxYear: TaxYear, futureYears: Boolean, history: Boolean)

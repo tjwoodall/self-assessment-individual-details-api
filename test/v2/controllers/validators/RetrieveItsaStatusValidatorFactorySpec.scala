@@ -16,9 +16,9 @@
 
 package v2.controllers.validators
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import support.UnitSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v2.models.errors.{FutureYearsFormatError, HistoryFormatError}
 import v2.models.request.RetrieveItsaStatusRequestData
 
@@ -82,7 +82,7 @@ class RetrieveItsaStatusValidatorFactorySpec extends UnitSpec {
             correlationId,
             BadRequestError,
             Some(
-              List(NinoFormatError, HistoryFormatError, TaxYearFormatError, FutureYearsFormatError)
+              List(FutureYearsFormatError, HistoryFormatError, NinoFormatError, TaxYearFormatError)
             )))
       }
     }

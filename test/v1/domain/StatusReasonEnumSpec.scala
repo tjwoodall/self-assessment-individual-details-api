@@ -16,8 +16,8 @@
 
 package v1.domain
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import shared.utils.UnitSpec
+import shared.utils.enums.EnumJsonSpecSupport
 import v1.models.domain.StatusReasonEnum
 
 class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {

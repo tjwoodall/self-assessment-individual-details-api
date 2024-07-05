@@ -16,9 +16,9 @@
 
 package v2.endpoints
 
-import api.models.domain.TaxYear
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.models.domain.TaxYear
+import shared.models.errors._
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -118,7 +118,7 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    lazy val downstreamTaxYear: String = TaxYear.fromMtd(mtdTaxYear).asTysDownstream
+    private lazy val downstreamTaxYear: String = TaxYear.fromMtd(mtdTaxYear).asTysDownstream
 
     val nino: String        = "AA123456A"
     val mtdTaxYear: String  = "2023-24"
@@ -177,7 +177,7 @@ class RetrieveItsaStatusControllerISpec extends IntegrationBaseSpec {
         )
     }
 
-    def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
+    private def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
 
     def setupStubs(): Unit = {}
 

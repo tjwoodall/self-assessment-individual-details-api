@@ -16,7 +16,7 @@
 
 package v2.models.errors
 
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import play.api.http.Status.BAD_REQUEST
 
 object FutureYearsFormatError extends MtdError("FORMAT_FUTURE_YEARS", "The provided futureYears value should be true or false", BAD_REQUEST)

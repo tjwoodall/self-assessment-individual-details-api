@@ -16,8 +16,8 @@
 
 package v2.domain
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import shared.utils.UnitSpec
+import shared.utils.enums.EnumJsonSpecSupport
 import v2.models.domain.StatusReasonEnum
 import v2.models.domain.StatusReasonEnum._
 

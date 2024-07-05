@@ -16,12 +16,12 @@
 
 package v1.controllers.validators
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveBoolean, ResolveNino, ResolveTaxYear}
-import api.models.errors.MtdError
 import cats.data.Validated
-import cats.data.Validated._
-import cats.implicits._
+import cats.data.Validated.Valid
+import cats.implicits.catsSyntaxTuple4Semigroupal
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveNino, ResolveTaxYear}
+import shared.models.errors.MtdError
 import v1.models.errors.{FutureYearsFormatError, HistoryFormatError}
 import v1.models.request.RetrieveItsaStatusRequestData
 
@@ -30,6 +30,9 @@ import javax.inject.Singleton
 @Singleton
 class RetrieveItsaStatusValidatorFactory {
 
+  private val resolveFutureYears = ResolveBoolean(FutureYearsFormatError)
+  private val resolveHistory     = ResolveBoolean(HistoryFormatError)
+
   def validator(nino: String, taxYear: String, futureYears: Option[String], history: Option[String]): Validator[RetrieveItsaStatusRequestData] =
     new Validator[RetrieveItsaStatusRequestData] {
 
@@ -37,8 +40,14 @@ class RetrieveItsaStatusValidatorFactory {
         (
           ResolveNino(nino),
           ResolveTaxYear(taxYear),
-          ResolveBoolean(futureYears, defaultValue = false, error = FutureYearsFormatError),
-          ResolveBoolean(history, defaultValue = false, error = HistoryFormatError)
+          futureYears match {
+            case Some(futureYears) => resolveFutureYears(futureYears)
+            case None              => Valid(false)
+          },
+          history match {
+            case Some(history) => resolveHistory(history)
+            case None          => Valid(false)
+          }
         ).mapN(RetrieveItsaStatusRequestData)
 
     }
