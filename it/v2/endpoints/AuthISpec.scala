@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.endpoints
+package v2.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -129,8 +129,8 @@ class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino    = "AA123456A"
-    val mtdTaxYear = "2021-22"
-    val downstreamTaxYear = "21-22"
+    val mtdTaxYear = "2022-23"
+    val downstreamTaxYear = "22-23"
 
     def setupStubs(): StubMapping
     def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
@@ -143,7 +143,7 @@ class AuthISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }

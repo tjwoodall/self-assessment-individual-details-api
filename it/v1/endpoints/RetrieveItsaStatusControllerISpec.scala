@@ -18,7 +18,7 @@ package v1.endpoints
 
 import shared.models.domain.TaxYear
 import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}

@@ -24,7 +24,7 @@ import scala.concurrent.Future
 
 class MtdIdLookupServiceSpec extends ServiceSpec {
 
-  val nino        = "AA123456A"
+  val nino = "AA123456A"
 
   trait Test extends MockMtdIdLookupConnector {
     lazy val target = new MtdIdLookupService(mockMtdIdLookupConnector)
@@ -35,7 +35,6 @@ class MtdIdLookupServiceSpec extends ServiceSpec {
     "an mtdId is found for the NINO" should {
       "return the mtdId" in new Test {
         val mtdId = "someMtdId"
-
         MockedMtdIdLookupConnector.lookup(nino) returns Future.successful(Right(mtdId))
         val result: Outcome = await(target.lookup(nino))
 

@@ -17,6 +17,7 @@
 package v2.controllers
 
 import config.MockSAIndividualDetailsConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
@@ -107,9 +108,9 @@ class RetrieveItsaStatusControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking[FlattenedGenericAuditDetail] {
+  private trait Test extends ControllerTest with AuditEventChecking[FlattenedGenericAuditDetail] {
 
-    private val controller = new RetrieveItsaStatusController(
+     val controller = new RetrieveItsaStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveItsaStatusValidatorFactory,
@@ -119,6 +120,11 @@ class RetrieveItsaStatusControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> false
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     protected def callController(): Future[Result] = controller.retrieveItsaStatus(nino.nino, taxYear.asMtd, None, None)(fakeGetRequest)
 
     def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] =

@@ -31,7 +31,7 @@ class SAIndividualDetailsApiDefinitionFactorySpec extends UnitSpec with MockAppC
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   class Test extends MockHttpClient with MockAppConfig {
-    MockAppConfig.apiGatewayContext returns "individuals/person"
+    MockedAppConfig.apiGatewayContext returns "individuals/person"
     val apiDefinitionFactory = new SAIndividualDetailsApiDefinitionFactory(mockAppConfig)
   }
 
@@ -39,12 +39,12 @@ class SAIndividualDetailsApiDefinitionFactorySpec extends UnitSpec with MockAppC
     "called" should {
       "return a valid Definition case class" in new Test {
         List(Version1, Version2).foreach { version =>
-          MockAppConfig.apiStatus(version) returns "BETA"
-          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
-          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
+          MockedAppConfig.apiStatus(version) returns "BETA"
+          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
         }
 
-        MockAppConfig.confidenceLevelConfig
+        MockedAppConfig.confidenceLevelConfig
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
@@ -99,7 +99,7 @@ class SAIndividualDetailsApiDefinitionFactorySpec extends UnitSpec with MockAppC
     ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
       s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
         s"return confidence level $expectedDefinitionCL" in new Test {
-          MockAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
+          MockedAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)

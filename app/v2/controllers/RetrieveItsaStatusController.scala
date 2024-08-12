@@ -43,6 +43,8 @@ class RetrieveItsaStatusController @Inject() (val authService: EnrolmentsAuthSer
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName = "retrieve-itsa-status"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveItsaStatusController",

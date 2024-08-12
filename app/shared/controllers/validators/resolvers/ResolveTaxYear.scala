@@ -47,7 +47,7 @@ object ResolveTaxYear extends ResolverSupport {
     }
 
   /** Adaptor for existing callers.
-   */
+    */
   def apply(minimumTaxYear: TaxYear, value: String): Validated[Seq[MtdError], TaxYear] = {
     val resolver = ResolveTaxYearMinimum(minimumTaxYear)
     resolver(value)
