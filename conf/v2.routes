@@ -1,2 +1,2 @@
-GET        /itsa-status/:nino/:taxYear             v2.controllers.RetrieveItsaStatusController.retrieveItsaStatus(nino: String, taxYear: String, futureYears: Option[String], history: Option[String])
+GET        /itsa-status/:nino/:taxYear             v2.retrieveItsaStatus.RetrieveItsaStatusController.retrieveItsaStatus(nino: String, taxYear: String, futureYears: Option[String], history: Option[String])
 
