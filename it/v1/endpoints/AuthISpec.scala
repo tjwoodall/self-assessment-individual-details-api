@@ -24,7 +24,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 
 class AuthISpec extends IntegrationBaseSpec {
 
@@ -95,32 +95,32 @@ class AuthISpec extends IntegrationBaseSpec {
     }
   }
 
-    "MTD ID lookup succeeds but the user is NOT logged in" should {
+  "MTD ID lookup succeeds but the user is NOT logged in" should {
 
-      "return 403" in new Test {
-        override val nino: String = "AA123456A"
+    "return 403" in new Test {
+      override val nino: String = "AA123456A"
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          MtdIdLookupStub.ninoFound(nino)
-          AuthStub.unauthorisedNotLoggedIn()
-        }
+      override def setupStubs(): StubMapping = {
+        AuditStub.audit()
+        MtdIdLookupStub.ninoFound(nino)
+        AuthStub.unauthorisedNotLoggedIn()
+      }
 
       val response: WSResponse = await(request().get())
       response.status shouldBe Status.FORBIDDEN
     }
   }
 
-    "MTD ID lookup succeeds but the user is NOT authorised" should {
+  "MTD ID lookup succeeds but the user is NOT authorised" should {
 
-      "return 403" in new Test {
-        override val nino: String = "AA123456A"
+    "return 403" in new Test {
+      override val nino: String = "AA123456A"
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          MtdIdLookupStub.ninoFound(nino)
-          AuthStub.unauthorisedOther()
-        }
+      override def setupStubs(): StubMapping = {
+        AuditStub.audit()
+        MtdIdLookupStub.ninoFound(nino)
+        AuthStub.unauthorisedOther()
+      }
 
       val response: WSResponse = await(request().get())
       response.status shouldBe Status.FORBIDDEN
@@ -128,16 +128,14 @@ class AuthISpec extends IntegrationBaseSpec {
   }
 
   private trait Test {
-    val nino    = "AA123456A"
-    val mtdTaxYear = "2021-22"
+    val nino              = "AA123456A"
+    val mtdTaxYear        = "2021-22"
     val downstreamTaxYear = "21-22"
 
     def setupStubs(): StubMapping
     def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
 
     def downstreamUri: String = s"/income-tax/$nino/person-itd/itsa-status/$downstreamTaxYear"
-
-
 
     def request(): WSRequest = {
       setupStubs()

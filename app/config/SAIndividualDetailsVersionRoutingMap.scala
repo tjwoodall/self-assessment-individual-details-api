@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package api.stubs
+package config
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status._
-import shared.support.WireMockMethods
+import play.api.routing.Router
+import shared.config.AppConfig
+import shared.routing._
 
-object AuditStub extends WireMockMethods {
+import javax.inject.{Inject, Singleton}
 
-  private val auditUri: String = s"/write/audit.*"
+@Singleton case class SAIndividualDetailsVersionRoutingMap @Inject() (
+    appConfig: AppConfig,
+    defaultRouter: Router,
+    v1Router: v1.Routes,
+    v2Router: v2.Routes
+) extends VersionRoutingMap {
 
-  def audit(): StubMapping = {
-    when(method = POST, uri = auditUri)
-      .thenReturn(status = NO_CONTENT)
-  }
+  /** Routes corresponding to available versions.
+    */
+  val map: Map[Version, Router] = Map(
+    Version1 -> v1Router,
+    Version2 -> v2Router
+  )
 
 }

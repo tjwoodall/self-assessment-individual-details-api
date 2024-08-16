@@ -19,7 +19,7 @@ package api.stubs
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
-import support.WireMockMethods
+import shared.support.WireMockMethods
 
 object AuthStub extends WireMockMethods {
 
@@ -29,7 +29,7 @@ object AuthStub extends WireMockMethods {
     "key" -> "HMRC-MTD-IT",
     "identifiers" -> Json.arr(
       Json.obj(
-        "key" -> "MTDITID",
+        "key"   -> "MTDITID",
         "value" -> "1234567890"
       )
     )

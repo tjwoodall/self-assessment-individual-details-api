@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package api.stubs
+package shared.controllers.validators
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status._
-import shared.support.WireMockMethods
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import shared.models.errors.MtdError
 
-object AuditStub extends WireMockMethods {
-
-  private val auditUri: String = s"/write/audit.*"
-
-  def audit(): StubMapping = {
-    when(method = POST, uri = auditUri)
-      .thenReturn(status = NO_CONTENT)
-  }
-
+case class AlwaysErrorsValidator(errors: Seq[MtdError]) extends Validator[Nothing] {
+  override def validate: Validated[Seq[MtdError], Nothing] = Invalid(errors)
 }

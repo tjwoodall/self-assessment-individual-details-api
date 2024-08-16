@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package shared.models.audit.routing
+package shared.controllers.validators
 
-import play.api.routing.Router
-import shared.config.AppConfig
-import shared.routing._
+import cats.data.Validated.Invalid
+import play.api.http.Status
+import shared.models.errors.MtdError
+import shared.utils.UnitSpec
 
-import javax.inject.{Inject, Singleton}
+class AlwaysErrorsValidatorSpec extends UnitSpec {
 
-@Singleton case class SAIndividualDetailsVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
-    defaultRouter: Router,
-    v1Router: v1.Routes,
-    v2Router: v2.Routes
-) extends VersionRoutingMap {
+  "AlwaysErrorsValidator" must {
+    "always return the errors that it is constructed with" in {
+      val errors = Seq(MtdError("E1", "", Status.BAD_REQUEST), MtdError("E2", "", Status.BAD_REQUEST))
 
-  /** Routes corresponding to available versions.
-    */
-  val map: Map[Version, Router] = Map(
-    Version1 -> v1Router,
-    Version2 -> v2Router
-  )
+      AlwaysErrorsValidator(errors).validate shouldBe Invalid(errors)
+    }
+  }
 
 }

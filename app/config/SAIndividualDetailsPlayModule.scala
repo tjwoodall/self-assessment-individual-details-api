@@ -19,7 +19,6 @@ package config
 import com.google.inject.AbstractModule
 import definition.SAIndividualDetailsApiDefinitionFactory
 import shared.definition.ApiDefinitionFactory
-import shared.models.audit.routing.SAIndividualDetailsVersionRoutingMap
 import shared.routing.VersionRoutingMap
 
 class SAIndividualDetailsPlayModule extends AbstractModule {

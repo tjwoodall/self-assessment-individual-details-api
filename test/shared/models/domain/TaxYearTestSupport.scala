@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package api.stubs
+package shared.models.domain
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status._
-import shared.support.WireMockMethods
+import java.time.{Clock, ZoneOffset}
 
-object AuditStub extends WireMockMethods {
+trait TaxYearTestSupport {
 
-  private val auditUri: String = s"/write/audit.*"
-
-  def audit(): StubMapping = {
-    when(method = POST, uri = auditUri)
-      .thenReturn(status = NO_CONTENT)
-  }
+  def clockAtTimeInTaxYear(taxYear: TaxYear): Clock =
+    Clock.fixed(taxYear.endDate.atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
 
 }
