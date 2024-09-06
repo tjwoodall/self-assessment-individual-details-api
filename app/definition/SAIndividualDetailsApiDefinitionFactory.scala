@@ -19,7 +19,6 @@ package definition
 import shared.config.AppConfig
 import shared.definition._
 import shared.routing.{Version1, Version2}
-
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -27,7 +26,6 @@ class SAIndividualDetailsApiDefinitionFactory @Inject() (protected val appConfig
 
   lazy val definition: Definition =
     Definition(
-      scopes = scopes,
       api = APIDefinition(
         name = "Self Assessment Individual Details (MTD)",
         description = "An API for retrieving individual details data for Self Assessment",

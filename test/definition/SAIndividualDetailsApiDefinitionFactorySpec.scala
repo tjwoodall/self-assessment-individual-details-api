@@ -18,17 +18,14 @@ package definition
 
 import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
-import shared.config.{ConfidenceLevelConfig, MockAppConfig}
+import shared.config.MockAppConfig
 import shared.definition.APIStatus.BETA
 import shared.definition._
 import shared.mocks.MockHttpClient
 import shared.routing.{Version1, Version2}
 import shared.utils.UnitSpec
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class SAIndividualDetailsApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
-
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   class Test extends MockHttpClient with MockAppConfig {
     MockedAppConfig.apiGatewayContext returns "individuals/person"
@@ -44,29 +41,8 @@ class SAIndividualDetailsApiDefinitionFactorySpec extends UnitSpec with MockAppC
           MockedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
         }
 
-        MockedAppConfig.confidenceLevelConfig
-          .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
-          .anyNumberOfTimes()
-
-        private val readScope  = "read:self-assessment"
-        private val writeScope = "write:self-assessment"
-
         apiDefinitionFactory.definition shouldBe
           Definition(
-            scopes = List(
-              Scope(
-                key = readScope,
-                name = "View your Self Assessment information",
-                description = "Allow read access to self assessment data",
-                confidenceLevel
-              ),
-              Scope(
-                key = writeScope,
-                name = "Change your Self Assessment information",
-                description = "Allow write access to self assessment data",
-                confidenceLevel
-              )
-            ),
             api = APIDefinition(
               name = "Self Assessment Individual Details (MTD)",
               description = "An API for retrieving individual details data for Self Assessment",
@@ -87,24 +63,6 @@ class SAIndividualDetailsApiDefinitionFactorySpec extends UnitSpec with MockAppC
               requiresTrust = None
             )
           )
-      }
-    }
-  }
-
-  "confidenceLevel" when {
-    List(
-      (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
-      (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
-      (false, ConfidenceLevel.L200, ConfidenceLevel.L50)
-    ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
-      s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
-        s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
-            confidenceLevel = configCL,
-            definitionEnabled = definitionEnabled,
-            authValidationEnabled = true)
-          apiDefinitionFactory.confidenceLevel shouldBe expectedDefinitionCL
-        }
       }
     }
   }
