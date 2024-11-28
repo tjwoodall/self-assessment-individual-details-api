@@ -1,7 +1,8 @@
-This API allows developers to perform operations related to Individuals/Taxable Entities for Income Tax Self Assessment:
+Use the Self Assessment Individual Details API to retrieve a customer’s Making Tax Digital status for a specific tax year to help advise the customer of their obligations and available options.
 
-- Retrieve ITSA status for a given NINO for a specified tax year and optionally for future years
+This API is related to the following customer journeys:
 
-For information on how to connect to this
-API [see the Income Tax MTD end-to-end service guide](https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/)
-.
+- Submit quarterly updates
+- Submit annual updates
+
+For information on how to connect to this API [see the Income Tax MTD end-to-end service guide](https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/).
