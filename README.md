@@ -45,7 +45,7 @@ with the
 appropriate port and version:
 
 ```
-http://localhost:7790/api/conf/1.0/application.yaml
+http://localhost:7790/api/conf/2.0/application.yaml
 ```
 
 ## Changelog

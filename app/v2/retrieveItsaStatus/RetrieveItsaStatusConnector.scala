@@ -16,10 +16,10 @@
 
 package v2.retrieveItsaStatus
 
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.IfsUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
 import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
@@ -27,7 +27,7 @@ import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveItsaStatusConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveItsaStatusRequestData)(implicit
       hc: HeaderCarrier,
@@ -37,7 +37,7 @@ class RetrieveItsaStatusConnector @Inject() (val http: HttpClient, val appConfig
     import request._
     import schema._
 
-    val downstreamUri: IfsUri[DownstreamResp] = IfsUri[DownstreamResp](
+    val downstreamUri: DownstreamUri[DownstreamResp] = IfsUri[DownstreamResp](
       s"income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=$futureYears&history=$history"
     )
 

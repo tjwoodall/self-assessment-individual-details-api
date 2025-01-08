@@ -17,12 +17,15 @@
 package config
 
 import play.api.Configuration
-import shared.config.{AppConfig, FeatureSwitches}
+import shared.config.{FeatureSwitches, SharedAppConfig}
 
 import javax.inject.Inject
 
 case class SAIndividualDetailsFeatureSwitches @Inject() (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {}
 
 object SAIndividualDetailsFeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): SAIndividualDetailsFeatureSwitches = SAIndividualDetailsFeatureSwitches(appConfig.featureSwitchConfig)
+
+  def apply()(implicit appConfig: SharedAppConfig): SAIndividualDetailsFeatureSwitches = SAIndividualDetailsFeatureSwitches(
+    appConfig.featureSwitchConfig)
+
 }

@@ -17,22 +17,20 @@
 package config
 
 import play.api.routing.Router
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.routing._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton case class SAIndividualDetailsVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
+    appConfig: SharedAppConfig,
     defaultRouter: Router,
-    v1Router: v1.Routes,
     v2Router: v2.Routes
 ) extends VersionRoutingMap {
 
   /** Routes corresponding to available versions.
     */
   val map: Map[Version, Router] = Map(
-    Version1 -> v1Router,
     Version2 -> v2Router
   )
 

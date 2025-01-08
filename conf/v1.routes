@@ -1,2 +1,0 @@
-GET        /itsa-status/:nino/:taxYear             v1.controllers.RetrieveItsaStatusController.retrieveItsaStatus(nino: String, taxYear: String, futureYears: Option[String], history: Option[String])
-
