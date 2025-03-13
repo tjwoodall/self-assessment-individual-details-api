@@ -7,13 +7,13 @@ components:
       description: The format of the supplied NINO field is not valid.
       value:
         code: FORMAT_NINO
-        message: The provided NINO is invalid
+        message: The NINO format is invalid
 
     formatTaxYear:
       description: The format of the supplied tax year field is not valid.
       value:
         code: FORMAT_TAX_YEAR
-        message: The provided tax year is invalid
+        message: The taxYear format is invalid
 
     formatFutureYears:
       description: futureYears must be true or false.
@@ -31,7 +31,7 @@ components:
       description: Tax year range invalid. A tax year range of one year is required.
       value:
         code: RULE_TAX_YEAR_RANGE_INVALID
-        message: Tax year range invalid. A tax year range of one year is required
+        message: A tax year range of one year is required
 
 
     ruleIncorrectGovTestScenario:
@@ -48,7 +48,7 @@ components:
         the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
       value:
         code: CLIENT_OR_AGENT_NOT_AUTHORISED
-        message: The client and/or agent is not authorised
+        message: The client or agent is not authorised
 
     # 404
 
