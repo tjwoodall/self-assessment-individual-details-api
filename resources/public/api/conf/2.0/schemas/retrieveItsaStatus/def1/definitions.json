@@ -43,7 +43,7 @@
         "Digitally Exempt are both missing"
       ]
     },
-    "businessIncomePriorTo2Years": {
+    "businessIncome2YearsPrior": {
       "type": "number",
       "description": "The business income for 2 years prior, based on Self Assessment returns or MTD ITSA declarations 2 years before the requested tax year.",
       "example": "99999999999.99"

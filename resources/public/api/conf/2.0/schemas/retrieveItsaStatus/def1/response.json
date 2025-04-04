@@ -28,8 +28,8 @@
                 "statusReason": {
                   "$ref": "definitions.json#/definitions/statusReason"
                 },
-                "businessIncomePriorTo2Years": {
-                  "$ref": "definitions.json#/definitions/businessIncomePriorTo2Years"
+                "businessIncome2YearsPrior": {
+                  "$ref": "definitions.json#/definitions/businessIncome2YearsPrior"
                 }
               }
             }
