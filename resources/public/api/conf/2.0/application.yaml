@@ -51,6 +51,5 @@ components:
             read:self-assessment: Grant read access
 
 paths:
-  /itsd/person-itd/itsa-status/{nino}:
+  /individuals/person/itsa-status/{nino}/{taxYear}:
     $ref: './ITSA_Status_retrieve.yaml'
-
