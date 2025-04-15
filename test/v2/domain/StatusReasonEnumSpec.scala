@@ -23,6 +23,22 @@ import v2.models.domain.StatusReasonEnum._
 
 class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
+  testDeserialization[StatusReasonEnum](
+    ("00", `Sign up - return available`),
+    ("01", `Sign up - no return available`),
+    ("02", `ITSA final declaration`),
+    ("03", `ITSA Q4 declaration`),
+    ("04", `CESA SA return`),
+    ("05", Complex),
+    ("06", `Ceased income source`),
+    ("07", `Reinstated income source`),
+    ("08", Rollover),
+    ("09", `Income Source Latency Changes`),
+    ("10", `MTD ITSA Opt-Out`),
+    ("11", `MTD ITSA Opt-In`),
+    ("12", `Digitally Exempt`)
+  )
+
   testRoundTrip[StatusReasonEnum](
     ("Sign up - return available", `Sign up - return available`),
     ("Sign up - no return available", `Sign up - no return available`),
@@ -34,7 +50,9 @@ class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {
     ("Reinstated income source", `Reinstated income source`),
     ("Rollover", Rollover),
     ("Income Source Latency Changes", `Income Source Latency Changes`),
-    ("MTD ITSA Opt-Out", `MTD ITSA Opt-Out`)
+    ("MTD ITSA Opt-Out", `MTD ITSA Opt-Out`),
+    ("MTD ITSA Opt-In", `MTD ITSA Opt-In`),
+    ("Digitally Exempt", `Digitally Exempt`)
   )
 
 }

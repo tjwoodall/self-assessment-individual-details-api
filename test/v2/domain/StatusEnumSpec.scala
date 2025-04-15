@@ -23,6 +23,16 @@ import v2.models.domain.StatusEnum._
 
 class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
+  testDeserialization[StatusEnum](
+    ("00", `No Status`),
+    ("01", `MTD Mandated`),
+    ("02", `MTD Voluntary`),
+    ("03", Annual),
+    ("04", `Non Digital`),
+    ("05", Dormant),
+    ("99", `MTD Exempt`)
+  )
+
   testRoundTrip[StatusEnum](
     ("No Status", `No Status`),
     ("MTD Mandated", `MTD Mandated`),
