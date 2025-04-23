@@ -1,11 +1,26 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package shared.auth
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, OK}
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers.AUTHORIZATION
+import play.api.test.Helpers.{AUTHORIZATION, FORBIDDEN, INTERNAL_SERVER_ERROR, OK}
 import shared.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
@@ -27,6 +42,8 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
   protected val downstreamUri: String
 
   protected val maybeDownstreamResponseJson: Option[JsValue]
+
+  protected val downstreamQueryParams: Map[String, String] = Map.empty
 
   protected val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.POST
 
@@ -54,7 +71,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
           AuthStub.authorisedWithPrimaryAgentEnrolment()
 
           DownstreamStub
-            .when(downstreamHttpMethod, downstreamUri)
+            .when(downstreamHttpMethod, downstreamUri, downstreamQueryParams)
             .thenReturn(downstreamSuccessStatus, maybeDownstreamResponseJson)
         }
 

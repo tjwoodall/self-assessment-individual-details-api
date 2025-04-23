@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthMainAgentsOnlyISpec
 import shared.services.DownstreamStub
 
-class SelfAssessmentIndividualDetailsApiAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
+class SelfAssessmentIndividualDetailsApiAuthMainAgentsOnlyHipISpec extends AuthMainAgentsOnlyISpec {
 
   override val callingApiVersion = "2.0"
 
@@ -32,7 +32,10 @@ class SelfAssessmentIndividualDetailsApiAuthMainAgentsOnlyISpec extends AuthMain
   override def sendMtdRequest(request: WSRequest): WSResponse = await(request.get())
 
   override val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.GET
-  override val downstreamUri: String                           = s"/income-tax/$nino/person-itd/itsa-status/22-23"
+
+  override val downstreamQueryParams: Map[String, String] = Map("taxYear" -> "22-23")
+
+  override val downstreamUri: String = s"/itsd/person-itd/itsa-status/$nino"
 
   override val maybeDownstreamResponseJson: Option[JsValue] = Some(
     Json.parse(
@@ -43,14 +46,15 @@ class SelfAssessmentIndividualDetailsApiAuthMainAgentsOnlyISpec extends AuthMain
         |    "itsaStatusDetails": [
         |      {
         |        "submittedOn": "2023-05-23T12:29:27.566Z",
-        |        "status": "No Status",
-        |        "statusReason": "Sign up - return available",
-        |        "businessIncome2YearsPrior": 23600.99
+        |        "status": "00",
+        |        "statusReason": "00",
+        |        "businessIncomePriorTo2Years": 23600.99
         |      }
         |    ]
         |  }
         |]
-    """.stripMargin
-    ))
+      """.stripMargin
+    )
+  )
 
 }

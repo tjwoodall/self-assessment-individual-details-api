@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@ package v2.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status
-import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers.AUTHORIZATION
+import play.api.test.Helpers._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 
-class AuthISpec extends IntegrationBaseSpec {
+class AuthHipISpec extends IntegrationBaseSpec {
 
   "Calling the sample endpoint" when {
 
@@ -37,11 +35,11 @@ class AuthISpec extends IntegrationBaseSpec {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
-          MtdIdLookupStub.error(nino, Status.INTERNAL_SERVER_ERROR)
+          MtdIdLookupStub.error(nino, INTERNAL_SERVER_ERROR)
         }
 
         val response: WSResponse = await(request().get())
-        response.status shouldBe Status.INTERNAL_SERVER_ERROR
+        response.status shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
@@ -53,16 +51,22 @@ class AuthISpec extends IntegrationBaseSpec {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
-            MtdIdLookupStub.error(nino, Status.FORBIDDEN)
+            MtdIdLookupStub.error(nino, FORBIDDEN)
           }
 
           val response: WSResponse = await(request().get())
-          response.status shouldBe Status.FORBIDDEN
+          response.status shouldBe FORBIDDEN
         }
       }
     }
 
     "return success status" in new Test {
+
+      val downstreamQueryParams: Map[String, String] = Map(
+        "taxYear"     -> downstreamTaxYear,
+        "futureYears" -> "false",
+        "history"     -> "false"
+      )
 
       val downstreamResponse: JsValue = Json.parse(
         """
@@ -72,21 +76,21 @@ class AuthISpec extends IntegrationBaseSpec {
           |    "itsaStatusDetails": [
           |      {
           |        "submittedOn": "2023-05-23T12:29:27.566Z",
-          |        "status": "No Status",
-          |        "statusReason": "Sign up - return available",
-          |        "businessIncome2YearsPrior": 23600.99
+          |        "status": "00",
+          |        "statusReason": "00",
+          |        "businessIncomePriorTo2Years": 23600.99
           |      }
           |    ]
           |  }
           |]
-    """.stripMargin
+        """.stripMargin
       )
 
       override def setupStubs(): StubMapping = {
         AuditStub.audit()
         AuthStub.authorised()
         MtdIdLookupStub.ninoFound(nino)
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("futureYears" -> "false", "history" -> "false"), OK, downstreamResponse)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, downstreamQueryParams, OK, downstreamResponse)
       }
 
       val response: WSResponse = await(request().get())
@@ -107,7 +111,7 @@ class AuthISpec extends IntegrationBaseSpec {
       }
 
       val response: WSResponse = await(request().get())
-      response.status shouldBe Status.FORBIDDEN
+      response.status shouldBe FORBIDDEN
     }
   }
 
@@ -123,26 +127,26 @@ class AuthISpec extends IntegrationBaseSpec {
       }
 
       val response: WSResponse = await(request().get())
-      response.status shouldBe Status.FORBIDDEN
+      response.status shouldBe FORBIDDEN
     }
   }
 
   private trait Test {
-    val nino              = "AA123456A"
-    val mtdTaxYear        = "2022-23"
-    val downstreamTaxYear = "22-23"
+    val nino               = "AA123456A"
+    private val mtdTaxYear = "2022-23"
+    val downstreamTaxYear  = "22-23"
 
     def setupStubs(): StubMapping
-    def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
+    private def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
 
-    def downstreamUri: String = s"/income-tax/$nino/person-itd/itsa-status/$downstreamTaxYear"
+    def downstreamUri: String = s"/itsd/person-itd/itsa-status/$nino"
 
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 

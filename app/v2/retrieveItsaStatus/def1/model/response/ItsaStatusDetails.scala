@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,21 @@
 
 package v2.retrieveItsaStatus.def1.model.response
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v2.models.domain.{StatusEnum, StatusReasonEnum}
 
 case class ItsaStatusDetails(submittedOn: String, status: StatusEnum, statusReason: StatusReasonEnum, businessIncome2YearsPrior: Option[BigDecimal])
 
 object ItsaStatusDetails {
 
-  implicit val format: OFormat[ItsaStatusDetails] = Json.format[ItsaStatusDetails]
+  implicit val reads: Reads[ItsaStatusDetails] = (
+    (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "status").read[StatusEnum] and
+      (JsPath \ "statusReason").read[StatusReasonEnum] and
+      (JsPath \ "businessIncomePriorTo2Years").readNullable[BigDecimal]
+  )(ItsaStatusDetails.apply _)
+
+  implicit val writes: OWrites[ItsaStatusDetails] = Json.writes[ItsaStatusDetails]
 
 }

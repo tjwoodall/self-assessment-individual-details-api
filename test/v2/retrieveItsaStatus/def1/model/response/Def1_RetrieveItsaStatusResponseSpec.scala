@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,102 +16,141 @@
 
 package v2.retrieveItsaStatus.def1.model.response
 
-import play.api.libs.json.{JsError, JsPath, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import shared.utils.UnitSpec
-import v2.models.domain.StatusEnum.{`MTD Mandated`, `No Status`}
-import v2.models.domain.StatusReasonEnum.{`ITSA Q4 declaration`, `Sign up - return available`}
+import v2.models.domain.{StatusEnum, StatusReasonEnum}
 
 class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
 
-  "The RetrieveItsaStatusResponse JSON writes" should {
-    "parse a top-level JSON array" in {
-      val json =
-        s"""
-           |[
-           |  {
-           |    "taxYear": "2021-22",
-           |    "itsaStatusDetails": [
-           |      {
-           |        "submittedOn": "2023-06-01T10:19:00.303Z",
-           |        "status": "No Status",
-           |        "statusReason": "Sign up - return available",
-           |        "businessIncome2YearsPrior": 99999999999.99
-           |      }
-           |    ]
-           |  },
-           |  {
-           |    "taxYear": "2020-21",
-           |    "itsaStatusDetails": [
-           |      {
-           |        "submittedOn": "2022-05-01T10:19:00.101Z",
-           |        "status": "MTD Mandated",
-           |        "statusReason": "ITSA Q4 declaration",
-           |        "businessIncome2YearsPrior": 8.88
-           |      }
-           |    ]
-           |  },
-           |  {
-           |    "taxYear": "2019-20",
-           |    "itsaStatusDetails": [
-           |    ]
-           |  },
-           |  {
-           |    "taxYear": "2018-19"
-           |  }
-           |]
-           |""".stripMargin
+  private def mtdJson(status: String, statusReason: String): JsValue = Json.parse(
+    s"""
+      |{
+      |  "itsaStatuses": [
+      |    {
+      |      "taxYear": "2025-26",
+      |      "itsaStatusDetails": [
+      |        {
+      |          "submittedOn": "2025-06-01T10:19:00.303Z",
+      |          "status": "$status",
+      |          "statusReason": "$statusReason",
+      |          "businessIncome2YearsPrior": 99999999999.99
+      |        }
+      |      ]
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+  )
 
-      val result =
-        Json
-          .parse(json)
-          .as[Def1_RetrieveItsaStatusResponse]
+  private def downstreamJson(status: String, statusReason: String): JsValue =
+    Json.parse(
+      s"""
+        |[
+        |  {
+        |    "taxYear": "2025-26",
+        |    "itsaStatusDetails": [
+        |      {
+        |        "submittedOn": "2025-06-01T10:19:00.303Z",
+        |        "status": "$status",
+        |        "statusReason": "$statusReason",
+        |        "businessIncomePriorTo2Years": 99999999999.99
+        |      }
+        |    ]
+        |  }
+        |]
+      """.stripMargin
+    )
 
-      result shouldBe Def1_RetrieveItsaStatusResponse(itsaStatuses = List(
+  private def model(status: StatusEnum, statusReason: StatusReasonEnum): Def1_RetrieveItsaStatusResponse =
+    Def1_RetrieveItsaStatusResponse(
+      itsaStatuses = List(
         ItsaStatuses(
-          "2021-22",
-          Some(
+          taxYear = "2025-26",
+          itsaStatusDetails = Some(
             List(
-              ItsaStatusDetails("2023-06-01T10:19:00.303Z", `No Status`, `Sign up - return available`, Some(BigDecimal("99999999999.99")))
-            ))),
-        ItsaStatuses(
-          "2020-21",
-          Some(
-            List(
-              ItsaStatusDetails("2022-05-01T10:19:00.101Z", `MTD Mandated`, `ITSA Q4 declaration`, Some(BigDecimal("8.88")))
-            ))),
-        ItsaStatuses("2019-20", Some(Nil)),
-        ItsaStatuses("2018-19", None)
-      ))
+              ItsaStatusDetails(
+                submittedOn = "2025-06-01T10:19:00.303Z",
+                status = status,
+                statusReason = statusReason,
+                businessIncome2YearsPrior = Some(BigDecimal("99999999999.99"))
+              )
+            )
+          )
+        )
+      )
+    )
 
+  private val statusValues: Seq[StatusEnum] = Seq(
+    StatusEnum.`No Status`,
+    StatusEnum.`MTD Mandated`,
+    StatusEnum.`MTD Voluntary`,
+    StatusEnum.Annual,
+    StatusEnum.`Non Digital`,
+    StatusEnum.Dormant,
+    StatusEnum.`MTD Exempt`
+  )
+
+  private val statusReasonValues: Seq[StatusReasonEnum] = Seq(
+    StatusReasonEnum.`Sign up - return available`,
+    StatusReasonEnum.`Sign up - no return available`,
+    StatusReasonEnum.`ITSA final declaration`,
+    StatusReasonEnum.`ITSA Q4 declaration`,
+    StatusReasonEnum.`CESA SA return`,
+    StatusReasonEnum.Complex,
+    StatusReasonEnum.`Ceased income source`,
+    StatusReasonEnum.`Reinstated income source`,
+    StatusReasonEnum.Rollover,
+    StatusReasonEnum.`Income Source Latency Changes`,
+    StatusReasonEnum.`MTD ITSA Opt-Out`,
+    StatusReasonEnum.`MTD ITSA Opt-In`,
+    StatusReasonEnum.`Digitally Exempt`
+  )
+
+  "Def1_RetrieveItsaStatusResponse" when {
+    "read from a valid JSON" should {
+      "produce the expected object when downstream is IFS" in {
+        statusValues.foreach { status =>
+          statusReasonValues.foreach { statusReason =>
+            val json: JsValue = downstreamJson(status.toString, statusReason.toString)
+
+            json.as[Def1_RetrieveItsaStatusResponse] shouldBe model(status, statusReason)
+          }
+        }
+      }
+
+      "produce the expected object when downstream is HIP" in {
+        statusValues.foreach { status =>
+          statusReasonValues.foreach { statusReason =>
+            val json: JsValue = downstreamJson(status.fromDownstream, statusReason.fromDownstream)
+
+            json.as[Def1_RetrieveItsaStatusResponse] shouldBe model(status, statusReason)
+          }
+        }
+      }
     }
 
-    "fail on an invalid response" in {
-      val json =
-        s"""
-           |[
-           |  {
-           |    "itsaStatusDetails": [
-           |      {
-           |        "submittedOn": "2023-06-01T10:19:00.303Z",
-           |        "status": "No Status",
-           |        "statusReason": "Sign up - return available",
-           |        "businessIncome2YearsPrior": 99999999999.99
-           |      }
-           |    ]
-           |  }
-           |]
-           |""".stripMargin
+    "read from empty JSON" should {
+      "produce a JsError" in {
+        val invalidJson: JsObject = JsObject.empty
 
-      val result =
-        Json
-          .parse(json)
-          .validate[Def1_RetrieveItsaStatusResponse]
-
-      result shouldBe a[JsError]
-      val expectedPath = JsPath \ 0 \ "taxYear"
-      result.asInstanceOf[JsError].errors.head._1 shouldBe expectedPath
+        invalidJson.validate[Def1_RetrieveItsaStatusResponse] shouldBe a[JsError]
+      }
     }
 
+    "written to JSON" should {
+      "produce the expected JSON" in {
+        statusValues.foreach { status =>
+          statusReasonValues.foreach { statusReason =>
+            val expectedModel: Def1_RetrieveItsaStatusResponse = model(status, statusReason)
+
+            Json.toJson[Def1_RetrieveItsaStatusResponse](expectedModel) shouldBe mtdJson(
+              status.toString,
+              statusReason.toString
+            )
+          }
+        }
+      }
+    }
   }
 
 }

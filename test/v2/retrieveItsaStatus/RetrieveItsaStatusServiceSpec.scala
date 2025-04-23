@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec with MockRetrieveItsaSta
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = List(
+        val ifsErrors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_FUTURES_YEAR", FutureYearsFormatError),
@@ -79,7 +79,14 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec with MockRetrieveItsaSta
           ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        input.foreach((serviceError _).tupled)
+        val hipErrors = List(
+          ("1215", NinoFormatError),
+          ("1117", TaxYearFormatError),
+          ("1216", InternalError),
+          ("5010", NotFoundError)
+        )
+
+        (ifsErrors ++ hipErrors).foreach((serviceError _).tupled)
       }
     }
   }

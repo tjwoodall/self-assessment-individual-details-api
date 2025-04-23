@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,46 @@
 
 package v2.models.domain
 
-import play.api.libs.json.Format
+import play.api.libs.json.{Reads, Writes}
 import shared.utils.enums.Enums
 
-sealed trait StatusEnum
+sealed trait StatusEnum {
+  val fromDownstream: String
+}
 
 object StatusEnum {
-  val parser: PartialFunction[String, StatusEnum] = Enums.parser[StatusEnum]
-  implicit val format: Format[StatusEnum]         = Enums.format[StatusEnum]
 
-  case object `No Status` extends StatusEnum
+  implicit val reads: Reads[StatusEnum] =
+    Enums.readsFrom[StatusEnum](_.fromDownstream).orElse(Enums.reads[StatusEnum])
 
-  case object `MTD Mandated` extends StatusEnum
+  implicit val writes: Writes[StatusEnum] = Enums.writes[StatusEnum]
 
-  case object `MTD Voluntary` extends StatusEnum
+  case object `No Status` extends StatusEnum {
+    override val fromDownstream: String = "00"
+  }
 
-  case object Annual extends StatusEnum
+  case object `MTD Mandated` extends StatusEnum {
+    override val fromDownstream: String = "01"
+  }
 
-  case object `Non Digital` extends StatusEnum
+  case object `MTD Voluntary` extends StatusEnum {
+    override val fromDownstream: String = "02"
+  }
 
-  case object Dormant extends StatusEnum
+  case object Annual extends StatusEnum {
+    override val fromDownstream: String = "03"
+  }
 
-  case object `MTD Exempt` extends StatusEnum
+  case object `Non Digital` extends StatusEnum {
+    override val fromDownstream: String = "04"
+  }
+
+  case object Dormant extends StatusEnum {
+    override val fromDownstream: String = "05"
+  }
+
+  case object `MTD Exempt` extends StatusEnum {
+    override val fromDownstream: String = "99"
+  }
 
 }
