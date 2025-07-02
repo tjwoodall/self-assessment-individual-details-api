@@ -18,6 +18,7 @@ package v2.retrieveItsaStatus
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
@@ -25,7 +26,7 @@ import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveItsaStatusConnector extends MockFactory {
+trait MockRetrieveItsaStatusConnector extends TestSuite with MockFactory {
 
   val mockRetrieveItsaStatusConnector: RetrieveItsaStatusConnector = mock[RetrieveItsaStatusConnector]
 

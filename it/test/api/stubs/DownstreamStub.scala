@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.stubs
+package stubs
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.JsValue

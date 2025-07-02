@@ -18,6 +18,7 @@ package v2.retrieveItsaStatus
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
@@ -25,7 +26,7 @@ import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveItsaStatusService extends MockFactory {
+trait MockRetrieveItsaStatusService extends TestSuite with MockFactory {
 
   val mockRetrieveItsaStatusService: RetrieveItsaStatusService = mock[RetrieveItsaStatusService]
 

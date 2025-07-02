@@ -17,8 +17,9 @@
 package config
 
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 
-trait MockSAIndividualDetailsConfig extends MockFactory {
+trait MockSAIndividualDetailsConfig extends TestSuite with MockFactory {
 
   implicit val mockBsasConfig: SAIndividualDetailsConfig = mock[SAIndividualDetailsConfig]
 

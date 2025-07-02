@@ -107,6 +107,22 @@ class TaxYearSpec extends UnitSpec {
       }
     }
 
+    "TaxYear.starting" should {
+      "return the correct tax year" in {
+        val taxYear         = TaxYear.starting(2023)
+        val expectedTaxYear = TaxYear("2024")
+        taxYear shouldBe expectedTaxYear
+      }
+    }
+
+    "TaxYear.ending" should {
+      "return the correct tax year" in {
+        val taxYear         = TaxYear.ending(2023)
+        val expectedTaxYear = TaxYear("2023")
+        taxYear shouldBe expectedTaxYear
+      }
+    }
+
     "constructed directly" should {
       "not compile" in {
         """new TaxYear("2021-22")""" shouldNot compile

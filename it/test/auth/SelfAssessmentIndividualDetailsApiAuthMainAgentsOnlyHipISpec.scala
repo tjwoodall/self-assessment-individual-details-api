@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -18,14 +18,14 @@ package auth
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import shared.auth.AuthSupportingAgentsAllowedISpec
+import shared.auth.AuthMainAgentsOnlyISpec
 import shared.services.DownstreamStub
 
-class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedHipISpec extends AuthSupportingAgentsAllowedISpec {
+class SelfAssessmentIndividualDetailsApiAuthMainAgentsOnlyHipISpec extends AuthMainAgentsOnlyISpec {
 
   override val callingApiVersion = "2.0"
 
-  override val supportingAgentsAllowedEndpoint = "retrieve-itsa-status"
+  val supportingAgentsNotAllowedEndpoint = "retrieve-itsa-status"
 
   override val mtdUrl = s"/itsa-status/$nino/2022-23"
 

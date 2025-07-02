@@ -50,6 +50,14 @@ class ApiDefinitionSpec extends UnitSpec {
     }
   }
 
+  "the 'categories' parameter is empty" should {
+    "throw an 'IllegalArgumentException'" in {
+      assertThrows[IllegalArgumentException](
+        apiDefinition.copy(categories = Nil)
+      )
+    }
+  }
+
   "the 'versions' parameter is not unique" should {
     "throw an 'IllegalArgumentException'" in {
       assertThrows[IllegalArgumentException](

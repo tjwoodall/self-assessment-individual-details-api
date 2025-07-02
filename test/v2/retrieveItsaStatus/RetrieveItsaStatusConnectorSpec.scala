@@ -20,6 +20,7 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v2.models.domain.StatusEnum.`No Status`
 import v2.models.domain.StatusReasonEnum.`Sign up - return available`
 import v2.retrieveItsaStatus.def1.model.request.Def1_RetrieveItsaStatusRequestData
@@ -44,7 +45,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
 
       MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1878.enabled" -> false)
 
-      willGet(url = s"$baseUrl/income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=true&history=true")
+      willGet(url = url"$baseUrl/income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=true&history=true")
         .returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[RetrieveItsaStatusResponse] = await(connector.retrieve(request))
@@ -56,7 +57,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
 
       MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1878.enabled" -> true)
 
-      willGet(url = s"$baseUrl/itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=true&history=true")
+      willGet(url = url"$baseUrl/itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=true&history=true")
         .returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[RetrieveItsaStatusResponse] = await(connector.retrieve(request))

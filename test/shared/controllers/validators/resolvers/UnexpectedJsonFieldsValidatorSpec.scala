@@ -18,6 +18,7 @@ package shared.controllers.validators.resolvers
 
 import play.api.libs.json.{JsObject, Json}
 import shared.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
+import shared.models.domain.TaxYear
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.utils.UnitSpec
 
@@ -188,23 +189,73 @@ class UnexpectedJsonFieldsValidatorSpec extends UnitSpec {
           case class A1(a1: Int) extends A
           case class A2(a2: Int) extends A
           case class Foo2(a: A)
+          case class A3(a3: Double)     extends A
+          case class A4(a4: Boolean)    extends A
+          case class A5(a5: BigInt)     extends A
+          case class A6(a6: BigDecimal) extends A
+          case class A7(a7: TaxYear)    extends A
 
           val dataA1 = Foo2(A1(1))
+          val dataA3 = Foo2(A3(2.0))
+          val dataA4 = Foo2(A4(true))
+          val dataA5 = Foo2(A5(BigInt(3)))
+          val dataA6 = Foo2(A6(BigDecimal(4.0)))
+          val dataA7 = Foo2(A7(TaxYear("2023")))
 
           val extraPathCheckerA1 = SchemaStructureSource[A1]
           val extraPathCheckerA2 = SchemaStructureSource[A2]
+          val extraPathCheckerA3 = SchemaStructureSource[A3]
+          val extraPathCheckerA4 = SchemaStructureSource[A4]
+          val extraPathCheckerA5 = SchemaStructureSource[A5]
+          val extraPathCheckerA6 = SchemaStructureSource[A6]
+          val extraPathCheckerA7 = SchemaStructureSource[A7]
 
           implicit val extraPathCheckerA: SchemaStructureSource[A] = SchemaStructureSource.instance {
             case a1: A1 => extraPathCheckerA1.schemaStructureOf(a1)
             case a2: A2 => extraPathCheckerA2.schemaStructureOf(a2)
+            case a3: A3 => extraPathCheckerA3.schemaStructureOf(a3)
+            case a4: A4 => extraPathCheckerA4.schemaStructureOf(a4)
+            case a5: A5 => extraPathCheckerA5.schemaStructureOf(a5)
+            case a6: A6 => extraPathCheckerA6.schemaStructureOf(a6)
+            case a7: A7 => extraPathCheckerA7.schemaStructureOf(a7)
           }
 
           val validator = new UnexpectedJsonFieldsValidator[Foo2]
 
-          "correct fields are present" in {
+          "correct Int fields are present" in {
             val json = Json.parse("""{ "a": { "a1": 1} }""").as[JsObject]
 
             validator.validator((json, dataA1)) shouldBe None
+          }
+
+          "correct Double fields are present" in {
+            val json = Json.parse("""{ "a": { "a3": 2.0} }""").as[JsObject]
+
+            validator.validator((json, dataA3)) shouldBe None
+          }
+
+          "correct Boolean fields are present" in {
+            val json = Json.parse("""{ "a": { "a4": true} }""").as[JsObject]
+
+            validator.validator((json, dataA4)) shouldBe None
+          }
+
+          "correct BigInt fields are present" in {
+            val json = Json.parse("""{ "a": { "a5": 3} }""").as[JsObject]
+
+            validator.validator((json, dataA5)) shouldBe None
+          }
+
+          "correct BigDecimal fields are present" in {
+            val json = Json.parse("""{ "a": { "a6": 4.0} }""").as[JsObject]
+
+            validator.validator((json, dataA6)) shouldBe None
+          }
+
+          "correct TaxYear fields are present" in {
+            val json = Json.parse("""{ "a": { "a7": 2023} }""").as[JsObject]
+
+            validator.validator((json, dataA7)) shouldBe None
           }
 
           "extra fields are present" in {

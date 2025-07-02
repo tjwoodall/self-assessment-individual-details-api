@@ -21,7 +21,7 @@ Start the service manager profile: `sm2 --start MTDFB_SA_DETAILS`
 
 Run unit tests: `sbt test`
 
-Run integration tests: `sbt it:test`
+Run integration tests: `sbt it/test`
 
 Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtopts` file to the root of the project with the
 following contents:

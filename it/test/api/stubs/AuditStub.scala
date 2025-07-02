@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package shared.utils
+package stubs
 
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status._
+import shared.support.WireMockMethods
 
-trait MockIdGenerator extends TestSuite with MockFactory {
+object AuditStub extends WireMockMethods {
 
-  protected val mockIdGenerator: IdGenerator = mock[IdGenerator]
+  private val auditUri: String = s"/write/audit.*"
 
-  object MockedIdGenerator {
-    def generateCorrelationId: CallHandler[String] = (() => mockIdGenerator.generateCorrelationId).expects()
+  def audit(): StubMapping = {
+    when(method = POST, uri = auditUri)
+      .thenReturn(status = NO_CONTENT)
   }
 
 }

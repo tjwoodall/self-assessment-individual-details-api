@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.stubs
+package stubs
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status._
@@ -23,7 +23,7 @@ import shared.support.WireMockMethods
 
 object AuthStub extends WireMockMethods {
 
-  private val authoriseUri: String = "/auth/authorise"
+  private val authoriseUri: String = "/test/auth/authorise"
 
   private val mtdEnrolment: JsObject = Json.obj(
     "key" -> "HMRC-MTD-IT",
