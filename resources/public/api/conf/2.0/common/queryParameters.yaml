@@ -8,7 +8,7 @@ components:
       description: The status of future tax years. When set to true, the API will return the future tax years from the specified tax years if present. The default is false
       schema:
         type: boolean
-        example: true or false
+        example: true
       required: false
     history:
       in: query
@@ -16,5 +16,5 @@ components:
       description: The history status of the specified tax year. When set to true, the API will return history of the specified tax year (and future years if the futureYear flag is set to true). The default is false
       schema:
         type: boolean
-        example: true or false
+        example: true
       required: false
