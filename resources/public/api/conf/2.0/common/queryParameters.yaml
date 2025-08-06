@@ -1,0 +1,20 @@
+uses:
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+components:
+  parameters:
+    futureYears:
+      in: query
+      name: futureYears
+      description: The status of future tax years. When set to true, the API will return the future tax years from the specified tax years if present. The default is false
+      schema:
+        type: boolean
+        example: true or false
+      required: false
+    history:
+      in: query
+      name: history
+      description: The history status of the specified tax year. When set to true, the API will return history of the specified tax year (and future years if the futureYear flag is set to true). The default is false
+      schema:
+        type: boolean
+        example: true or false
+      required: false

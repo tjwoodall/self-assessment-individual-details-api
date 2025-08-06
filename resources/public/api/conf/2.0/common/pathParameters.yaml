@@ -1,0 +1,20 @@
+components:
+  parameters:
+    nino:
+      name: nino
+      in: path
+      description: |
+        National Insurance number, in the format `AA999999A`
+      schema:
+        type: string
+        example: TC663795B
+      required: true
+    taxYear:
+      name: taxYear
+      in: path
+      description: |
+        The tax year to retrieve data for. The start year and end year must not span two tax years. No gaps are allowed, for example, 2023-25 is not valid. There is no minimum tax year.
+      schema:
+        type: string
+        example: 2023-24
+      required: true
