@@ -67,7 +67,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
   }
 
   private trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     val connector: RetrieveItsaStatusConnector = new RetrieveItsaStatusConnector(
       http = mockHttpClient,

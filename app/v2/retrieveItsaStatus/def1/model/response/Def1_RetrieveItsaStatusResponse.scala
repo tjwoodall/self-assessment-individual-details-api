@@ -16,7 +16,7 @@
 
 package v2.retrieveItsaStatus.def1.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
 
 case class Def1_RetrieveItsaStatusResponse(itsaStatuses: Seq[ItsaStatuses]) extends RetrieveItsaStatusResponse

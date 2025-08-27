@@ -18,7 +18,7 @@ package config
 
 import play.api.routing.Router
 import shared.config.SharedAppConfig
-import shared.routing._
+import shared.routing.*
 
 import javax.inject.{Inject, Singleton}
 

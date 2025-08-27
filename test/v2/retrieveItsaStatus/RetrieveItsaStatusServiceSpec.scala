@@ -17,7 +17,7 @@
 package v2.retrieveItsaStatus
 
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v2.models.domain.StatusEnum.`No Status`
@@ -86,7 +86,7 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec with MockRetrieveItsaSta
           ("5010", NotFoundError)
         )
 
-        (ifsErrors ++ hipErrors).foreach((serviceError _).tupled)
+        (ifsErrors ++ hipErrors).foreach(serviceError.tupled)
       }
     }
   }

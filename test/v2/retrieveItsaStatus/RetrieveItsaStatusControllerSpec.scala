@@ -16,7 +16,6 @@
 
 package v2.retrieveItsaStatus
 
-import config.MockSAIndividualDetailsConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
@@ -41,8 +40,7 @@ class RetrieveItsaStatusControllerSpec
     with ControllerTestRunner
     with MockRetrieveItsaStatusService
     with MockAuditService
-    with MockRetrieveItsaStatusValidatorFactory
-    with MockSAIndividualDetailsConfig {
+    with MockRetrieveItsaStatusValidatorFactory {
 
   private val nino        = Nino("AA123456A")
   private val taxYear     = TaxYear.fromMtd("2023-24")
@@ -108,7 +106,7 @@ class RetrieveItsaStatusControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[FlattenedGenericAuditDetail] {
 
-    val controller = new RetrieveItsaStatusController(
+    val controller: RetrieveItsaStatusController = new RetrieveItsaStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveItsaStatusValidatorFactory,

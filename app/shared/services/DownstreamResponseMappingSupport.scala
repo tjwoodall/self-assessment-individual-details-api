@@ -17,7 +17,7 @@
 package shared.services
 
 import shared.controllers.EndpointLogContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.utils.Logging
 
@@ -32,7 +32,7 @@ trait DownstreamResponseMappingSupport {
         logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No matching stub was found")
         RuleIncorrectGovTestScenarioError
 
-      case "INVALID_CORRELATION_ID" | "INVALID_CORRELATIONID" =>
+      case "INVALID_CORRELATION_ID" =>
         logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - An internal server error occurred")
         InternalError
 

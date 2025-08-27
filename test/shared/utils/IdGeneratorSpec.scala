@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package config
+package shared.utils
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
+class IdGeneratorSpec extends UnitSpec {
 
-trait MockSAIndividualDetailsConfig extends TestSuite with MockFactory {
+  val generator        = new IdGenerator
+  val correlationRegex = "^[A-Za-z0-9\\-]{36}$"
 
-  implicit val mockBsasConfig: SAIndividualDetailsConfig = mock[SAIndividualDetailsConfig]
-
-  object MockedSAIndividualDetailsConfig {}
+  "IdGenerator" should {
+    "generate a correlation id" when {
+      "getCorrelationId is called" in {
+        generator.generateCorrelationId.matches(correlationRegex) shouldBe true
+      }
+    }
+  }
 
 }

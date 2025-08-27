@@ -6,9 +6,9 @@ This API allows developers to perform operations related to Individuals/Taxable 
 
 ## Requirements
 
-- Scala 2.13.x
+- Scala 3.x.x
 - Java 11
-- sbt 1.9.7
+- sbt 1.10.x
 - [Service Manager V2](https://github.com/hmrc/sm2)
 
 ## Development Setup

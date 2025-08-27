@@ -47,6 +47,6 @@ class Def1_RetrieveItsaStatusValidator(nino: String, taxYear: String, futureYear
         case Some(history) => resolveHistory(history)
         case None          => Valid(false)
       }
-    ).mapN(Def1_RetrieveItsaStatusRequestData)
+    ).mapN(Def1_RetrieveItsaStatusRequestData.apply)
 
 }

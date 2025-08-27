@@ -18,7 +18,7 @@ package shared.services
 
 import shared.config.SharedAppConfig
 import shared.models.auth.UserDetails
-import shared.models.errors.{InternalError, _}
+import shared.models.errors.*
 import shared.models.outcomes.AuthOutcome
 import shared.services.EnrolmentsAuthService.{
   authorisationDisabledPredicate,
@@ -28,9 +28,9 @@ import shared.services.EnrolmentsAuthService.{
 }
 import shared.utils.Logging
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.*
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -56,6 +56,8 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
       mtdId: String,
       endpointAllowsSupportingAgents: Boolean = false
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuthOutcome] = {
+
+    import shared.models.errors.InternalError
 
     authFunction
       .authorised(initialPredicate(mtdId))
@@ -101,6 +103,7 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
   }
 
   private def agentDetails(authorisedEnrolments: Enrolments): Either[MtdError, UserDetails] =
+    import shared.models.errors.InternalError
     (
       for {
         enrolment  <- authorisedEnrolments.getEnrolment("HMRC-AS-AGENT")

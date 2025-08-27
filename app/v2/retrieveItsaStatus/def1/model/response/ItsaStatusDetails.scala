@@ -29,7 +29,7 @@ object ItsaStatusDetails {
       (JsPath \ "status").read[StatusEnum] and
       (JsPath \ "statusReason").read[StatusReasonEnum] and
       (JsPath \ "businessIncomePriorTo2Years").readNullable[BigDecimal]
-  )(ItsaStatusDetails.apply _)
+  )(ItsaStatusDetails.apply)
 
   implicit val writes: OWrites[ItsaStatusDetails] = Json.writes[ItsaStatusDetails]
 

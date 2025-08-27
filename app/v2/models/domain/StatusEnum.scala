@@ -16,46 +16,23 @@
 
 package v2.models.domain
 
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.*
 import shared.utils.enums.Enums
 
-sealed trait StatusEnum {
-  val fromDownstream: String
+enum StatusEnum(val fromDownstream: String) {
+  case `No Status`     extends StatusEnum("00")
+  case `MTD Mandated`  extends StatusEnum("01")
+  case `MTD Voluntary` extends StatusEnum("02")
+  case Annual          extends StatusEnum("03")
+  case `Non Digital`   extends StatusEnum("04")
+  case Dormant         extends StatusEnum("05")
+  case `MTD Exempt`    extends StatusEnum("99")
 }
 
 object StatusEnum {
 
-  implicit val reads: Reads[StatusEnum] =
-    Enums.readsFrom[StatusEnum](_.fromDownstream).orElse(Enums.reads[StatusEnum])
+  given reads: Reads[StatusEnum] = Enums.readsFrom[StatusEnum](values, _.fromDownstream).orElse(Enums.reads(values))
 
-  implicit val writes: Writes[StatusEnum] = Enums.writes[StatusEnum]
-
-  case object `No Status` extends StatusEnum {
-    override val fromDownstream: String = "00"
-  }
-
-  case object `MTD Mandated` extends StatusEnum {
-    override val fromDownstream: String = "01"
-  }
-
-  case object `MTD Voluntary` extends StatusEnum {
-    override val fromDownstream: String = "02"
-  }
-
-  case object Annual extends StatusEnum {
-    override val fromDownstream: String = "03"
-  }
-
-  case object `Non Digital` extends StatusEnum {
-    override val fromDownstream: String = "04"
-  }
-
-  case object Dormant extends StatusEnum {
-    override val fromDownstream: String = "05"
-  }
-
-  case object `MTD Exempt` extends StatusEnum {
-    override val fromDownstream: String = "99"
-  }
+  given Writes[StatusEnum] = Enums.writes[StatusEnum]
 
 }

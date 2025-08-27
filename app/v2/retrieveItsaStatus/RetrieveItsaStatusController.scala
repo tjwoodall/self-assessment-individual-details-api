@@ -19,7 +19,7 @@ package v2.retrieveItsaStatus
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import shared.models.auth.UserDetails
 import shared.models.errors.ErrorWrapper
