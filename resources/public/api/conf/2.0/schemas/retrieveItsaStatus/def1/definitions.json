@@ -13,7 +13,19 @@
     },
     "status": {
       "type": "string",
-      "description": "The ITSA Status for the Tax Year. Values are 00 = No Status; 01 = MTD Mandated; 02 = MTD Voluntary; 03 = Annual; 04 = Non Digital; 05 = Dormant; 99 = MTD Exempt.",
+      {{#if (enabled '1878_digitally_exempt_docs')}}
+      "description": "The ITSA Status for the Tax Year. The value `Non Digital` is deprecated and will no longer be supported from tax year 2026-27",
+      "enum": [
+        "No Status",
+        "MTD Mandated",
+        "MTD Voluntary",
+        "Annual",
+        "Non Digital",
+        "Digitally Exempt",
+        "Dormant",
+        "MTD Exempt"
+      ]
+      {{else}}
       "enum": [
         "No Status",
         "MTD Mandated",
@@ -23,10 +35,11 @@
         "Dormant",
         "MTD Exempt"
       ]
+      {{/if}}
     },
     "statusReason": {
       "type": "string",
-      "description": "The reason for the ITSA Status. Values are 00 = Sign up - return available; 01 = Sign up - no return available; 02 = ITSA final declaration; 03 = ITSA Q4 declaration; 04 = CESA SA return; 05 = Complex; 06 = Ceased income source; 07 = Reinstated income source; 08 = Rollover; 09 = Income Source Latency Changes; 10 = MTD ITSA Opt-Out; 11 = MTD ITSA Opt-In; 12 = Digitally Exempt.",
+      "description": "The reason for the ITSA Status.",
       "enum": [
         "Sign up - return available",
         "Sign up - no return available",

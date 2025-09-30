@@ -24,8 +24,8 @@ import uk.gov.hmrc.http.StringContextOps
 import v2.models.domain.StatusEnum.`No Status`
 import v2.models.domain.StatusReasonEnum.`Sign up - return available`
 import v2.retrieveItsaStatus.def1.model.request.Def1_RetrieveItsaStatusRequestData
-import v2.retrieveItsaStatus.def1.model.response.{Def1_RetrieveItsaStatusResponse, ItsaStatusDetails, ItsaStatuses}
-import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
+import v2.retrieveItsaStatus.def1.model.response.{ItsaStatusDetails, ItsaStatuses}
+import v2.retrieveItsaStatus.model.response.{Def1_RetrieveItsaStatusResponse, RetrieveItsaStatusResponse}
 
 import scala.concurrent.Future
 

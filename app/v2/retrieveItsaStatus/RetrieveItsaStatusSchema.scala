@@ -16,18 +16,10 @@
 
 package v2.retrieveItsaStatus
 
-import play.api.libs.json.Reads
-import shared.schema.DownstreamReadable
-import v2.retrieveItsaStatus.def1.model.response.Def1_RetrieveItsaStatusResponse
-import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
-
-sealed trait RetrieveItsaStatusSchema extends DownstreamReadable[RetrieveItsaStatusResponse]
+sealed trait RetrieveItsaStatusSchema
 
 object RetrieveItsaStatusSchema {
 
-  case object Def1 extends RetrieveItsaStatusSchema {
-    type DownstreamResp = Def1_RetrieveItsaStatusResponse
-    val connectorReads: Reads[DownstreamResp] = Def1_RetrieveItsaStatusResponse.reads
-  }
+  case object Def1 extends RetrieveItsaStatusSchema
 
 }

@@ -19,6 +19,7 @@ package v2.retrieveItsaStatus.def1.model.response
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import shared.utils.UnitSpec
 import v2.models.domain.{StatusEnum, StatusReasonEnum}
+import v2.retrieveItsaStatus.model.response.Def1_RetrieveItsaStatusResponse
 
 class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
 
@@ -86,6 +87,7 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
     StatusEnum.`MTD Voluntary`,
     StatusEnum.Annual,
     StatusEnum.`Non Digital`,
+    StatusEnum.`Digitally Exempt`,
     StatusEnum.Dormant,
     StatusEnum.`MTD Exempt`
   )

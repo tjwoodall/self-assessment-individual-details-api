@@ -16,9 +16,9 @@
 
 package v2.retrieveItsaStatus.model.response
 
-import play.api.libs.json.{JsObject, Json, OWrites}
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import shared.utils.JsonWritesUtil
-import v2.retrieveItsaStatus.def1.model.response.Def1_RetrieveItsaStatusResponse
+import v2.retrieveItsaStatus.def1.model.response.ItsaStatuses
 
 trait RetrieveItsaStatusResponse
 
@@ -28,5 +28,18 @@ object RetrieveItsaStatusResponse extends JsonWritesUtil {
     Json.toJson(def1).as[JsObject]
 
   }
+
+}
+
+case class Def1_RetrieveItsaStatusResponse(itsaStatuses: Seq[ItsaStatuses]) extends RetrieveItsaStatusResponse
+
+object Def1_RetrieveItsaStatusResponse {
+
+  implicit val reads: Reads[Def1_RetrieveItsaStatusResponse] = json =>
+    json
+      .validate[Seq[ItsaStatuses]]
+      .map(itsaStatuses => Def1_RetrieveItsaStatusResponse(itsaStatuses))
+
+  implicit val writes: OWrites[Def1_RetrieveItsaStatusResponse] = Json.writes[Def1_RetrieveItsaStatusResponse]
 
 }
