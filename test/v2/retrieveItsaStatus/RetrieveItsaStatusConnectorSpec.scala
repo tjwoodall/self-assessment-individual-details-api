@@ -16,6 +16,7 @@
 
 package v2.retrieveItsaStatus
 
+import config.MockSAIndividualDetailsConfig
 import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
@@ -24,12 +25,12 @@ import uk.gov.hmrc.http.StringContextOps
 import v2.models.domain.StatusEnum.`No Status`
 import v2.models.domain.StatusReasonEnum.`Sign up - return available`
 import v2.retrieveItsaStatus.def1.model.request.Def1_RetrieveItsaStatusRequestData
-import v2.retrieveItsaStatus.def1.model.response.{Def1_RetrieveItsaStatusResponse, ItsaStatusDetails, ItsaStatuses}
-import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
+import v2.retrieveItsaStatus.def1.model.response.{ItsaStatusDetails, ItsaStatuses}
+import v2.retrieveItsaStatus.model.response.{Def1_RetrieveItsaStatusResponse, RetrieveItsaStatusResponse}
 
 import scala.concurrent.Future
 
-class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
+class RetrieveItsaStatusConnectorSpec extends ConnectorSpec with MockSAIndividualDetailsConfig {
 
   private val nino    = "AA111111A"
   private val taxYear = TaxYear.fromMtd("2023-24")

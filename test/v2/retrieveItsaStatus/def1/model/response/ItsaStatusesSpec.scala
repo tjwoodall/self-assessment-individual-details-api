@@ -16,12 +16,13 @@
 
 package v2.retrieveItsaStatus.def1.model.response
 
+import config.MockSAIndividualDetailsConfig
 import play.api.libs.json.{JsValue, Json}
 import shared.utils.UnitSpec
 import v2.models.domain.StatusEnum.*
 import v2.models.domain.StatusReasonEnum.*
 
-class ItsaStatusesSpec extends UnitSpec {
+class ItsaStatusesSpec extends UnitSpec with MockSAIndividualDetailsConfig {
 
   private val itsaStatusDetails: ItsaStatusDetails = ItsaStatusDetails("2018-01-01", `MTD Voluntary`, `MTD ITSA Opt-In`, Some(50000.25))
   private val itsaStatuses: ItsaStatuses           = ItsaStatuses("2017", Some(Seq(itsaStatusDetails)))

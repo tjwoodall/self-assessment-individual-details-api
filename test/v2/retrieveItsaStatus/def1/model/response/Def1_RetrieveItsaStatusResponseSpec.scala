@@ -16,11 +16,13 @@
 
 package v2.retrieveItsaStatus.def1.model.response
 
+import config.MockSAIndividualDetailsConfig
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import shared.utils.UnitSpec
 import v2.models.domain.{StatusEnum, StatusReasonEnum}
+import v2.retrieveItsaStatus.model.response.Def1_RetrieveItsaStatusResponse
 
-class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
+class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec with MockSAIndividualDetailsConfig {
 
   private def mtdJson(status: String, statusReason: String): JsValue = Json.parse(
     s"""
@@ -86,6 +88,7 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
     StatusEnum.`MTD Voluntary`,
     StatusEnum.Annual,
     StatusEnum.`Non Digital`,
+    StatusEnum.`Digitally Exempt`,
     StatusEnum.Dormant,
     StatusEnum.`MTD Exempt`
   )
@@ -109,6 +112,7 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
   "Def1_RetrieveItsaStatusResponse" when {
     "read from a valid JSON" should {
       "produce the expected object when downstream is IFS" in {
+        digitallyExemptTaxYearMock(2027)
         statusValues.foreach { status =>
           statusReasonValues.foreach { statusReason =>
             val json: JsValue = downstreamJson(status.toString, statusReason.toString)
@@ -119,11 +123,23 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
       }
 
       "produce the expected object when downstream is HIP" in {
+        digitallyExemptTaxYearMock(2027)
         statusValues.foreach { status =>
           statusReasonValues.foreach { statusReason =>
             val json: JsValue = downstreamJson(status.fromDownstream, statusReason.fromDownstream)
 
             json.as[Def1_RetrieveItsaStatusResponse] shouldBe model(status, statusReason)
+          }
+        }
+      }
+
+      "map '04' to `Digitally Exempt when downstream is HIP and tax year is 26-27 or later" in {
+        digitallyExemptTaxYearMock(2026)
+        statusValues.foreach { status =>
+          statusReasonValues.foreach { statusReason =>
+            val json: JsValue = downstreamJson(StatusEnum.`Non Digital`.fromDownstream, StatusReasonEnum.Complex.fromDownstream)
+
+            json.as[Def1_RetrieveItsaStatusResponse] shouldBe model(StatusEnum.`Digitally Exempt`, StatusReasonEnum.Complex)
           }
         }
       }

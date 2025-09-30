@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package v2.retrieveItsaStatus.def1.model.response
+package config
 
-import config.SAIndividualDetailsConfig
-import play.api.libs.json.{Json, OWrites, Reads}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 
-case class ItsaStatuses(taxYear: String, itsaStatusDetails: Option[Seq[ItsaStatusDetails]])
+trait MockSAIndividualDetailsConfig extends TestSuite with MockFactory {
 
-object ItsaStatuses {
+  implicit val mockedSAIndividualDetailsConfig: SAIndividualDetailsConfig = mock[SAIndividualDetailsConfig]
 
-  implicit def reads(implicit config: SAIndividualDetailsConfig): Reads[ItsaStatuses] = Json.reads[ItsaStatuses]
-  implicit val writes: OWrites[ItsaStatuses]                                          = Json.writes[ItsaStatuses]
+  def digitallyExemptTaxYearMock(year: Int): CallHandler[Int] =
+    (() => mockedSAIndividualDetailsConfig.digitallyExemptTaxYear).expects().returning(year).anyNumberOfTimes()
 
 }

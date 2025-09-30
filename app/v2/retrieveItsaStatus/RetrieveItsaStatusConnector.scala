@@ -16,39 +16,45 @@
 
 package v2.retrieveItsaStatus
 
+import config.SAIndividualDetailsConfig
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
-import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.HttpClientV2
+import v2.retrieveItsaStatus.def1.model.request.Def1_RetrieveItsaStatusRequestData
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
-import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
+import v2.retrieveItsaStatus.model.response.{Def1_RetrieveItsaStatusResponse, RetrieveItsaStatusResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveItsaStatusConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig)(implicit config: SAIndividualDetailsConfig)
+    extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveItsaStatusRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveItsaStatusResponse]] = {
 
-    import request._
-    import schema._
+    request match {
+      case def1: Def1_RetrieveItsaStatusRequestData =>
+        import request.*
 
-    val downstreamUri: DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1878")) {
-      HipUri[DownstreamResp](
-        s"itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=$futureYears&history=$history"
-      )
-    } else {
-      IfsUri[DownstreamResp](
-        s"income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=$futureYears&history=$history"
-      )
+        val downstreamUri: DownstreamUri[Def1_RetrieveItsaStatusResponse] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1878")) {
+          HipUri[Def1_RetrieveItsaStatusResponse](
+            s"itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=$futureYears&history=$history"
+          )
+        } else {
+          IfsUri[Def1_RetrieveItsaStatusResponse](
+            s"income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=$futureYears&history=$history"
+          )
+        }
+
+        get(downstreamUri)
     }
 
-    get(downstreamUri)
   }
 
 }

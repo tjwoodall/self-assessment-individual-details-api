@@ -16,22 +16,33 @@
 
 package v2.models.domain
 
+import config.SAIndividualDetailsConfig
 import play.api.libs.json.*
+import shared.models.domain.TaxYear
 import shared.utils.enums.Enums
+
+import scala.math.Ordered.orderingToOrdered
 
 enum StatusEnum(val fromDownstream: String) {
   case `No Status`     extends StatusEnum("00")
   case `MTD Mandated`  extends StatusEnum("01")
   case `MTD Voluntary` extends StatusEnum("02")
   case Annual          extends StatusEnum("03")
-  case `Non Digital`   extends StatusEnum("04")
-  case Dormant         extends StatusEnum("05")
-  case `MTD Exempt`    extends StatusEnum("99")
+  // Non Digital will be removed for TY 26-27
+  case `Non Digital` extends StatusEnum("04")
+  // Update fromDownstream to "04" once Non Digital is removed
+  case `Digitally Exempt` extends StatusEnum("")
+  case Dormant            extends StatusEnum("05")
+  case `MTD Exempt`       extends StatusEnum("99")
 }
 
 object StatusEnum {
 
-  given reads: Reads[StatusEnum] = Enums.readsFrom[StatusEnum](values, _.fromDownstream).orElse(Enums.reads(values))
+  given reads(using config: SAIndividualDetailsConfig): Reads[StatusEnum] =
+    Enums.readsFrom[StatusEnum](values, _.fromDownstream).orElse(Enums.reads(values)).flatMap {
+      case `Non Digital` if TaxYear.currentTaxYear >= TaxYear.ending(config.digitallyExemptTaxYear) => Reads.pure(`Digitally Exempt`)
+      case status                                                                                   => Reads.pure(status)
+    }
 
   given Writes[StatusEnum] = Enums.writes[StatusEnum]
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package v2.retrieveItsaStatus.def1.model.response
+package config
 
-import config.SAIndividualDetailsConfig
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.Configuration
+import shared.config.AppConfigBase
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-case class ItsaStatuses(taxYear: String, itsaStatusDetails: Option[Seq[ItsaStatusDetails]])
+import javax.inject.{Inject, Singleton}
 
-object ItsaStatuses {
-
-  implicit def reads(implicit config: SAIndividualDetailsConfig): Reads[ItsaStatuses] = Json.reads[ItsaStatuses]
-  implicit val writes: OWrites[ItsaStatuses]                                          = Json.writes[ItsaStatuses]
-
+@Singleton
+class SAIndividualDetailsConfig @Inject() (val config: ServicesConfig, val configuration: Configuration) extends AppConfigBase {
+  def digitallyExemptTaxYear: Int = config.getInt("tax_year_digitally_exempt")
 }
