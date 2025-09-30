@@ -16,7 +16,6 @@
 
 package v2.retrieveItsaStatus.def1.model.response
 
-import config.SAIndividualDetailsConfig
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v2.models.domain.{StatusEnum, StatusReasonEnum}
@@ -25,7 +24,7 @@ case class ItsaStatusDetails(submittedOn: String, status: StatusEnum, statusReas
 
 object ItsaStatusDetails {
 
-  implicit def reads(implicit config: SAIndividualDetailsConfig): Reads[ItsaStatusDetails] = (
+  implicit val reads: Reads[ItsaStatusDetails] = (
     (JsPath \ "submittedOn").read[String] and
       (JsPath \ "status").read[StatusEnum] and
       (JsPath \ "statusReason").read[StatusReasonEnum] and

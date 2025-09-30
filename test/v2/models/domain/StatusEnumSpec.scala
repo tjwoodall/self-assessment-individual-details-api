@@ -16,17 +16,18 @@
 
 package v2.models.domain
 
-import config.MockSAIndividualDetailsConfig
 import play.api.libs.json.{JsString, Json}
 import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
 import v2.models.domain.StatusEnum.*
 
-class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport with MockSAIndividualDetailsConfig {
+import java.time.{Clock, LocalDate, ZoneOffset}
+
+class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   "JSON reads" must {
     "deserialize correctly when tax year is before 26-27" in {
-      digitallyExemptTaxYearMock(2027)
+
       val namesAndValues = Seq(
         ("00", `No Status`),
         ("01", `MTD Mandated`),
@@ -42,7 +43,7 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport with MockSAIndivi
   }
 
   "deserialize correctly when tax year is 26-27 or later" in {
-    digitallyExemptTaxYearMock(2026)
+    given clock: Clock = Clock.fixed(LocalDate.parse("2026-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
     val namesAndValues = Seq(
       ("00", `No Status`),
       ("01", `MTD Mandated`),
@@ -58,7 +59,6 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport with MockSAIndivi
 
   "JSON formats" must {
     "support round trip when tax year is before 26-27" in {
-      digitallyExemptTaxYearMock(2027)
       val namesAndValues = Seq(
         ("No Status", `No Status`),
         ("MTD Mandated", `MTD Mandated`),
@@ -79,7 +79,7 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport with MockSAIndivi
 
   "JSON formats" must {
     "support round trip when tax year is 26-27 or later" in {
-      digitallyExemptTaxYearMock(2026)
+      given clock: Clock = Clock.fixed(LocalDate.parse("2026-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
       val namesAndValues = Seq(
         ("No Status", `No Status`),
         ("MTD Mandated", `MTD Mandated`),

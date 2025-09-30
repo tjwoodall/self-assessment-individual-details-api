@@ -16,11 +16,11 @@
 
 package v2.models.domain
 
-import config.SAIndividualDetailsConfig
 import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import shared.utils.enums.Enums
 
+import java.time.Clock
 import scala.math.Ordered.orderingToOrdered
 
 enum StatusEnum(val fromDownstream: String) {
@@ -38,10 +38,10 @@ enum StatusEnum(val fromDownstream: String) {
 
 object StatusEnum {
 
-  given reads(using config: SAIndividualDetailsConfig): Reads[StatusEnum] =
+  given reads(using clock: Clock = Clock.systemUTC()): Reads[StatusEnum] =
     Enums.readsFrom[StatusEnum](values, _.fromDownstream).orElse(Enums.reads(values)).flatMap {
-      case `Non Digital` if TaxYear.currentTaxYear >= TaxYear.ending(config.digitallyExemptTaxYear) => Reads.pure(`Digitally Exempt`)
-      case status                                                                                   => Reads.pure(status)
+      case `Non Digital` if TaxYear.currentTaxYear >= TaxYear.ending(2027) => Reads.pure(`Digitally Exempt`)
+      case status                                                          => Reads.pure(status)
     }
 
   given Writes[StatusEnum] = Enums.writes[StatusEnum]

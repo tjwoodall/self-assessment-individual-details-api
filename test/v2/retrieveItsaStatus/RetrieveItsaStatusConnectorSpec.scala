@@ -16,7 +16,6 @@
 
 package v2.retrieveItsaStatus
 
-import config.MockSAIndividualDetailsConfig
 import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
@@ -30,7 +29,7 @@ import v2.retrieveItsaStatus.model.response.{Def1_RetrieveItsaStatusResponse, Re
 
 import scala.concurrent.Future
 
-class RetrieveItsaStatusConnectorSpec extends ConnectorSpec with MockSAIndividualDetailsConfig {
+class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
 
   private val nino    = "AA111111A"
   private val taxYear = TaxYear.fromMtd("2023-24")

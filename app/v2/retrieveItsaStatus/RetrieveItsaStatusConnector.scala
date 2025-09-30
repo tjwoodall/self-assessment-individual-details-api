@@ -16,7 +16,6 @@
 
 package v2.retrieveItsaStatus
 
-import config.SAIndividualDetailsConfig
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
@@ -30,8 +29,7 @@ import v2.retrieveItsaStatus.model.response.{Def1_RetrieveItsaStatusResponse, Re
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveItsaStatusConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig)(implicit config: SAIndividualDetailsConfig)
-    extends BaseDownstreamConnector {
+class RetrieveItsaStatusConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveItsaStatusRequestData)(implicit
       hc: HeaderCarrier,

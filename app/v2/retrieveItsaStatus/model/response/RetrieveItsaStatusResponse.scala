@@ -16,7 +16,6 @@
 
 package v2.retrieveItsaStatus.model.response
 
-import config.SAIndividualDetailsConfig
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import shared.utils.JsonWritesUtil
 import v2.retrieveItsaStatus.def1.model.response.ItsaStatuses
@@ -36,7 +35,7 @@ case class Def1_RetrieveItsaStatusResponse(itsaStatuses: Seq[ItsaStatuses]) exte
 
 object Def1_RetrieveItsaStatusResponse {
 
-  implicit def reads(implicit config: SAIndividualDetailsConfig): Reads[Def1_RetrieveItsaStatusResponse] = json =>
+  implicit val reads: Reads[Def1_RetrieveItsaStatusResponse] = json =>
     json
       .validate[Seq[ItsaStatuses]]
       .map(itsaStatuses => Def1_RetrieveItsaStatusResponse(itsaStatuses))
