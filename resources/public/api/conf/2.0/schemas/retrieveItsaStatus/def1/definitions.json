@@ -14,13 +14,14 @@
     "status": {
       "type": "string",
       
-      "description": "The ITSA Status for the Tax Year.",
+      "description": "The ITSA Status for the Tax Year. The value `Non Digital` is deprecated and will no longer be supported from tax year 2026-27",
       "enum": [
         "No Status",
         "MTD Mandated",
         "MTD Voluntary",
         "Annual",
         "Non Digital",
+        "Digitally Exempt",
         "Dormant",
         "MTD Exempt"
       ]
