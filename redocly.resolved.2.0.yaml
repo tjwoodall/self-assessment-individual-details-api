@@ -214,13 +214,7 @@ paths:
                 example-response:
                   description: Example response given any tax year
                   value:
-                    itsaStatuses:
-                      - taxYear: 2019-20
-                        itsaStatusDetails:
-                          - submittedOn: '2023-05-23T12:29:27.566Z'
-                            status: No Status
-                            statusReason: Sign up - return available
-                            businessIncome2YearsPrior: 99999999999.99
+                    $ref: ./examples/retrieveItsaStatus/def1/response.json
         '400':
           description: Bad request
           headers:
