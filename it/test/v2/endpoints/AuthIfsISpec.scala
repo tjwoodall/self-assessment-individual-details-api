@@ -28,9 +28,6 @@ import shared.support.IntegrationBaseSpec
 
 class AuthIfsISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1878.enabled" -> false) ++ super.servicesConfig
-
   "Calling the sample endpoint" when {
 
     "MTD ID lookup fails with a 500" should {
@@ -75,8 +72,8 @@ class AuthIfsISpec extends IntegrationBaseSpec {
           |    "itsaStatusDetails": [
           |      {
           |        "submittedOn": "2023-05-23T12:29:27.566Z",
-          |        "status": "No Status",
-          |        "statusReason": "Sign up - return available",
+          |        "status": "00",
+          |        "statusReason": "00",
           |        "businessIncomePriorTo2Years": 23600.99
           |      }
           |    ]
@@ -89,7 +86,12 @@ class AuthIfsISpec extends IntegrationBaseSpec {
         AuditStub.audit()
         AuthStub.authorised()
         MtdIdLookupStub.ninoFound(nino)
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("futureYears" -> "false", "history" -> "false"), OK, downstreamResponse)
+        DownstreamStub.onSuccess(
+          DownstreamStub.GET,
+          downstreamUri,
+          Map("taxYear" -> downstreamTaxYear, "futureYears" -> "false", "history" -> "false"),
+          OK,
+          downstreamResponse)
       }
 
       val response: WSResponse = await(request().get())
@@ -138,7 +140,7 @@ class AuthIfsISpec extends IntegrationBaseSpec {
     def setupStubs(): StubMapping
     def uri: String = s"/itsa-status/$nino/$mtdTaxYear"
 
-    def downstreamUri: String = s"/income-tax/$nino/person-itd/itsa-status/$downstreamTaxYear"
+    def downstreamUri: String = s"/itsd/person-itd/itsa-status/$nino"
 
     def request(): WSRequest = {
       setupStubs()
