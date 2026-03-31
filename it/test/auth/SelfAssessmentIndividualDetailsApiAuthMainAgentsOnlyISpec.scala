@@ -18,24 +18,21 @@ package auth
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import shared.auth.AuthSupportingAgentsAllowedISpec
+import shared.auth.AuthMainAgentsOnlyISpec
 import shared.services.DownstreamStub
 
-class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedHipISpec extends AuthSupportingAgentsAllowedISpec {
+class SelfAssessmentIndividualDetailsApiAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
   override val callingApiVersion = "2.0"
 
-  override val supportingAgentsAllowedEndpoint = "retrieve-itsa-status"
+  val supportingAgentsNotAllowedEndpoint = "retrieve-itsa-status"
 
   override val mtdUrl = s"/itsa-status/$nino/2022-23"
 
   override def sendMtdRequest(request: WSRequest): WSResponse = await(request.get())
 
   override val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.GET
-
-  override val downstreamQueryParams: Map[String, String] = Map("taxYear" -> "22-23")
-
-  override val downstreamUri: String = s"/itsd/person-itd/itsa-status/$nino"
+  override val downstreamUri: String                           = s"/itsd/person-itd/itsa-status/$nino"
 
   override val maybeDownstreamResponseJson: Option[JsValue] = Some(
     Json.parse(
@@ -46,15 +43,14 @@ class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedHipISpec extends 
         |    "itsaStatusDetails": [
         |      {
         |        "submittedOn": "2023-05-23T12:29:27.566Z",
-        |        "status": "00",
-        |        "statusReason": "00",
+        |        "status": "No Status",
+        |        "statusReason": "Sign up - return available",
         |        "businessIncomePriorTo2Years": 23600.99
         |      }
         |    ]
         |  }
         |]
-      """.stripMargin
-    )
-  )
+    """.stripMargin
+    ))
 
 }

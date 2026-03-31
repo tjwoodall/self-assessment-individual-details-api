@@ -16,7 +16,6 @@
 
 package v2.retrieveItsaStatus
 
-import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -41,21 +40,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
   private val outcome = Right(ResponseWrapper(correlationId, responseModel))
 
   "RetrieveItsaStatusConnector" should {
-    "return a 200 status and expected response for a success scenario with HIP migration feature flag set to false" in new IfsTest with Test {
-
-      MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1878.enabled" -> false)
-
-      willGet(url = url"$baseUrl/income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=true&history=true")
-        .returns(Future.successful(outcome))
-
-      val result: DownstreamOutcome[RetrieveItsaStatusResponse] = await(connector.retrieve(request))
-
-      result shouldBe outcome
-    }
-
-    "return a 200 status and expected response for a success scenario with HIP migration feature flag set to true" in new HipTest with Test {
-
-      MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1878.enabled" -> true)
+    "return a 200 status and expected response for a success scenario" in new HipTest with Test {
 
       willGet(url = url"$baseUrl/itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=true&history=true")
         .returns(Future.successful(outcome))

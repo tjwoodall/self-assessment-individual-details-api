@@ -16,8 +16,8 @@
 
 package v2.retrieveItsaStatus
 
-import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri}
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.HipUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -40,15 +40,9 @@ class RetrieveItsaStatusConnector @Inject() (val http: HttpClientV2, val appConf
       case def1: Def1_RetrieveItsaStatusRequestData =>
         import request.*
 
-        val downstreamUri: DownstreamUri[Def1_RetrieveItsaStatusResponse] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1878")) {
-          HipUri[Def1_RetrieveItsaStatusResponse](
-            s"itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=$futureYears&history=$history"
-          )
-        } else {
-          IfsUri[Def1_RetrieveItsaStatusResponse](
-            s"income-tax/$nino/person-itd/itsa-status/${taxYear.asTysDownstream}?futureYears=$futureYears&history=$history"
-          )
-        }
+        val downstreamUri: DownstreamUri[Def1_RetrieveItsaStatusResponse] = HipUri[Def1_RetrieveItsaStatusResponse](
+          s"itsd/person-itd/itsa-status/$nino?taxYear=${taxYear.asTysDownstream}&futureYears=$futureYears&history=$history"
+        )
 
         get(downstreamUri)
     }

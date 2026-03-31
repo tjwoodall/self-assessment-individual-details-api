@@ -21,10 +21,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthSupportingAgentsAllowedISpec
 import shared.services.DownstreamStub
 
-class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedIfsISpec extends AuthSupportingAgentsAllowedISpec {
-
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1878.enabled" -> false) ++ super.servicesConfig
+class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedISpec extends AuthSupportingAgentsAllowedISpec {
 
   override val callingApiVersion = "2.0"
 
@@ -35,7 +32,8 @@ class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedIfsISpec extends 
   override def sendMtdRequest(request: WSRequest): WSResponse = await(request.get())
 
   override val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.GET
-  override val downstreamUri: String                           = s"/income-tax/$nino/person-itd/itsa-status/22-23"
+
+  override val downstreamUri: String = s"/itsd/person-itd/itsa-status/$nino"
 
   override val maybeDownstreamResponseJson: Option[JsValue] = Some(
     Json.parse(

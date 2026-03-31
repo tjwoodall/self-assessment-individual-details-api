@@ -13,7 +13,6 @@
     },
     "status": {
       "type": "string",
-      {{#if (enabled '1878_digitally_exempt_docs')}}
       "description": "The ITSA Status for the Tax Year. The value `Non Digital` is deprecated and will no longer be supported from tax year 2026-27",
       "enum": [
         "No Status",
@@ -25,18 +24,6 @@
         "Dormant",
         "MTD Exempt"
       ]
-      {{else}}
-      "description": "The ITSA Status for the Tax Year.",
-      "enum": [
-        "No Status",
-        "MTD Mandated",
-        "MTD Voluntary",
-        "Annual",
-        "Non Digital",
-        "Dormant",
-        "MTD Exempt"
-      ]
-      {{/if}}
     },
     "statusReason": {
       "type": "string",
