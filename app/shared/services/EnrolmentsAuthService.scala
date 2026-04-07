@@ -70,18 +70,18 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
                   .authorised(EnrolmentsAuthService.supportingAgentAuthPredicate(mtdId)) {
                     Future.successful(agentDetails(mtdId, authorisedEnrolments, "Supporting Agent"))
                   }
-              case _: InsufficientEnrolments =>
-                logger.warn(s"[EnrolmentsAuthService][authorised] Agent enrolment not found for MTDITID: $mtdId")
-                Future.successful(Left(ClientNotEnrolledError))
+//              case _: InsufficientEnrolments =>
+//                logger.warn(s"[EnrolmentsAuthService][authorised] Agent enrolment not found for MTDITID: $mtdId")
+//                Future.successful(Left(ClientNotEnrolledError))
             }
         case _ =>
           logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
           Future.successful(Left(ClientOrAgentNotAuthorisedError))
       }
       .recoverWith {
-        case _: InsufficientEnrolments =>
-          logger.warn(s"[EnrolmentsAuthService][authorised] Insufficient Enrolments")
-          Future.successful(Left(ClientNotEnrolledError))
+//        case _: InsufficientEnrolments =>
+//          logger.warn(s"[EnrolmentsAuthService][authorised] Insufficient Enrolments")
+//          Future.successful(Left(ClientNotEnrolledError))
         case _: AuthorisationException =>
           Future.successful(Left(ClientOrAgentNotAuthorisedError))
         case error =>

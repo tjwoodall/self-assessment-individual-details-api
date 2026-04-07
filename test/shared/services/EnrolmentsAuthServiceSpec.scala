@@ -19,7 +19,7 @@ package shared.services
 import org.scalamock.handlers.CallHandler
 import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
 import shared.models.auth.UserDetails
-import shared.models.errors.{ClientNotEnrolledError, ClientOrAgentNotAuthorisedError, InternalError}
+import shared.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import shared.models.outcomes.AuthOutcome
 import shared.services.EnrolmentsAuthService.{
   authorisationDisabledPredicate,
@@ -234,7 +234,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockSharedAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         val result: AuthOutcome = await(enrolmentsAuthService.authorised(mtdId))
-        result shouldBe Left(ClientNotEnrolledError)
+        result shouldBe Left(ClientOrAgentNotAuthorisedError)
       }
 
     def disallowWhenNoBearerToken(authValidationEnabled: Boolean, initialPredicate: Predicate): Unit =
@@ -260,7 +260,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockSharedAppConfig {
           .returns(Future.failed(InsufficientEnrolments()))
 
         val result: AuthOutcome = await(enrolmentsAuthService.authorised(mtdId))
-        result shouldBe Left(ClientNotEnrolledError)
+        result shouldBe Left(ClientOrAgentNotAuthorisedError)
       }
   }
 
