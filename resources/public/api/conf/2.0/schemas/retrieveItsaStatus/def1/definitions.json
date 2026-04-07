@@ -41,7 +41,14 @@
         "Income Source Latency Changes",
         "MTD ITSA Opt-Out",
         "MTD ITSA Opt-In",
-        "Digitally Exempt"
+        "Digitally Exempt",
+        "Capacitor",
+        "Residence and remittance",
+         "Ministers of religion",
+         "Lloyds underwriters",
+         "Blind persons allowance",
+         "Married couples allowance",
+         "Return not considered"
       ]
     },
     "businessIncome2YearsPrior": {

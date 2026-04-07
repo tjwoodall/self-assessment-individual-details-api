@@ -33,6 +33,13 @@ enum StatusReasonEnum(val fromDownstream: String) {
   case `MTD ITSA Opt-Out`              extends StatusReasonEnum("10")
   case `MTD ITSA Opt-In`               extends StatusReasonEnum("11")
   case `Digitally Exempt`              extends StatusReasonEnum("12")
+  case `Capacitor`                     extends StatusReasonEnum("13")
+  case `Residence and remittance`      extends StatusReasonEnum("14")
+  case `Ministers of religion`         extends StatusReasonEnum("15")
+  case `Lloyds underwriters`           extends StatusReasonEnum("16")
+  case `Blind persons allowance`       extends StatusReasonEnum("17")
+  case `Married couples allowance`     extends StatusReasonEnum("18")
+  case `Return not considered`         extends StatusReasonEnum("19")
 }
 
 object StatusReasonEnum {

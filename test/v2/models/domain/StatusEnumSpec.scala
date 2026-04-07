@@ -27,7 +27,7 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   "JSON reads" must {
     "deserialize correctly when tax year is before 26-27" in {
-
+      given clock: Clock = Clock.fixed(LocalDate.parse("2025-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
       val namesAndValues = Seq(
         ("00", `No Status`),
         ("01", `MTD Mandated`),
@@ -59,6 +59,7 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   "JSON formats" must {
     "support round trip when tax year is before 26-27" in {
+      given clock: Clock = Clock.fixed(LocalDate.parse("2025-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
       val namesAndValues = Seq(
         ("No Status", `No Status`),
         ("MTD Mandated", `MTD Mandated`),

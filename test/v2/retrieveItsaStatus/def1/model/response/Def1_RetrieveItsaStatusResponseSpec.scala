@@ -86,7 +86,6 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
     StatusEnum.`MTD Mandated`,
     StatusEnum.`MTD Voluntary`,
     StatusEnum.Annual,
-    StatusEnum.`Non Digital`,
     StatusEnum.`Digitally Exempt`,
     StatusEnum.Dormant,
     StatusEnum.`MTD Exempt`
@@ -105,7 +104,14 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
     StatusReasonEnum.`Income Source Latency Changes`,
     StatusReasonEnum.`MTD ITSA Opt-Out`,
     StatusReasonEnum.`MTD ITSA Opt-In`,
-    StatusReasonEnum.`Digitally Exempt`
+    StatusReasonEnum.`Digitally Exempt`,
+    StatusReasonEnum.`Capacitor`,
+    StatusReasonEnum.`Residence and remittance`,
+    StatusReasonEnum.`Ministers of religion`,
+    StatusReasonEnum.`Lloyds underwriters`,
+    StatusReasonEnum.`Blind persons allowance`,
+    StatusReasonEnum.`Married couples allowance`,
+    StatusReasonEnum.`Return not considered`
   )
 
   "Def1_RetrieveItsaStatusResponse" when {
