@@ -166,6 +166,7 @@ paths:
                                 type: string
                                 description: "The date the ITSA status was submitted,\
                                   \ in the format YYYY-MM-DDThh:mm:ss.SSSZ."
+                                format: date-time
                                 example: 2021-03-23T16:02:34.039Z
                               status:
                                 type: string
@@ -198,7 +199,17 @@ paths:
                                 - MTD ITSA Opt-Out
                                 - MTD ITSA Opt-In
                                 - Digitally Exempt
+                                - Capacitor
+                                - Residence and remittance
+                                - Ministers of religion
+                                - Lloyds underwriters
+                                - Blind persons allowance
+                                - Married couples allowance
+                                - Return not considered
                               businessIncome2YearsPrior:
+                                multipleOf: 0.01
+                                maximum: 99999999999.99
+                                minimum: 0
                                 type: number
                                 description: "The business income for 2 years prior,\
                                   \ based on Self Assessment returns or MTD ITSA declarations\
@@ -424,6 +435,7 @@ components:
                       type: string
                       description: "The date the ITSA status was submitted, in the\
                         \ format YYYY-MM-DDThh:mm:ss.SSSZ."
+                      format: date-time
                       example: 2021-03-23T16:02:34.039Z
                     status:
                       type: string
@@ -456,7 +468,17 @@ components:
                       - MTD ITSA Opt-Out
                       - MTD ITSA Opt-In
                       - Digitally Exempt
+                      - Capacitor
+                      - Residence and remittance
+                      - Ministers of religion
+                      - Lloyds underwriters
+                      - Blind persons allowance
+                      - Married couples allowance
+                      - Return not considered
                     businessIncome2YearsPrior:
+                      multipleOf: 0.01
+                      maximum: 99999999999.99
+                      minimum: 0
                       type: number
                       description: "The business income for 2 years prior, based on\
                         \ Self Assessment returns or MTD ITSA declarations 2 years\
@@ -485,6 +507,7 @@ components:
     submittedOn:
       type: string
       description: "The date the ITSA status was submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ."
+      format: date-time
       example: 2021-03-23T16:02:34.039Z
     status:
       type: string
@@ -516,7 +539,17 @@ components:
       - MTD ITSA Opt-Out
       - MTD ITSA Opt-In
       - Digitally Exempt
+      - Capacitor
+      - Residence and remittance
+      - Ministers of religion
+      - Lloyds underwriters
+      - Blind persons allowance
+      - Married couples allowance
+      - Return not considered
     businessIncome2YearsPrior:
+      multipleOf: 0.01
+      maximum: 99999999999.99
+      minimum: 0
       type: number
       description: "The business income for 2 years prior, based on Self Assessment\
         \ returns or MTD ITSA declarations 2 years before the requested tax year."
