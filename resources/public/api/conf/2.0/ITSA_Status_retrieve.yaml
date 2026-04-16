@@ -92,6 +92,8 @@ get:
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
               $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+            CLIENT_NOT_MTD_ENROLLED:
+              $ref: ./common/errors.yaml#/components/examples/clientNotMtdEnrolled
 
     404:
       description: Not Found
