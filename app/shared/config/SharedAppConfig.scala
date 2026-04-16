@@ -37,7 +37,8 @@ class SharedAppConfig @Inject() (val config: ServicesConfig, protected[config] v
   def appName: String = config.getString("appName")
 
   // MTD ID Lookup Config
-  def mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
+  def mtdIdBaseUrl: String           = config.baseUrl("mtd-id-lookup")
+  def enrolmentStoreProxyUrl: String = config.baseUrl("enrolment-store-proxy")
 
   def desDownstreamConfig: DownstreamConfig          = downstreamConfig("des")
   def ifsDownstreamConfig: DownstreamConfig          = downstreamConfig("ifs")

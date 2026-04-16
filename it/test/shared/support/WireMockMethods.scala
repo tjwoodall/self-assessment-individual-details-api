@@ -26,32 +26,58 @@ trait WireMockMethods {
 
   def resetAll(): Unit = WireMock.reset()
 
-  def when(method: HTTPMethod, uri: String, queryParams: Map[String, String] = Map.empty, headers: Map[String, String] = Map.empty): Mapping = {
-    new Mapping(method, uri, queryParams, headers, None)
-  }
+  def when(
+      method: HTTPMethod,
+      uri: String,
+      queryParams: Map[String, String] = Map.empty,
+      headers: Map[String, String] = Map.empty
+  ): Mapping =
+    new Mapping(method, uri, queryParams, headers, None, None, None, None)
 
-  class Mapping(method: HTTPMethod, uri: String, queryParams: Map[String, String], headers: Map[String, String], body: Option[String]) {
+  class Mapping(
+      method: HTTPMethod,
+      uri: String,
+      queryParams: Map[String, String],
+      headers: Map[String, String],
+      body: Option[String],
+      scenarioName: Option[String],
+      requiredState: Option[String],
+      newState: Option[String]
+  ) {
 
     private val mapping = {
       val uriMapping = method.wireMockMapping(urlPathMatching(uri))
 
-      val uriMappingWithQueryParams = queryParams.foldLeft(uriMapping) { case (m, (key, value)) =>
+      val withQuery = queryParams.foldLeft(uriMapping) { case (m, (key, value)) =>
         m.withQueryParam(key, matching(value))
       }
 
-      val uriMappingWithHeaders = headers.foldLeft(uriMappingWithQueryParams) { case (m, (key, value)) =>
+      val withHeaders = headers.foldLeft(withQuery) { case (m, (key, value)) =>
         m.withHeader(key, equalTo(value))
       }
 
       body match {
-        case Some(extractedBody) => uriMappingWithHeaders.withRequestBody(equalToJson(extractedBody))
-        case None                => uriMappingWithHeaders
+        case Some(b) => withHeaders.withRequestBody(equalToJson(b))
+        case None    => withHeaders
       }
     }
 
+    // Scenario builder methods
+
+    def inScenario(name: String): Mapping =
+      new Mapping(method, uri, queryParams, headers, body, Some(name), requiredState, newState)
+
+    def whenScenarioStateIs(state: String): Mapping =
+      new Mapping(method, uri, queryParams, headers, body, scenarioName, Some(state), newState)
+
+    def willSetStateTo(state: String): Mapping =
+      new Mapping(method, uri, queryParams, headers, body, scenarioName, requiredState, Some(state))
+
+    // Default Mapping builder methods
+
     def withRequestBody[T](body: T)(implicit writes: Writes[T]): Mapping = {
       val stringBody = writes.writes(body).toString()
-      new Mapping(method, uri, queryParams, headers, Some(stringBody))
+      new Mapping(method, uri, queryParams, headers, Some(stringBody), scenarioName, requiredState, newState)
     }
 
     def thenReturn[T](status: Int, body: T)(implicit writes: Writes[T]): StubMapping = {
@@ -59,27 +85,44 @@ trait WireMockMethods {
       thenReturnInternal(status, Map.empty, Some(stringBody))
     }
 
-    def thenReturn(status: Int, body: String): StubMapping = {
+    def thenReturn(status: Int, body: String): StubMapping =
       thenReturnInternal(status, Map.empty, Some(body))
-    }
 
-    def thenReturn(status: Int, headers: Map[String, String] = Map.empty): StubMapping = {
+    def thenReturn(status: Int, headers: Map[String, String] = Map.empty): StubMapping =
       thenReturnInternal(status, headers, None)
-    }
 
-    private def thenReturnInternal(status: Int, headers: Map[String, String], body: Option[String]): StubMapping = {
+    private def thenReturnInternal(
+        status: Int,
+        headers: Map[String, String],
+        body: Option[String]
+    ): StubMapping = {
+
       val response = {
-        val statusResponse = aResponse().withStatus(status)
-        val responseWithHeaders = headers.foldLeft(statusResponse) { case (res, (key, value)) =>
-          res.withHeader(key, value)
-        }
+        val base        = aResponse().withStatus(status)
+        val withHeaders = headers.foldLeft(base) { case (res, (k, v)) => res.withHeader(k, v) }
         body match {
-          case Some(extractedBody) => responseWithHeaders.withBody(extractedBody)
-          case None                => responseWithHeaders
+          case Some(b) => withHeaders.withBody(b)
+          case None    => withHeaders
         }
       }
 
-      stubFor(mapping.willReturn(response))
+      val builderWithResponse = mapping.willReturn(response)
+
+      val builderWithScenario =
+        (scenarioName, requiredState, newState) match {
+          case (Some(name), Some(req), Some(next)) =>
+            builderWithResponse.inScenario(name).whenScenarioStateIs(req).willSetStateTo(next)
+          case (Some(name), Some(req), None) =>
+            builderWithResponse.inScenario(name).whenScenarioStateIs(req)
+          case (Some(name), None, Some(next)) =>
+            builderWithResponse.inScenario(name).willSetStateTo(next)
+          case (Some(name), None, None) =>
+            builderWithResponse.inScenario(name)
+          case _ =>
+            builderWithResponse
+        }
+
+      stubFor(builderWithScenario)
     }
 
   }
