@@ -16,7 +16,8 @@
 
 package shared.services
 
-import shared.config.SharedAppConfig
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.connectors.EnrolmentsAuthConnector
 import shared.models.auth.UserDetails
 import shared.models.errors.*
 import shared.models.outcomes.AuthOutcome
@@ -32,7 +33,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: SharedAppConfig) extends Logging {
+class EnrolmentsAuthService @Inject() (val connector: AuthConnector,
+                                       val enrolmentsAuthConnector: EnrolmentsAuthConnector,
+                                       val appConfig: SharedAppConfig)
+    extends Logging {
 
   import shared.models.errors.InternalError
 
@@ -51,7 +55,8 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
 
   def authorised(mtdId: String, endpointAllowsSupportingAgents: Boolean = false)(implicit
       hc: HeaderCarrier,
-      ec: ExecutionContext): Future[AuthOutcome] =
+      ec: ExecutionContext,
+      appConfig: SharedAppConfig): Future[AuthOutcome] = {
     authFunction
       .authorised(initialPredicate(mtdId))
       .retrieve(affinityGroup and authorisedEnrolments) {
@@ -70,24 +75,29 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
                   .authorised(EnrolmentsAuthService.supportingAgentAuthPredicate(mtdId)) {
                     Future.successful(agentDetails(mtdId, authorisedEnrolments, "Supporting Agent"))
                   }
-//              case _: InsufficientEnrolments =>
-//                logger.warn(s"[EnrolmentsAuthService][authorised] Agent enrolment not found for MTDITID: $mtdId")
-//                Future.successful(Left(ClientNotEnrolledError))
+              case _: InsufficientEnrolments =>
+                logger.warn(s"[EnrolmentsAuthService][authorised] Agent enrolment not found for MTDITID: $mtdId")
+                Future.successful(Left(ClientOrAgentNotAuthorisedError))
             }
         case _ =>
           logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
           Future.successful(Left(ClientOrAgentNotAuthorisedError))
       }
       .recoverWith {
-//        case _: InsufficientEnrolments =>
-//          logger.warn(s"[EnrolmentsAuthService][authorised] Insufficient Enrolments")
-//          Future.successful(Left(ClientNotEnrolledError))
+        case _: InsufficientEnrolments =>
+          logger.warn(s"[EnrolmentsAuthService][authorised] Insufficient Enrolments")
+          if (ConfigFeatureSwitches().isEnabled("ES1Call")) {
+            enrolmentsAuthConnector.getMtdIds(mtdId).map(Left(_))
+          } else {
+            Future.successful(Left(ClientOrAgentNotAuthorisedError))
+          }
         case _: AuthorisationException =>
           Future.successful(Left(ClientOrAgentNotAuthorisedError))
         case error =>
           logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
           Future.successful(Left(InternalError))
       }
+  }
 
   private def agentDetails(mtdId: String, enrolments: Enrolments, agentType: String): Either[MtdError, UserDetails] = {
     (for {
