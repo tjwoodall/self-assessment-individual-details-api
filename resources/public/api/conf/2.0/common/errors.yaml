@@ -50,6 +50,12 @@ components:
         code: CLIENT_OR_AGENT_NOT_AUTHORISED
         message: The client or agent is not authorised
 
+    clientNotMtdEnrolled:
+      description: The client does not have an active MTD enrolment.
+      value:
+        code: CLIENT_NOT_MTD_ENROLLED
+        message: The client does not have an active MTD enrolment.
+
     # 404
 
     notFound:
