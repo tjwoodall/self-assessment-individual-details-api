@@ -69,8 +69,9 @@ object AuthStub extends WireMockMethods {
     when(method = POST, uri = authoriseUri)
       .thenReturn(status = UNAUTHORIZED, headers = Map("WWW-Authenticate" -> """MDTP detail="InvalidBearerToken""""))
 
-  def insufficientEnrolments(): Mapping =
+  def insufficientEnrolments(): StubMapping =
     when(method = POST, uri = authoriseUri)
+      .thenReturn(status = UNAUTHORIZED, headers = Map("WWW-Authenticate" -> """MDTP detail="InsufficientEnrolments""""))
 
   private def authorisedWith(affinityGroup: String): StubMapping =
     when(method = POST, uri = authoriseUri)

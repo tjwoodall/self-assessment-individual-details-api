@@ -40,9 +40,10 @@ class MtdIdLookupService @Inject() (val connector: MtdIdLookupConnector) {
         case Right(mtdId) => Right(mtdId)
         case Left(MtdIdLookupConnector.Error(statusCode)) =>
           statusCode match {
-            case FORBIDDEN    => Left(ClientOrAgentNotAuthorisedError)
-            case UNAUTHORIZED => Left(InvalidBearerTokenError)
-            case _            => Left(InternalError)
+            case FORBIDDEN            => Left(ClientOrAgentNotAuthorisedError)
+            case UNAUTHORIZED         => Left(InvalidBearerTokenError)
+            case UNPROCESSABLE_ENTITY => Left(ClientNotEnrolledError)
+            case _                    => Left(InternalError)
           }
       }
     }

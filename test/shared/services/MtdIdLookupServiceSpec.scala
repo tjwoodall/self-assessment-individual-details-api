@@ -69,6 +69,15 @@ class MtdIdLookupServiceSpec extends ServiceSpec {
       }
     }
 
+    "the downstream service returns a 422 status error" should {
+      "return ClientNotEnrolledError" in new Test {
+        MockedMtdIdLookupConnector.lookup(nino) returns Future.successful(Left(MtdIdLookupConnector.Error(UNPROCESSABLE_ENTITY)))
+        val result: Outcome = await(target.lookup(nino))
+
+        result shouldBe Left(ClientNotEnrolledError)
+      }
+    }
+
     "the downstream service returns another status code" should {
       "return InternalError" in new Test {
         MockedMtdIdLookupConnector.lookup(nino) returns Future.successful(Left(MtdIdLookupConnector.Error(IM_A_TEAPOT)))

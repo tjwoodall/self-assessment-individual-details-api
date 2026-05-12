@@ -19,7 +19,6 @@ package shared.services
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.config.SharedAppConfig
 import shared.models.auth.UserDetails
 import shared.models.outcomes.AuthOutcome
 import uk.gov.hmrc.http.HeaderCarrier
@@ -34,15 +33,15 @@ trait MockEnrolmentsAuthService extends TestSuite with MockFactory {
 
     def authoriseUser(): Unit = {
       (mockEnrolmentsAuthService
-        .authorised(_: String, _: Boolean)(_: HeaderCarrier, _: ExecutionContext, _: SharedAppConfig))
-        .expects(*, *, *, *, *)
+        .authorised(_: String, _: Boolean)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(*, *, *, *)
         .returns(Future.successful(Right(UserDetails("mtd-id", "Individual", None))))
     }
 
     def authoriseAgent(mtdId: String, supportingAgentAccessAllowed: Boolean = false): CallHandler[Future[AuthOutcome]] = {
       (mockEnrolmentsAuthService
-        .authorised(_: String, _: Boolean)(_: HeaderCarrier, _: ExecutionContext, _: SharedAppConfig))
-        .expects(mtdId, supportingAgentAccessAllowed, *, *, *)
+        .authorised(_: String, _: Boolean)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(mtdId, supportingAgentAccessAllowed, *, *)
     }
 
   }

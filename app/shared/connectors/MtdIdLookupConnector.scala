@@ -36,7 +36,7 @@ class MtdIdLookupConnector @Inject() (http: HttpClientV2, appConfig: SharedAppCo
   def getMtdId(nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MtdIdLookupConnector.Outcome] = {
     import shared.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
 
-    http.get(url"${appConfig.mtdIdBaseUrl}/mtd-identifier-lookup/nino/$nino").execute[MtdIdLookupConnector.Outcome]
+    http.get(url"${appConfig.mtdIdBaseUrl}/mtd-identifier-lookup/nino/$nino?notEnrolledFlag=true").execute[MtdIdLookupConnector.Outcome]
   }
 
 }

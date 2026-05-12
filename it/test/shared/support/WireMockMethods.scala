@@ -32,17 +32,14 @@ trait WireMockMethods {
       queryParams: Map[String, String] = Map.empty,
       headers: Map[String, String] = Map.empty
   ): Mapping =
-    new Mapping(method, uri, queryParams, headers, None, None, None, None)
+    new Mapping(method, uri, queryParams, headers, None)
 
   class Mapping(
       method: HTTPMethod,
       uri: String,
       queryParams: Map[String, String],
       headers: Map[String, String],
-      body: Option[String],
-      scenarioName: Option[String],
-      requiredState: Option[String],
-      newState: Option[String]
+      body: Option[String]
   ) {
 
     private val mapping = {
@@ -62,22 +59,11 @@ trait WireMockMethods {
       }
     }
 
-    // Scenario builder methods
-
-    def inScenario(name: String): Mapping =
-      new Mapping(method, uri, queryParams, headers, body, Some(name), requiredState, newState)
-
-    def whenScenarioStateIs(state: String): Mapping =
-      new Mapping(method, uri, queryParams, headers, body, scenarioName, Some(state), newState)
-
-    def willSetStateTo(state: String): Mapping =
-      new Mapping(method, uri, queryParams, headers, body, scenarioName, requiredState, Some(state))
-
     // Default Mapping builder methods
 
     def withRequestBody[T](body: T)(implicit writes: Writes[T]): Mapping = {
       val stringBody = writes.writes(body).toString()
-      new Mapping(method, uri, queryParams, headers, Some(stringBody), scenarioName, requiredState, newState)
+      new Mapping(method, uri, queryParams, headers, Some(stringBody))
     }
 
     def thenReturn[T](status: Int, body: T)(implicit writes: Writes[T]): StubMapping = {
@@ -108,21 +94,7 @@ trait WireMockMethods {
 
       val builderWithResponse = mapping.willReturn(response)
 
-      val builderWithScenario =
-        (scenarioName, requiredState, newState) match {
-          case (Some(name), Some(req), Some(next)) =>
-            builderWithResponse.inScenario(name).whenScenarioStateIs(req).willSetStateTo(next)
-          case (Some(name), Some(req), None) =>
-            builderWithResponse.inScenario(name).whenScenarioStateIs(req)
-          case (Some(name), None, Some(next)) =>
-            builderWithResponse.inScenario(name).willSetStateTo(next)
-          case (Some(name), None, None) =>
-            builderWithResponse.inScenario(name)
-          case _ =>
-            builderWithResponse
-        }
-
-      stubFor(builderWithScenario)
+      stubFor(builderWithResponse)
     }
 
   }
