@@ -26,7 +26,7 @@ import play.api.mvc.Results.InternalServerError
 import shared.config.Deprecation.Deprecated
 import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
-import shared.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
+import shared.models.errors.{ClientNotEnrolledError, ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.Version
 import shared.services.ServiceOutcome
@@ -137,6 +137,8 @@ object RequestHandler {
         val result =
           if (simulateRequestCannotBeFulfilled) {
             EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilledError))))
+          } else if (simulateNotEnrolled) {
+            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, ClientNotEnrolledError))))
           } else {
             for {
               parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
@@ -157,6 +159,9 @@ object RequestHandler {
           }
         }.merge
       }
+
+      private def simulateNotEnrolled(implicit request: UserRequest[?]): Boolean =
+        request.headers.get("Gov-Test-Scenario").contains("NOT_ENROLLED")
 
       private def simulateRequestCannotBeFulfilled(implicit request: UserRequest[?], appConfig: SharedAppConfig): Boolean =
         request.headers.get("Gov-Test-Scenario").contains("REQUEST_CANNOT_BE_FULFILLED") &&
