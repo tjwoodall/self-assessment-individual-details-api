@@ -22,7 +22,6 @@ import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v2.models.domain.StatusEnum.`No Status`
 import v2.models.domain.StatusReasonEnum.`Sign up - return available`
-import v2.models.errors.{FutureYearsFormatError, HistoryFormatError}
 import v2.retrieveItsaStatus.def1.model.request.Def1_RetrieveItsaStatusRequestData
 import v2.retrieveItsaStatus.def1.model.response.{ItsaStatusDetails, ItsaStatuses}
 import v2.retrieveItsaStatus.model.response.Def1_RetrieveItsaStatusResponse
@@ -69,17 +68,6 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec with MockRetrieveItsaSta
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val ifsErrors = List(
-          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-          ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_FUTURES_YEAR", FutureYearsFormatError),
-          ("INVALID_HISTORY", HistoryFormatError),
-          ("INVALID_CORRELATION_ID", InternalError),
-          ("NOT_FOUND", NotFoundError),
-          ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
-        )
-
         val hipErrors = List(
           ("1215", NinoFormatError),
           ("1117", TaxYearFormatError),
@@ -87,7 +75,7 @@ class RetrieveItsaStatusServiceSpec extends ServiceSpec with MockRetrieveItsaSta
           ("5010", NotFoundError)
         )
 
-        (ifsErrors ++ hipErrors).foreach(serviceError.tupled)
+        hipErrors.foreach(serviceError.tupled)
       }
     }
   }

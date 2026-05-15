@@ -42,8 +42,8 @@ class ItsaStatusesSpec extends UnitSpec {
     s"""
        |{
        | "submittedOn": "2018-01-01",
-       | "status": "MTD Voluntary",
-       | "statusReason": "MTD ITSA Opt-In",
+       | "status": "02",
+       | "statusReason": "11",
        | "businessIncomePriorTo2Years": 50000.25
        |}
        |""".stripMargin

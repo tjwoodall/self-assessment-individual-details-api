@@ -38,20 +38,4 @@ class StatusReasonEnumSpec extends UnitSpec with EnumJsonSpecSupport {
     ("12", `Digitally Exempt`)
   )
 
-  testRoundTrip[StatusReasonEnum](
-    ("Sign up - return available", `Sign up - return available`),
-    ("Sign up - no return available", `Sign up - no return available`),
-    ("ITSA final declaration", `ITSA final declaration`),
-    ("ITSA Q4 declaration", `ITSA Q4 declaration`),
-    ("CESA SA return", `CESA SA return`),
-    ("Complex", Complex),
-    ("Ceased income source", `Ceased income source`),
-    ("Reinstated income source", `Reinstated income source`),
-    ("Rollover", Rollover),
-    ("Income Source Latency Changes", `Income Source Latency Changes`),
-    ("MTD ITSA Opt-Out", `MTD ITSA Opt-Out`),
-    ("MTD ITSA Opt-In", `MTD ITSA Opt-In`),
-    ("Digitally Exempt", `Digitally Exempt`)
-  )
-
 }

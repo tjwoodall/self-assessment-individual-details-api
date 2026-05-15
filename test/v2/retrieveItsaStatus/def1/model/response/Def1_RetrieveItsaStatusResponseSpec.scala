@@ -116,17 +116,8 @@ class Def1_RetrieveItsaStatusResponseSpec extends UnitSpec {
 
   "Def1_RetrieveItsaStatusResponse" when {
     "read from a valid JSON" should {
-      "produce the expected object when downstream is IFS" in {
-        statusValues.foreach { status =>
-          statusReasonValues.foreach { statusReason =>
-            val json: JsValue = downstreamJson(status.toString, statusReason.toString)
 
-            json.as[Def1_RetrieveItsaStatusResponse] shouldBe model(status, statusReason)
-          }
-        }
-      }
-
-      "produce the expected object when downstream is HIP" in {
+      "produce the expected object" in {
         statusValues.foreach { status =>
           statusReasonValues.foreach { statusReason =>
             val json: JsValue = downstreamJson(status.fromDownstream, statusReason.fromDownstream)
