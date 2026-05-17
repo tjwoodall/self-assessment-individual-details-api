@@ -40,6 +40,7 @@ paths:
         |-----------------------------------------|--------------------------------------------------------------------------------------------------|
         | N/A - DEFAULT                           | Simulates success response.                                                                      |
         | NOT_FOUND                               | Simulates the scenario where no data is found.                                                   |
+        | NOT_ENROLLED                            | Simulates the scenario where a Client is not MTD Enrolled                                        |
         | STATEFUL                                | Performs a stateful retrieve.                                                                    |
       parameters:
       - name: nino
@@ -349,6 +350,11 @@ paths:
                   value:
                     code: CLIENT_OR_AGENT_NOT_AUTHORISED
                     message: The client or agent is not authorised
+                CLIENT_NOT_MTD_ENROLLED:
+                  description: The client does not have an active MTD enrolment.
+                  value:
+                    code: CLIENT_NOT_MTD_ENROLLED
+                    message: The client does not have an active MTD enrolment.
         "404":
           description: Not Found
           headers:
@@ -654,6 +660,11 @@ components:
       value:
         code: CLIENT_OR_AGENT_NOT_AUTHORISED
         message: The client or agent is not authorised
+    clientNotMtdEnrolled:
+      description: The client does not have an active MTD enrolment.
+      value:
+        code: CLIENT_NOT_MTD_ENROLLED
+        message: The client does not have an active MTD enrolment.
     notFound:
       description: The supplied income source could not be found.
       value:
