@@ -44,7 +44,7 @@ enum StatusReasonEnum(val fromDownstream: String) {
 
 object StatusReasonEnum {
 
-  given reads: Reads[StatusReasonEnum] = Enums.readsFrom[StatusReasonEnum](values, _.fromDownstream).orElse(Enums.reads(values))
+  given reads: Reads[StatusReasonEnum] = Enums.readsFrom[StatusReasonEnum](values, _.fromDownstream)
 
   given Writes[StatusReasonEnum] = Enums.writes[StatusReasonEnum]
 }

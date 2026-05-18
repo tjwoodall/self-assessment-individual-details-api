@@ -20,7 +20,6 @@ import cats.implicits.*
 import shared.controllers.RequestContext
 import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
-import v2.models.errors.{FutureYearsFormatError, HistoryFormatError}
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
 import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse
 
@@ -37,25 +36,15 @@ class RetrieveItsaStatusService @Inject() (connector: RetrieveItsaStatusConnecto
       .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = {
-    val ifsErrors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_FUTURES_YEAR"      -> FutureYearsFormatError,
-      "INVALID_HISTORY"           -> HistoryFormatError,
-      "INVALID_CORRELATION_ID"    -> InternalError,
-      "NOT_FOUND"                 -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 
-    val hipErrors = Map(
+    val downstreamErrors = Map(
       "1215" -> NinoFormatError,
       "1117" -> TaxYearFormatError,
       "1216" -> InternalError,
       "5010" -> NotFoundError
     )
 
-    ifsErrors ++ hipErrors
+    downstreamErrors
   }
 
 }

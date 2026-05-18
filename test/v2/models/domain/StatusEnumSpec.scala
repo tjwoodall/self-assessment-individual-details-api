@@ -16,7 +16,7 @@
 
 package v2.models.domain
 
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.JsString
 import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
 import v2.models.domain.StatusEnum.*
@@ -54,48 +54,6 @@ class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
       ("99", `MTD Exempt`))
     namesAndValues.foreach { case (name, obj) =>
       JsString(name).as[StatusEnum] shouldBe obj
-    }
-  }
-
-  "JSON formats" must {
-    "support round trip when tax year is before 26-27" in {
-      given clock: Clock = Clock.fixed(LocalDate.parse("2025-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
-      val namesAndValues = Seq(
-        ("No Status", `No Status`),
-        ("MTD Mandated", `MTD Mandated`),
-        ("MTD Voluntary", `MTD Voluntary`),
-        ("Annual", Annual),
-        ("Non Digital", `Non Digital`),
-        ("Dormant", Dormant),
-        ("MTD Exempt", `MTD Exempt`)
-      )
-      namesAndValues.foreach { case (name, obj) =>
-        val json = Json.parse(s""""$name"""")
-
-        Json.toJson(obj) shouldBe json
-        json.as[StatusEnum] shouldBe obj
-      }
-    }
-  }
-
-  "JSON formats" must {
-    "support round trip when tax year is 26-27 or later" in {
-      given clock: Clock = Clock.fixed(LocalDate.parse("2026-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
-      val namesAndValues = Seq(
-        ("No Status", `No Status`),
-        ("MTD Mandated", `MTD Mandated`),
-        ("MTD Voluntary", `MTD Voluntary`),
-        ("Annual", Annual),
-        ("Digitally Exempt", `Digitally Exempt`),
-        ("Dormant", Dormant),
-        ("MTD Exempt", `MTD Exempt`)
-      )
-      namesAndValues.foreach { case (name, obj) =>
-        val json = Json.parse(s""""$name"""")
-
-        Json.toJson(obj) shouldBe json
-        json.as[StatusEnum] shouldBe obj
-      }
     }
   }
 

@@ -39,7 +39,7 @@ enum StatusEnum(val fromDownstream: String) {
 object StatusEnum {
 
   given reads(using clock: Clock = Clock.systemUTC()): Reads[StatusEnum] =
-    Enums.readsFrom[StatusEnum](values, _.fromDownstream).orElse(Enums.reads(values)).flatMap {
+    Enums.readsFrom[StatusEnum](values, _.fromDownstream).flatMap {
       case `Non Digital` if TaxYear.currentTaxYear >= TaxYear.ending(2027) => Reads.pure(`Digitally Exempt`)
       case status                                                          => Reads.pure(status)
     }

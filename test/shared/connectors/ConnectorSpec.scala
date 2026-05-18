@@ -120,24 +120,6 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     protected final val config: DownstreamConfig = DownstreamConfig(this.baseUrl, environment, token, Some(allowedHeaders))
   }
 
-  protected trait DesTest extends StandardConnectorTest {
-    val name = "des"
-
-    MockedSharedAppConfig.desDownstreamConfig.anyNumberOfTimes() returns config
-  }
-
-  protected trait IfsTest extends StandardConnectorTest {
-    override val name = "ifs"
-
-    MockedSharedAppConfig.ifsDownstreamConfig.anyNumberOfTimes() returns config
-  }
-
-  protected trait TysIfsTest extends StandardConnectorTest {
-    override val name = "tys-ifs"
-
-    MockedSharedAppConfig.tysIfsDownstreamConfig.anyNumberOfTimes() returns config
-  }
-
   protected trait HipTest extends ConnectorTest {
     private val clientId     = "clientId"
     private val clientSecret = "clientSecret"

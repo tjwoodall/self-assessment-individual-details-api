@@ -44,8 +44,8 @@ class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedISpec extends Aut
       |    "itsaStatusDetails": [
       |      {
       |        "submittedOn": "2023-05-23T12:29:27.566Z",
-      |        "status": "No Status",
-      |        "statusReason": "Sign up - return available",
+      |        "status": "00",
+      |        "statusReason": "00",
       |        "businessIncomePriorTo2Years": 23600.99
       |      }
       |    ]
