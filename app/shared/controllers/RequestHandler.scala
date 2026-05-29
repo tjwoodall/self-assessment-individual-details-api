@@ -160,8 +160,9 @@ object RequestHandler {
         }.merge
       }
 
-      private def simulateNotEnrolled(implicit request: UserRequest[?]): Boolean =
-        request.headers.get("Gov-Test-Scenario").contains("NOT_ENROLLED")
+      private def simulateNotEnrolled(implicit request: UserRequest[?], appConfig: SharedAppConfig): Boolean =
+        request.headers.get("Gov-Test-Scenario").contains("NOT_ENROLLED") &&
+          appConfig.allowNotEnrolledHeader(Version(request))
 
       private def simulateRequestCannotBeFulfilled(implicit request: UserRequest[?], appConfig: SharedAppConfig): Boolean =
         request.headers.get("Gov-Test-Scenario").contains("REQUEST_CANNOT_BE_FULFILLED") &&

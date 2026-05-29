@@ -63,7 +63,10 @@ class SharedAppConfig @Inject() (val config: ServicesConfig, protected[config] v
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
 
   def allowRequestCannotBeFulfilledHeader(version: Version): Boolean =
-    config.getBoolean(s"api.$version.endpoints.allow-request-cannot-be-fulfilled-header")
+    configuration.getOptional[Boolean](s"api.$version.endpoints.allow-request-cannot-be-fulfilled-header").getOrElse(false)
+
+  def allowNotEnrolledHeader(version: Version): Boolean =
+    configuration.getOptional[Boolean](s"api.$version.endpoints.allow-not-enrolled-header").getOrElse(false)
 
   def endpointReleasedInProduction(version: String, name: String): Boolean = {
     val versionReleasedInProd = apiVersionReleasedInProduction(version)
