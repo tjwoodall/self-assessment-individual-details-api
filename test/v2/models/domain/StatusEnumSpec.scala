@@ -17,8 +17,8 @@
 package v2.models.domain
 
 import play.api.libs.json.JsString
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 import v2.models.domain.StatusEnum.*
 
 import java.time.{Clock, LocalDate, ZoneOffset}

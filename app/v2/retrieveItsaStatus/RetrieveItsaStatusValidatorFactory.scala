@@ -16,7 +16,7 @@
 
 package v2.retrieveItsaStatus
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v2.retrieveItsaStatus.def1.Def1_RetrieveItsaStatusValidator
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
 

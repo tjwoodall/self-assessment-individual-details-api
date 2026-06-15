@@ -17,8 +17,8 @@
 package v2.models.domain
 
 import play.api.libs.json.*
-import shared.models.domain.TaxYear
-import shared.utils.enums.Enums
+import api.models.domain.TaxYear
+import api.utils.enums.Enums
 
 import java.time.Clock
 import scala.math.Ordered.orderingToOrdered

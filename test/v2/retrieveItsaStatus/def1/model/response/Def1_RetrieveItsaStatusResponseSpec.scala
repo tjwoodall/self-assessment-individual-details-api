@@ -17,7 +17,7 @@
 package v2.retrieveItsaStatus.def1.model.response
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 import v2.models.domain.{StatusEnum, StatusReasonEnum}
 import v2.retrieveItsaStatus.model.response.Def1_RetrieveItsaStatusResponse
 

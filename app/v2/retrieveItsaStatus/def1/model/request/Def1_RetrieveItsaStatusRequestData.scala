@@ -16,7 +16,7 @@
 
 package v2.retrieveItsaStatus.def1.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v2.retrieveItsaStatus.RetrieveItsaStatusSchema
 import v2.retrieveItsaStatus.RetrieveItsaStatusSchema.Def1
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData

@@ -16,9 +16,9 @@
 
 package v2.retrieveItsaStatus
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v2.models.domain.StatusEnum.`No Status`
 import v2.models.domain.StatusReasonEnum.`Sign up - return available`
@@ -56,7 +56,7 @@ class RetrieveItsaStatusConnectorSpec extends ConnectorSpec {
 
     val connector: RetrieveItsaStatusConnector = new RetrieveItsaStatusConnector(
       http = mockHttpClient,
-      appConfig = mockSharedAppConfig
+      appConfig = mockAppConfig
     )
 
     val request: Def1_RetrieveItsaStatusRequestData = Def1_RetrieveItsaStatusRequestData(Nino(nino), taxYear, futureYears = true, history = true)

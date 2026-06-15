@@ -18,8 +18,8 @@ package config
 
 import com.google.inject.AbstractModule
 import definition.SAIndividualDetailsApiDefinitionFactory
-import shared.definition.ApiDefinitionFactory
-import shared.routing.VersionRoutingMap
+import api.definition.ApiDefinitionFactory
+import api.routing.VersionRoutingMap
 
 class SAIndividualDetailsPlayModule extends AbstractModule {
 

@@ -19,7 +19,7 @@ package v2.retrieveItsaStatus
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.connectors.DownstreamOutcome
+import api.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData
 import v2.retrieveItsaStatus.model.response.RetrieveItsaStatusResponse

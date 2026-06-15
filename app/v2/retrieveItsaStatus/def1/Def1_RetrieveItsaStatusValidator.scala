@@ -19,9 +19,9 @@ package v2.retrieveItsaStatus.def1
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits.catsSyntaxTuple4Semigroupal
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveNino, ResolveTaxYear}
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveBoolean, ResolveNino, ResolveTaxYear}
+import api.models.errors.MtdError
 import v2.models.errors.{FutureYearsFormatError, HistoryFormatError}
 import v2.retrieveItsaStatus.def1.model.request.Def1_RetrieveItsaStatusRequestData
 import v2.retrieveItsaStatus.model.request.RetrieveItsaStatusRequestData

@@ -18,8 +18,8 @@ package auth
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import shared.auth.AuthSupportingAgentsAllowedISpec
-import shared.services.DownstreamStub
+import api.auth.AuthSupportingAgentsAllowedISpec
+import api.services.DownstreamStub
 
 class SelfAssessmentIndividualDetailsApiSupportingAgentsAllowedISpec extends AuthSupportingAgentsAllowedISpec {
 

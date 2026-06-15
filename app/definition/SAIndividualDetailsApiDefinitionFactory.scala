@@ -16,14 +16,14 @@
 
 package definition
 
-import shared.config.SharedAppConfig
-import shared.definition.*
-import shared.routing.Version2
+import api.config.AppConfig
+import api.definition.*
+import api.routing.Version2
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class SAIndividualDetailsApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
+class SAIndividualDetailsApiDefinitionFactory @Inject() (protected val appConfig: AppConfig) extends ApiDefinitionFactory {
 
   lazy val definition: Definition =
     Definition(
