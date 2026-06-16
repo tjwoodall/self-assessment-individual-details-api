@@ -16,8 +16,8 @@
 
 package v2.models.domain
 
-import play.api.libs.json.*
 import api.utils.enums.Enums
+import play.api.libs.json.*
 
 enum StatusReasonEnum(val fromDownstream: String) {
   case `Sign up - return available`    extends StatusReasonEnum("00")

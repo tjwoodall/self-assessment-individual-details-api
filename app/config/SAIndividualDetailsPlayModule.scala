@@ -16,10 +16,10 @@
 
 package config
 
-import com.google.inject.AbstractModule
-import definition.SAIndividualDetailsApiDefinitionFactory
 import api.definition.ApiDefinitionFactory
 import api.routing.VersionRoutingMap
+import com.google.inject.AbstractModule
+import definition.SAIndividualDetailsApiDefinitionFactory
 
 class SAIndividualDetailsPlayModule extends AbstractModule {
 

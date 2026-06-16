@@ -16,8 +16,6 @@
 
 package v2.retrieveItsaStatus
 
-import play.api.libs.json.JsValue
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import api.config.AppConfig
 import api.controllers.*
 import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
@@ -26,6 +24,8 @@ import api.models.errors.ErrorWrapper
 import api.routing.Version
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.IdGenerator
+import play.api.libs.json.JsValue
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 

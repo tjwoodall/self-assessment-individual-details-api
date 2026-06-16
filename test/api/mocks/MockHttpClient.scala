@@ -16,17 +16,17 @@
 
 package api.mocks
 
+import api.utils.UrlUtils
+import izumi.reflect.Tag
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.JsValue
 import play.api.libs.ws.BodyWritable
-import api.utils.UrlUtils
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
 
-import izumi.reflect.Tag
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 

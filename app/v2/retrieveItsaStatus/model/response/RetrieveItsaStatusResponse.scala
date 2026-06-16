@@ -16,8 +16,8 @@
 
 package v2.retrieveItsaStatus.model.response
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import api.utils.JsonWritesUtil
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import v2.retrieveItsaStatus.def1.model.response.ItsaStatuses
 
 trait RetrieveItsaStatusResponse
