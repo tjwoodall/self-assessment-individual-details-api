@@ -64,7 +64,6 @@ class AppConfigSpec extends UnitSpec {
             |      endpoints {
             |        enabled = false
             |        api-released-in-production = false
-            |        allow-request-cannot-be-fulfilled-header = false
             |      }
             |    }
             |""".stripMargin
@@ -84,7 +83,6 @@ class AppConfigSpec extends UnitSpec {
             |      endpoints {
             |        enabled = true
             |        api-released-in-production = true
-            |        allow-request-cannot-be-fulfilled-header = false
             |
             |        released-in-production {
             |          create-something: true
@@ -111,7 +109,6 @@ class AppConfigSpec extends UnitSpec {
             |      endpoints {
             |        enabled = true
             |        api-released-in-production = true
-            |        allow-request-cannot-be-fulfilled-header = false
             |
             |        released-in-production {
             |          create-something: true
@@ -135,7 +132,6 @@ class AppConfigSpec extends UnitSpec {
             |      endpoints {
             |        enabled = true
             |        api-released-in-production = true
-            |        allow-request-cannot-be-fulfilled-header = false
             |
             |        released-in-production {
             |          create-something: true
@@ -159,7 +155,6 @@ class AppConfigSpec extends UnitSpec {
             |      endpoints {
             |        enabled = true
             |        api-released-in-production = true
-            |        allow-request-cannot-be-fulfilled-header = false
             |
             |        released-in-production {
             |          create-something: true
@@ -186,7 +181,6 @@ class AppConfigSpec extends UnitSpec {
             |      endpoints {
             |        enabled = true
             |        api-released-in-production = true
-            |        allow-request-cannot-be-fulfilled-header = false
             |      }
             |    }
             """.stripMargin
@@ -206,7 +200,6 @@ class AppConfigSpec extends UnitSpec {
               |      endpoints {
               |        enabled = true
               |        api-released-in-production = true
-              |        allow-request-cannot-be-fulfilled-header = false
               |      }
               |    }
                  """.stripMargin
@@ -231,7 +224,6 @@ class AppConfigSpec extends UnitSpec {
                   |      endpoints {
                   |        enabled = true
                   |        api-released-in-production = true
-                  |        allow-request-cannot-be-fulfilled-header = false
                   |      }
                   |    }
                   """.stripMargin
@@ -258,7 +250,6 @@ class AppConfigSpec extends UnitSpec {
                   |      endpoints {
                   |        enabled = true
                   |        api-released-in-production = true
-                  |        allow-request-cannot-be-fulfilled-header = false
                   |      }
                   |    }
                   """.stripMargin
@@ -289,7 +280,6 @@ class AppConfigSpec extends UnitSpec {
                   |      endpoints {
                   |        enabled = true
                   |        api-released-in-production = true
-                  |        allow-request-cannot-be-fulfilled-header = false
                   |      }
                   |    }
                   """.stripMargin
@@ -317,7 +307,6 @@ class AppConfigSpec extends UnitSpec {
                   |      endpoints {
                   |        enabled = true
                   |        api-released-in-production = true
-                  |        allow-request-cannot-be-fulfilled-header = false
                   |      }
                   |    }
                   """.stripMargin
@@ -345,8 +334,7 @@ class AppConfigSpec extends UnitSpec {
                 |      sunsetDate = "2023-12-31"
                 |      endpoints {
                 |        enabled = true
-                |        api-released-in-production = true
-                |        allow-request-cannot-be-fulfilled-header = false
+                |        api-released-in-production = trueF
                 |      }
                 |    }
                 """.stripMargin
