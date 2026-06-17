@@ -19,7 +19,7 @@ package api.controllers
 import api.config.AppConfig
 import api.config.Deprecation.Deprecated
 import api.controllers.validators.Validator
-import api.models.errors.{ClientNotEnrolledError, ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
+import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.routing.Version
 import api.services.ServiceOutcome
@@ -135,21 +135,15 @@ object RequestHandler {
             s"with correlationId : ${ctx.correlationId}")
 
         val result =
-          if (simulateRequestCannotBeFulfilled) {
-            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilledError))))
-          } else if (simulateNotEnrolled) {
-            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, ClientNotEnrolledError))))
-          } else {
-            for {
-              parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
-              serviceResponse <- EitherT(service(parsedRequest))
-            } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
-              responseModifier match {
-                case Some(modifier) =>
-                  handleSuccess(parsedRequest, serviceResponse.copy(responseData = modifier(serviceResponse.responseData)))
-                case None =>
-                  handleSuccess(parsedRequest, serviceResponse)
-              }
+          for {
+            parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
+            serviceResponse <- EitherT(service(parsedRequest))
+          } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
+            responseModifier match {
+              case Some(modifier) =>
+                handleSuccess(parsedRequest, serviceResponse.copy(responseData = modifier(serviceResponse.responseData)))
+              case None =>
+                handleSuccess(parsedRequest, serviceResponse)
             }
           }
 
@@ -163,10 +157,6 @@ object RequestHandler {
       private def simulateNotEnrolled(implicit request: UserRequest[?], appConfig: AppConfig): Boolean =
         request.headers.get("Gov-Test-Scenario").contains("NOT_ENROLLED") &&
           appConfig.allowNotEnrolledHeader(Version(request))
-
-      private def simulateRequestCannotBeFulfilled(implicit request: UserRequest[?], appConfig: AppConfig): Boolean =
-        request.headers.get("Gov-Test-Scenario").contains("REQUEST_CANNOT_BE_FULFILLED") &&
-          appConfig.allowRequestCannotBeFulfilledHeader(Version(request))
 
       private def doWithContext[A](ctx: RequestContext)(f: RequestContext => A): A = f(ctx)
 
