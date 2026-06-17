@@ -16,7 +16,7 @@
 
 package api.controllers
 
-import api.config.Deprecation.{Deprecated, NotDeprecated}
+import api.config.Deprecation.NotDeprecated
 import api.config.{AppConfig, Deprecation, MockAppConfig}
 import api.controllers.validators.Validator
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -37,7 +37,6 @@ import play.api.test.{FakeRequest, ResultExtractors}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 
-import java.time.LocalDateTime
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class RequestHandlerSpec

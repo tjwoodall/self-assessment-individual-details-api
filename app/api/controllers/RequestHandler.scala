@@ -19,7 +19,7 @@ package api.controllers
 import api.config.AppConfig
 import api.config.Deprecation.Deprecated
 import api.controllers.validators.Validator
-import api.models.errors.{ErrorWrapper, InternalError}
+import api.models.errors.{ClientNotEnrolledError, ErrorWrapper, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.routing.Version
 import api.services.ServiceOutcome
@@ -135,15 +135,19 @@ object RequestHandler {
             s"with correlationId : ${ctx.correlationId}")
 
         val result =
-          for {
-            parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
-            serviceResponse <- EitherT(service(parsedRequest))
-          } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
-            responseModifier match {
-              case Some(modifier) =>
-                handleSuccess(parsedRequest, serviceResponse.copy(responseData = modifier(serviceResponse.responseData)))
-              case None =>
-                handleSuccess(parsedRequest, serviceResponse)
+          if (simulateNotEnrolled) {
+            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, ClientNotEnrolledError))))
+          } else {
+            for {
+              parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
+              serviceResponse <- EitherT(service(parsedRequest))
+            } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
+              responseModifier match {
+                case Some(modifier) =>
+                  handleSuccess(parsedRequest, serviceResponse.copy(responseData = modifier(serviceResponse.responseData)))
+                case None =>
+                  handleSuccess(parsedRequest, serviceResponse)
+              }
             }
           }
 
