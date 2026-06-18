@@ -16,34 +16,22 @@
 
 package v2.models.domain
 
-import api.models.domain.TaxYear
 import api.utils.enums.Enums
 import play.api.libs.json.*
 
-import java.time.Clock
-import scala.math.Ordered.orderingToOrdered
-
 enum StatusEnum(val fromDownstream: String) {
-  case `No Status`     extends StatusEnum("00")
-  case `MTD Mandated`  extends StatusEnum("01")
-  case `MTD Voluntary` extends StatusEnum("02")
-  case Annual          extends StatusEnum("03")
-  // Non Digital will be removed for TY 26-27
-  case `Non Digital` extends StatusEnum("04")
-  // Update fromDownstream to "04" once Non Digital is removed
-  case `Digitally Exempt` extends StatusEnum("")
+  case `No Status`        extends StatusEnum("00")
+  case `MTD Mandated`     extends StatusEnum("01")
+  case `MTD Voluntary`    extends StatusEnum("02")
+  case Annual             extends StatusEnum("03")
+  case `Digitally Exempt` extends StatusEnum("04")
   case Dormant            extends StatusEnum("05")
   case `MTD Exempt`       extends StatusEnum("99")
 }
 
 object StatusEnum {
 
-  given reads(using clock: Clock = Clock.systemUTC()): Reads[StatusEnum] =
-    Enums.readsFrom[StatusEnum](values, _.fromDownstream).flatMap {
-      case `Non Digital` if TaxYear.currentTaxYear >= TaxYear.ending(2027) => Reads.pure(`Digitally Exempt`)
-      case status                                                          => Reads.pure(status)
-    }
-
-  given Writes[StatusEnum] = Enums.writes[StatusEnum]
+  given reads: Reads[StatusEnum] = Enums.readsFrom[StatusEnum](values, _.fromDownstream)
+  given Writes[StatusEnum]       = Enums.writes[StatusEnum]
 
 }

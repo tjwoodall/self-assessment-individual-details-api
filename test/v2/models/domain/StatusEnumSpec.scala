@@ -18,43 +18,28 @@ package v2.models.domain
 
 import api.utils.UnitSpec
 import api.utils.enums.EnumJsonSpecSupport
-import play.api.libs.json.JsString
 import v2.models.domain.StatusEnum.*
-
-import java.time.{Clock, LocalDate, ZoneOffset}
 
 class StatusEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  "JSON reads" must {
-    "deserialize correctly when tax year is before 26-27" in {
-      given clock: Clock = Clock.fixed(LocalDate.parse("2025-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
-      val namesAndValues = Seq(
-        ("00", `No Status`),
-        ("01", `MTD Mandated`),
-        ("02", `MTD Voluntary`),
-        ("03", Annual),
-        ("04", `Non Digital`),
-        ("05", Dormant),
-        ("99", `MTD Exempt`))
-      namesAndValues.foreach { case (name, obj) =>
-        JsString(name).as[StatusEnum] shouldBe obj
-      }
-    }
-  }
+  testDeserialization(
+    ("00", `No Status`),
+    ("01", `MTD Mandated`),
+    ("02", `MTD Voluntary`),
+    ("03", Annual),
+    ("04", `Digitally Exempt`),
+    ("05", Dormant),
+    ("99", `MTD Exempt`)
+  )
 
-  "deserialize correctly when tax year is 26-27 or later" in {
-    given clock: Clock = Clock.fixed(LocalDate.parse("2026-04-06").atStartOfDay(ZoneOffset.UTC).toInstant, ZoneOffset.UTC)
-    val namesAndValues = Seq(
-      ("00", `No Status`),
-      ("01", `MTD Mandated`),
-      ("02", `MTD Voluntary`),
-      ("03", Annual),
-      ("04", `Digitally Exempt`),
-      ("05", Dormant),
-      ("99", `MTD Exempt`))
-    namesAndValues.foreach { case (name, obj) =>
-      JsString(name).as[StatusEnum] shouldBe obj
-    }
-  }
+  testSerialization(
+    (`No Status`, "No Status"),
+    (`MTD Mandated`, "MTD Mandated"),
+    (`MTD Voluntary`, "MTD Voluntary"),
+    (Annual, "Annual"),
+    (`Digitally Exempt`, "Digitally Exempt"),
+    (Dormant, "Dormant"),
+    (`MTD Exempt`, "MTD Exempt")
+  )
 
 }
