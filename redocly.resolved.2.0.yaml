@@ -181,13 +181,12 @@ paths:
                                 example: '2021-03-23T16:02:34.039Z'
                               status:
                                 type: string
-                                description: The ITSA Status for the Tax Year. The value `Non Digital` is deprecated and will no longer be supported from tax year 2026-27
+                                description: The ITSA Status for the Tax Year.
                                 enum:
                                   - No Status
                                   - MTD Mandated
                                   - MTD Voluntary
                                   - Annual
-                                  - Non Digital
                                   - Digitally Exempt
                                   - Dormant
                                   - MTD Exempt
