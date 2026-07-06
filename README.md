@@ -1,5 +1,8 @@
 Self Assessment Individual Details API
 ========================
+
+[![Apache-2.0 license](http://img.shields.io/badge/license-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 This API allows developers to perform operations related to Individuals/Taxable Entities for Income Tax Self Assessment:
 
 - Retrieve ITSA status for a given NINO for a specified tax year and optionally for future years
@@ -13,9 +16,13 @@ This API allows developers to perform operations related to Individuals/Taxable 
 
 ## Development Setup
 
-Run from the console using: `sbt run` (starts on port 7790 by default)
+Run the microservice from the console using: `sbt run` (starts on port 7790 by default)
 
-Start the service manager profile: `sm2 --start MTDFB_SA_DETAILS`
+Start the service manager profile: 
+
+```bash 
+sm2 -start MTDFB_SA_DETAILS
+```
 
 ## Run Tests
 
@@ -23,26 +30,23 @@ Run unit tests: `sbt test`
 
 Run integration tests: `sbt it/test`
 
-Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtopts` file to the root of the project with the
-following contents:
+## View OpenAPI Specification (OAS) documentation
 
-```
--J-Xmx3G
--J-XX:+UseG1GC
-```
+To view the OpenAPI documentation locally, ensure the API is running.
 
-## Viewing OAS
+Start the `api-documentation-frontend` and `api-definition` services using the Service Manager profile:
 
-To view documentation locally ensure the Self Assessment Individual Details API is running, and run
-api-documentation-frontend:
-
-```
-./run_local_with_dependencies.sh
+```bash
+sm2 -start DEVHUB_PREVIEW_OPENAPI
 ```
 
-Then go to http://localhost:9680/api-documentation/docs/openapi/preview and enter the full URL path to the YAML file
-with the
-appropriate port and version:
+Then navigate to the preview page:
+
+```text
+http://localhost:9680/api-documentation/docs/openapi/preview
+```
+
+Enter the specification URL using the appropriate port and API version:
 
 ```
 http://localhost:7790/api/conf/2.0/application.yaml
@@ -58,10 +62,8 @@ You can create a GitHub issue [here](https://github.com/hmrc/income-tax-mtd-chan
 
 ## API Reference / Documentation
 
-Available on
-the [Self Assessment Individual Details Documentation](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-individual-details-api)
+Available on the [HMRC Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-individual-details-api)
 
 ## License
 
-This code is open source software licensed under
-the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
+This code is open source software licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
